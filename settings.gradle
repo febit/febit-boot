@@ -1,0 +1,27 @@
+pluginManagement {
+  repositories {
+    mavenLocal()
+    maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+    maven { url 'https://maven.aliyun.com/repository/central' }
+  }
+}
+
+rootProject.name = 'febit-jooq'
+
+subModule 'jooq'
+
+codegenModule 'meta'
+codegenModule 'runtime'
+codegenModule 'gradle-plugin'
+
+def subModule(String name) {
+  String fullName = ":febit-${name}"
+  include fullName
+  project(fullName).projectDir = file("${name}")
+}
+
+def codegenModule(String name) {
+  def fullName = ':febit-jooq-codegen-' + name
+  include fullName
+  project(fullName).projectDir = file("jooq-codegen/${name}")
+}

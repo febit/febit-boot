@@ -1,0 +1,17 @@
+.DS_Store
+
+target/
+build/
+
+!**/src/**/target/
+!**/src/**/build/
+
+.gradle
+gradle.properties
+lombok.config
+
+*.iml
+.idea
+.project
+.classpath
+.settings

@@ -1,0 +1,21 @@
+group rootProject.group + '.codegen'
+
+ext {
+  moduleName = 'Febit Codegen Runtime'
+  moduleDescription = ''
+}
+
+dependencies {
+  api 'org.slf4j:slf4j-api'
+  api 'commons-io:commons-io'
+  api 'org.jooq:jooq-codegen'
+  api 'org.febit:febit-common'
+  api 'org.springframework:spring-core'
+
+  api 'javax.xml.bind:jaxb-api:2.3.1'
+  implementation 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+  implementation 'com.sun.xml.bind:jaxb-impl:2.3.0.1'
+
+  testRuntimeOnly 'org.slf4j:slf4j-simple'
+  testRuntimeOnly 'com.h2database:h2'
+}
