@@ -18,7 +18,7 @@ package org.febit.jooq;
 import lombok.Data;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.febit.lang.protocal.Order;
+import org.febit.lang.protocal.Sort;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -34,20 +34,20 @@ import static org.febit.jooq.Utils.declaredFields;
 
 @Slf4j
 @UtilityClass
-public class OrderUtils {
+public class SortUtils {
 
-    private static final Map<Class<?>, Map<String, OrderEntry>> CACHE
+    private static final Map<Class<?>, Map<String, SortEntry>> CACHE
             = new ConcurrentReferenceHashMap<>(256);
 
-    public static List<OrderField<?>> resolve(List<Order> orders, SearchForm form) {
-        var mapper = CACHE.computeIfAbsent(form.getClass(), OrderUtils::resolveMapper);
+    public static List<OrderField<?>> resolve(List<Sort> sorts, SearchForm form) {
+        var mapper = CACHE.computeIfAbsent(form.getClass(), SortUtils::resolveFromForm);
         var result = new ArrayList<OrderField<?>>(mapper.size());
-        for (var order : orders) {
-            var entry = mapper.get(order.getProperty());
+        for (var sort : sorts) {
+            var entry = mapper.get(sort.getProperty());
             if (entry == null) {
-                throw new IllegalArgumentException("Not support sort by property: " + order.getProperty());
+                throw new IllegalArgumentException("Not support sort by property: " + sort.getProperty());
             }
-            result.add(order.isAsc()
+            result.add(sort.isAsc()
                     ? entry.field.asc()
                     : entry.field.desc()
             );
@@ -55,12 +55,20 @@ public class OrderUtils {
         return result;
     }
 
-    private static Map<String, OrderEntry> resolveMapper(Class<?> mappingType) {
+    private static Map<String, SortEntry> resolveFromForm(Class<?> formClass) {
+        var orderByAnno = formClass.getAnnotation(OrderMappingBy.class);
+        if (orderByAnno == null) {
+            return Map.of();
+        }
+        return CACHE.computeIfAbsent(orderByAnno.value(), SortUtils::resolve);
+    }
+
+    private static Map<String, SortEntry> resolve(Class<?> mappingType) {
         var configs = declaredFields(mappingType)
-                .map(OrderUtils::resolveEntry)
+                .map(SortUtils::resolveEntry)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
-                        OrderEntry::getName,
+                        SortEntry::getName,
                         Function.identity()
                 ));
 
@@ -71,14 +79,14 @@ public class OrderUtils {
     }
 
     @Nullable
-    public static OrderEntry resolveEntry(Field field) {
+    public static SortEntry resolveEntry(Field field) {
         var anno = AnnotatedElementUtils.findMergedAnnotation(field, Column.class);
         var name = Utils.name(anno, field.getName());
-        return new OrderEntry(field.getName(), DSL.field(name, field.getType()));
+        return new SortEntry(field.getName(), DSL.field(name, field.getType()));
     }
 
     @Data
-    public static class OrderEntry {
+    public static class SortEntry {
         private final String name;
         private final org.jooq.Field<?> field;
     }

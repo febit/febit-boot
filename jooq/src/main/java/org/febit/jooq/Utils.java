@@ -36,8 +36,8 @@ import static java.lang.Boolean.TRUE;
 class Utils {
 
     static Name name(Column.Name anno) {
+        var table = anno.table();
         var col = anno.value();
-        var table = anno.value();
         if (table.isEmpty()) {
             return DSL.name(col);
         }
@@ -49,8 +49,8 @@ class Utils {
             return DSL.name(resolveSqlName(fieldName));
         }
 
+        var table = column.table();
         var col = column.value();
-        var table = column.value();
         if (table.isEmpty()) {
             return DSL.name(col);
         }

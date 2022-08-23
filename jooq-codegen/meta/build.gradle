@@ -15,6 +15,9 @@ ext {
 
 dependencies {
   api 'org.jooq:jooq-meta'
+  api 'org.apache.commons:commons-lang3'
+  api 'org.febit:febit-common'
+
   api 'javax.xml.bind:jaxb-api:2.3.1'
   api 'com.sun.xml.bind:jaxb-core:2.3.0.1'
   api 'com.sun.xml.bind:jaxb-impl:2.3.0.1'

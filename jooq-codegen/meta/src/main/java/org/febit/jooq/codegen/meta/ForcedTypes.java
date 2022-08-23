@@ -3,6 +3,7 @@ package org.febit.jooq.codegen.meta;
 import lombok.experimental.UtilityClass;
 import org.jooq.meta.jaxb.ForcedType;
 
+import javax.annotation.Nullable;
 import java.time.Instant;
 import java.util.function.Consumer;
 
@@ -29,6 +30,75 @@ public class ForcedTypes {
                 .withIncludeTypes(type);
     }
 
+    public static void to(Sink sink, String expr, Schema schema) {
+        switch (schema.getType()) {
+            case BOOLEAN:
+                toBoolean(sink, expr);
+                break;
+            case INSTANT:
+                timeToInstant(sink, expr);
+                break;
+            case ENUM:
+                toEnum(sink, expr, schema.getValueType().toTypeString());
+                break;
+            case JSON:
+                jsonTo(sink, expr, schema.getValueType());
+                break;
+            case RAW:
+            case STRING:
+            case BYTES:
+            case INT:
+            case LONG:
+            case FLOAT:
+            case DOUBLE:
+            case DATE:
+            case TIME:
+            case LOCAL_DATETIME:
+            case ZONED_DATETIME:
+            case ARRAY:
+            case LIST:
+            case MAP:
+            default:
+                throw new IllegalArgumentException("Not support json type: " + schema.toTypeString());
+        }
+    }
+
+    public static void jsonTo(Sink sink, String expr, Schema type) {
+        switch (type.getType()) {
+            case RAW:
+            case ENUM:
+            case STRING:
+            case BYTES:
+            case BOOLEAN:
+            case INT:
+            case LONG:
+            case FLOAT:
+            case DOUBLE:
+            case INSTANT:
+            case DATE:
+            case TIME:
+            case LOCAL_DATETIME:
+            case ZONED_DATETIME:
+                jsonToBean(sink, expr, type.toTypeString());
+                break;
+            case ARRAY:
+                jsonToBeanArray(sink, expr, type.getValueType().toTypeString());
+                break;
+            case LIST:
+                jsonToBeanList(sink, expr, type.getValueType().toTypeString());
+                break;
+            case MAP:
+                jsonToBeanMap(sink, expr,
+                        type.getKeyType().toTypeString(),
+                        type.getValueType().toTypeString()
+                );
+                break;
+            case JSON:
+            default:
+                throw new IllegalArgumentException("Not support json type: " + type.toTypeString());
+        }
+    }
+
     public static void toBoolean(Sink sink, String expr) {
         sink.accept(next()
                 .expr(expr)
@@ -49,6 +119,12 @@ public class ForcedTypes {
     public static void jsonToBean(Sink sink, String expr, String beanType) {
         var call = ".forBean(" + beanType + ".class)";
         jsonToBean(sink, expr, beanType, call);
+    }
+
+    public static void jsonToBeanMap(Sink sink, String expr, String beanType) {
+        var call = ".forBeanMap(" + beanType + ".class)";
+        var javaType = "java.util.Map<String, " + beanType + ">";
+        jsonToBean(sink, expr, javaType, call);
     }
 
     private void jsonToBean(Sink sink, String expr, String beanType, String call) {
@@ -74,9 +150,9 @@ public class ForcedTypes {
         );
     }
 
-    public static void jsonToBeanMap(Sink sink, String expr, String beanType) {
-        var call = ".forBeanMap(" + beanType + ".class)";
-        var javaType = "java.util.Map<String, " + beanType + ">";
+    public static void jsonToBeanMap(Sink sink, String expr, String keyType, String beanType) {
+        var call = ".forBeanMap(" + keyType + ".class, " + beanType + ".class)";
+        var javaType = "java.util.Map<" + keyType + ", " + beanType + ">";
         jsonToBean(sink, expr, javaType, call);
     }
 
@@ -93,20 +169,16 @@ public class ForcedTypes {
     }
 
     public static void timeToInstant(Sink sink) {
-        datetimeToInstant(sink);
-        timestampToInstant(sink);
-        zonedDateTimeToInstant(sink);
+        timeToInstant(sink, null);
     }
 
-    public static void datetimeToInstant(Sink sink) {
-        toInstant(sink, Types.DATETIME, null);
-    }
-
-    public static void timestampToInstant(Sink sink) {
-        toInstant(sink, Types.TIMESTAMP, null);
-    }
-
-    public static void zonedDateTimeToInstant(Sink sink) {
+    public static void timeToInstant(Sink sink, @Nullable String expr) {
+        sink.accept(next()
+                .converter(Converters.LOCAL_DATE_TIME_INSTANT)
+                .expr(expr != null ? expr : EXPR_ALL)
+                .javaType(Instant.class.getName())
+                .type(Types.DATETIME_OR_TIMESTAMP)
+        );
         sink.accept(next()
                 .converter(Converters.OFFSET_DATE_TIME_INSTANT)
                 .expr(EXPR_ALL)
@@ -115,29 +187,23 @@ public class ForcedTypes {
         );
     }
 
-    public static void toInstant(Sink sink, String type, String expr) {
-        sink.accept(next()
-                .converter(Converters.LOCAL_DATE_TIME_INSTANT)
-                .expr(expr != null ? expr : EXPR_ALL)
-                .javaType(Instant.class.getName())
-                .type(type)
-        );
-    }
-
     public interface Converters {
-        String VALUED_ENUM = "org.febit.boot.jooq.converter.";
-        String LOCAL_DATE_TIME_INSTANT = "org.febit.boot.jooq.converter.LocalDateTimeToInstantConverter";
-        String OFFSET_DATE_TIME_INSTANT = "org.febit.boot.jooq.converter.OffsetDateTimeToInstantConverter";
-        String JSON_STRING = "org.febit.boot.jooq.converter.JsonStringConverter";
-        String JSON = "org.febit.boot.jooq.converter.JsonConverter";
-        String JSONB = "org.febit.boot.jooq.converter.JsonbConverter";
+        String PKG = "org.febit.jooq.converter.";
+        String VALUED_ENUM = PKG + "ValuedEnumConverter";
+        String LOCAL_DATE_TIME_INSTANT = PKG + "LocalDateTimeToInstantConverter";
+        String OFFSET_DATE_TIME_INSTANT = PKG + "OffsetDateTimeToInstantConverter";
+        String JSON_STRING = PKG + "JsonStringConverter";
+        String JSON = PKG + "JsonConverter";
+        String JSONB = PKG + "JsonbConverter";
     }
 
     public interface Types {
         String ANY = ".*";
         String BOOLEAN = "boolean";
+
         String DATETIME = "datetime";
         String TIMESTAMP = "timestamp";
+        String DATETIME_OR_TIMESTAMP = DATETIME + "|" + TIMESTAMP;
 
         String TIMESTAMP_TZ = "("
                 + "TIMESTAMPTZ|TIMESTAMP_TZ"

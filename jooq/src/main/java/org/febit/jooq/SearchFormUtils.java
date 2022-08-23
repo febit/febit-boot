@@ -165,7 +165,7 @@ public class SearchFormUtils {
                 anno.ignoreEmpty(),
                 anno.ignoreCase(),
                 DSL.field(name, fieldType),
-                List.of(Lists.collect(
+                List.copyOf(Lists.collect(
                         anno.names(),
                         n -> DSL.field(Utils.name(n), fieldType)
                 )),

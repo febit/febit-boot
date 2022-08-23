@@ -38,8 +38,13 @@ public class JsonbConverter<V> extends AbstractConverter<JSONB, V> {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <V> JsonbConverter<Map<String, V>> forBeanMap(Class<V> beanType) {
+        return forBeanMap(String.class, beanType);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static <K, V> JsonbConverter<Map<K, V>> forBeanMap(Class<K> keyType, Class<V> beanType) {
         val type = JacksonUtils.TYPE_FACTORY.constructMapType(
-                Map.class, String.class, beanType);
+                Map.class, keyType, beanType);
         return new JsonbConverter(Map.class, type);
     }
 

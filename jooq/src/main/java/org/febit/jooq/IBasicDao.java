@@ -190,7 +190,7 @@ public interface IBasicDao<TB extends Table<R>, PO, R extends TableRecord<R>> {
                 pagination,
                 dsl().selectFrom(table())
                         .where(conditions),
-                OrderUtils.resolve(pagination.getOrders(), form),
+                SortUtils.resolve(pagination.getSorts(), form),
                 mapper
         );
     }
