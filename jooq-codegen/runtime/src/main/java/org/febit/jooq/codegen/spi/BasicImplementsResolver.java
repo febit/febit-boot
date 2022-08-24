@@ -1,6 +1,7 @@
 package org.febit.jooq.codegen.spi;
 
 import org.febit.jooq.codegen.JooqGeneratorStrategy;
+import org.febit.jooq.codegen.meta.MetaUtils;
 import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.meta.TableDefinition;
 import org.springframework.core.Ordered;
@@ -28,10 +29,10 @@ public class BasicImplementsResolver implements ImplementsResolver {
 
         switch (context.getMode()) {
             case DEFAULT:
-                context.addImpl("org.febit.jooq.ITable<" + recordClassName + ", " + pkType + ">");
+                context.addImpl(MetaUtils.JOOQ_PKG + ".ITable<" + recordClassName + ", " + pkType + ">");
                 break;
             case POJO:
-                context.addImpl("org.febit.jooq.IEntity<" + pkType + ">");
+                context.addImpl(MetaUtils.JOOQ_PKG + ".IEntity<" + pkType + ">");
                 break;
             default:
         }

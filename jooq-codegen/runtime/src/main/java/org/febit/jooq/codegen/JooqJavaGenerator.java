@@ -1,5 +1,6 @@
 package org.febit.jooq.codegen;
 
+import org.febit.jooq.codegen.meta.MetaUtils;
 import org.febit.jooq.codegen.spi.DatabaseFilter;
 import org.jooq.codegen.FebitDevkitJavaGeneratorHack;
 import org.jooq.codegen.GeneratorStrategy;
@@ -110,7 +111,7 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
         var recordClassName = getStrategy().getJavaClassName(table, GeneratorStrategy.Mode.RECORD);
         var impledEntity = getStrategy().getJavaClassImplements(table, GeneratorStrategy.Mode.POJO)
                 .stream()
-                .anyMatch(cls -> cls.startsWith("org.febit.jooq.IEntity<"));
+                .anyMatch(cls -> cls.startsWith(MetaUtils.JOOQ_PKG + ".IEntity<"));
 
         out.ref(getStrategy().getFullJavaClassName(table, GeneratorStrategy.Mode.RECORD));
         out.println();

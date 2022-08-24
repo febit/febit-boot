@@ -16,11 +16,15 @@ import java.io.UncheckedIOException;
 @UtilityClass
 public class MetaUtils {
 
+    public static final String JOOQ_PKG = "org.febit.jooq";
+    public static final String CODEGEN_PKG = JOOQ_PKG + ".codegen";
+
     public static final String CODEGEN_JOOQ = "codegenJooq";
     public static final String GROUP_NAME = "Codegen jOOQ";
     public static final String CODEGEN_JOOQ_FOLDER = "codegen-jooq";
-    public static final String CLASS_GENERATOR = "org.febit.jooq.codegen.JooqJavaGenerator";
-    public static final String CLASS_STRATEGY = "org.febit.jooq.codegen.JooqGeneratorStrategy";
+
+    public static final String CLASS_GENERATOR = CODEGEN_PKG + ".JooqJavaGenerator";
+    public static final String CLASS_STRATEGY = CODEGEN_PKG + ".JooqGeneratorStrategy";
     public static final String CLASS_MAIN = "org.jooq.codegen.GenerationTool";
 
     public Generator createGenerator() {
