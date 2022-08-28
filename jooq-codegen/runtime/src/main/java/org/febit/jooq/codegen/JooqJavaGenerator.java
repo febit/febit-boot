@@ -157,7 +157,7 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
         var recordClassName = getStrategy().getJavaClassName(table, GeneratorStrategy.Mode.RECORD);
         var impledEntity = getStrategy().getJavaClassImplements(table, GeneratorStrategy.Mode.POJO)
                 .stream()
-                .anyMatch(cls -> cls.startsWith(MetaUtils.JOOQ_PKG + ".IEntity<"));
+                .anyMatch(cls -> cls.startsWith(MetaUtils.CORE_PKG + ".IEntity<"));
 
         out.ref(getStrategy().getFullJavaClassName(table, GeneratorStrategy.Mode.RECORD));
         out.println();

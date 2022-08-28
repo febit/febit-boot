@@ -34,6 +34,7 @@ import java.util.function.Supplier;
 public class MetaUtils {
 
     public static final String JOOQ_PKG = "org.febit.jooq";
+    public static final String CORE_PKG = JOOQ_PKG;
     public static final String CODEGEN_PKG = JOOQ_PKG + ".codegen";
     public static final String CLASS_GENERATOR = CODEGEN_PKG + ".JooqJavaGenerator";
     public static final String CLASS_STRATEGY = CODEGEN_PKG + ".JooqGeneratorStrategy";

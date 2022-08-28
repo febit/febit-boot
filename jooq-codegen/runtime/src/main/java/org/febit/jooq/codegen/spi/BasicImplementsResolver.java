@@ -44,10 +44,10 @@ public class BasicImplementsResolver implements ImplementsResolver {
 
         switch (context.getMode()) {
             case DEFAULT:
-                context.addImpl(MetaUtils.JOOQ_PKG + ".ITable<" + recordClassName + ", " + pkType + ">");
+                context.addImpl(MetaUtils.CORE_PKG + ".ITable<" + recordClassName + ", " + pkType + ">");
                 break;
             case POJO:
-                context.addImpl(MetaUtils.JOOQ_PKG + ".IEntity<" + pkType + ">");
+                context.addImpl(MetaUtils.CORE_PKG + ".IEntity<" + pkType + ">");
                 break;
             default:
         }

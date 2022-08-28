@@ -203,7 +203,7 @@ public class ForcedTypes {
     }
 
     public interface Converters {
-        String PKG = MetaUtils.JOOQ_PKG + ".converter.";
+        String PKG = MetaUtils.CORE_PKG + ".converter.";
         String VALUED_ENUM = PKG + "ValuedEnumConverter";
         String LOCAL_DATE_TIME_INSTANT = PKG + "LocalDateTimeToInstantConverter";
         String OFFSET_DATE_TIME_INSTANT = PKG + "OffsetDateTimeToInstantConverter";
