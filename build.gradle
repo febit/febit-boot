@@ -2,6 +2,7 @@ plugins {
   id 'com.github.hierynomus.license' version '0.16.1'
   id 'org.febit.standard-java' version '1.0.0-SNAPSHOT'
   id 'org.febit.codegen-module' version '1.0.0-SNAPSHOT' apply false
+  id 'de.benediktritter.maven-plugin-development' version '0.4.0' apply false
 }
 
 group 'org.febit.jooq'
@@ -95,6 +96,10 @@ configure(javaModules()) {
       dependency "org.apache.commons:commons-collections4:${versions.commonsCollections4}"
       dependency "commons-io:commons-io:${versions.commonsIo}"
       dependency "org.assertj:assertj-core:${versions.assertj}"
+
+      dependency 'org.apache.maven:maven-plugin-api:3.0'
+      dependency 'org.apache.maven:maven-core:3.0'
+      dependency 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.5'
     }
   }
 

@@ -1,6 +1,7 @@
 pluginManagement {
   repositories {
     mavenLocal()
+    gradlePluginPortal()
     maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
     maven { url 'https://maven.aliyun.com/repository/central' }
   }
@@ -13,6 +14,7 @@ subModule 'jooq'
 codegenModule 'meta'
 codegenModule 'runtime'
 codegenModule 'gradle-plugin'
+codegenModule 'maven-plugin'
 
 def subModule(String name) {
   String fullName = ":febit-${name}"

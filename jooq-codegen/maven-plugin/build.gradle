@@ -1,0 +1,29 @@
+plugins {
+  id 'de.benediktritter.maven-plugin-development'
+}
+
+group rootProject.group + '.codegen'
+
+ext {
+  withoutMavenJavaPublications = true
+  moduleName = 'Febit Codegen jOOQ Gradle Plugin'
+  moduleDescription = ''
+}
+
+test {
+}
+
+mavenPlugin {
+  // see: https://www.benediktritter.de/maven-plugin-development/
+  helpMojoPackage = 'org.febit.devkit.maven.codegen.jooq'
+}
+
+dependencies {
+  implementation project(':febit-jooq-codegen-meta')
+  implementation project(':febit-jooq-codegen-runtime')
+  implementation 'org.febit.devkit-gradle:febit-devkit-gradle-common'
+
+  implementation 'org.apache.maven:maven-plugin-api'
+  implementation 'org.apache.maven:maven-core'
+  implementation 'org.apache.maven.plugin-tools:maven-plugin-annotations'
+}
