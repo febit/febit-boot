@@ -143,10 +143,10 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
         var idGetter = getStrategy().getJavaGetterName(idColumn, GeneratorStrategy.Mode.POJO);
 
         out.println();
-        out.tab(1).println("@Override");
-        out.tab(1).println("public %s id() {", idType);
-        out.tab(2).println("return %s();", idGetter);
-        out.tab(1).println("}");
+        out.println("@Override");
+        out.println("public %s id() {", idType);
+        out.println("return %s();", idGetter);
+        out.println("}");
     }
 
     /**
@@ -162,11 +162,11 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
         out.ref(getStrategy().getFullJavaClassName(table, GeneratorStrategy.Mode.RECORD));
         out.println();
         if (impledEntity) {
-            out.tab(1).println("@Override");
+            out.println("@Override");
         }
-        out.tab(1).println("public %s toRecord() {", recordClassName);
-        out.tab(2).println("return %s.fromPojo(this);", recordClassName);
-        out.tab(1).println("}");
+        out.println("public %s toRecord() {", recordClassName);
+        out.println("return %s.fromPojo(this);", recordClassName);
+        out.println("}");
     }
 
     private String resolveColumnFullType(ColumnDefinition column, JavaWriter out) {
@@ -198,10 +198,10 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
         out.ref(getStrategy().getFullJavaClassName(table, GeneratorStrategy.Mode.POJO));
 
         out.println();
-        out.tab(1).println("public static %s fromPojo(%s po) {", recordClassName, poClassName);
-        out.tab(2).println("%s record = new %s();", recordClassName, recordClassName);
-        out.tab(2).println("record.from(po);");
-        out.tab(2).println("return record;");
-        out.tab(1).println("}");
+        out.println("public static %s fromPojo(%s po) {", recordClassName, poClassName);
+        out.println("%s record = new %s();", recordClassName, recordClassName);
+        out.println("record.from(po);");
+        out.println("return record;");
+        out.println("}");
     }
 }
