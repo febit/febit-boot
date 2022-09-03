@@ -35,26 +35,26 @@ import static java.lang.Boolean.TRUE;
 @UtilityClass
 class Utils {
 
-    static Name name(Column.Name anno) {
-        var table = anno.table();
-        var col = anno.value();
+    static Name name(String table, String col) {
         if (table.isEmpty()) {
             return DSL.name(col);
         }
         return DSL.name(table, col);
     }
 
+    static Name name(Column.Name anno) {
+        return name(anno.table(), anno.value());
+    }
+
     static Name name(@Nullable Column column, String fieldName) {
-        if (column == null || column.value().isEmpty()) {
+        if (column == null) {
             return DSL.name(resolveSqlName(fieldName));
         }
-
-        var table = column.table();
         var col = column.value();
-        if (table.isEmpty()) {
-            return DSL.name(col);
+        if (col.isEmpty()) {
+            col = resolveSqlName(fieldName);
         }
-        return DSL.name(table, col);
+        return name(column.table(), col);
     }
 
     static <R extends UpdatableRecord<R>, P, T extends ITable<R, I>, I> List<R> records(

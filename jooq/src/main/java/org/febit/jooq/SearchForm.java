@@ -51,6 +51,10 @@ public interface SearchForm {
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     @interface Keyword {
+
+        @AliasFor(annotation = Column.class, attribute = "values")
+        String[] value() default {};
+
         @AliasFor(annotation = Column.class, attribute = "names")
         Column.Name[] names() default {};
 

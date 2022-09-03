@@ -140,12 +140,6 @@ public class SearchFormUtils {
             return null;
         }
 
-        if (anno.operator() == Column.Operator.KEYWORD
-                && anno.names().length == 0) {
-            log.warn("Skip search KEYWORD field: {}, since 'names' is empty.", field);
-            return null;
-        }
-
         if (anno.operator().multiValues()
                 && !isSupportedCollection(field)
         ) {
@@ -156,6 +150,15 @@ public class SearchFormUtils {
         }
 
         var name = Utils.name(anno, field.getName());
+        var names = Lists.collect(anno.names(), Utils::name);
+        names.addAll(Lists.collect(anno.values(), n -> Utils.name(anno.table(), n)));
+
+        if (anno.operator() == Column.Operator.KEYWORD
+                && names.isEmpty()) {
+            log.warn("Skip search KEYWORD field: {}, since 'values' & 'names' are empty.", field);
+            return null;
+        }
+
         var fieldType = anno.operator().multiValues()
                 ? resolveComponentType(field)
                 : field.getType();
@@ -166,8 +169,7 @@ public class SearchFormUtils {
                 anno.ignoreCase(),
                 DSL.field(name, fieldType),
                 List.copyOf(Lists.collect(
-                        anno.names(),
-                        n -> DSL.field(Utils.name(n), fieldType)
+                        names, n -> DSL.field(n, fieldType)
                 )),
                 getter(field)
         );

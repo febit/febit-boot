@@ -31,6 +31,8 @@ public @interface Column {
 
     String value() default "";
 
+    String[] values() default {};
+
     Name[] names() default {};
 
     boolean ignoreEmpty() default true;
