@@ -24,7 +24,7 @@ import org.apache.maven.project.MavenProject;
 import org.febit.jooq.codegen.meta.ForcedTypes;
 import org.febit.jooq.codegen.meta.MetaUtils;
 import org.febit.jooq.codegen.meta.Schema;
-import org.febit.util.ArraysUtils;
+import org.febit.lang.util.ArraysUtils;
 import org.jooq.codegen.GenerationTool;
 import org.jooq.meta.jaxb.*;
 

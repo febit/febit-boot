@@ -15,7 +15,7 @@
  */
 package org.febit.jooq;
 
-import org.febit.util.Lists;
+import org.febit.lang.util.Lists;
 import org.jooq.*;
 
 import javax.annotation.Nullable;

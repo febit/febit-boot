@@ -16,8 +16,8 @@
 package org.febit.jooq;
 
 import lombok.experimental.UtilityClass;
-import org.febit.annotation.NonNullApi;
-import org.febit.util.Lists;
+import org.febit.lang.annotation.NonNullApi;
+import org.febit.lang.util.Lists;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.impl.DSL;

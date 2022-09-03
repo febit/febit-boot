@@ -5,7 +5,7 @@ plugins {
 group rootProject.group + '.codegen'
 
 codegenModule {
-  moduleClassName = "org.febit.jooq.codegen.meta.CodegenJooqModule"
+  moduleClassName = "org.febit.jooq.codegen.meta.CodegenJooq"
 }
 
 ext {
@@ -17,7 +17,7 @@ dependencies {
   api 'org.slf4j:slf4j-api'
   api 'org.jooq:jooq-meta'
   api 'org.apache.commons:commons-lang3'
-  api 'org.febit:febit-common'
+  api 'org.febit:febit-lang'
 
   api 'javax.xml.bind:jaxb-api:2.3.1'
   api 'com.sun.xml.bind:jaxb-core:2.3.0.1'

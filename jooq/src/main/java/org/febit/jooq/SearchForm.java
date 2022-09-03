@@ -16,7 +16,7 @@
 package org.febit.jooq;
 
 import lombok.val;
-import org.febit.annotation.NonNullArgs;
+import org.febit.lang.annotation.NonNullArgs;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.springframework.core.annotation.AliasFor;

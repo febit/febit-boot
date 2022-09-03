@@ -17,7 +17,7 @@ package org.febit.jooq.codegen;
 
 import org.febit.jooq.codegen.meta.MetaUtils;
 import org.febit.jooq.codegen.spi.DatabaseFilter;
-import org.febit.util.JacksonUtils;
+import org.febit.lang.util.JacksonUtils;
 import org.jooq.codegen.FebitDevkitJavaGeneratorHack;
 import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.codegen.JavaWriter;

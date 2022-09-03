@@ -17,7 +17,7 @@ package org.febit.jooq.converter;
 
 import com.fasterxml.jackson.databind.JavaType;
 import lombok.val;
-import org.febit.util.JacksonUtils;
+import org.febit.lang.util.JacksonUtils;
 import org.jooq.JSON;
 import org.jooq.impl.AbstractConverter;
 

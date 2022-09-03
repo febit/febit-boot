@@ -18,7 +18,7 @@ package org.febit.jooq.codegen.meta;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
-import org.febit.util.StringWalker;
+import org.febit.lang.util.StringWalker;
 
 /**
  * Internal schema utils.

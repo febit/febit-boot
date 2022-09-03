@@ -20,7 +20,7 @@ ext {
       commonsExec        : '1.3',
       assertj            : '3.22.0',
       springBoot         : '2.7.3',
-      febitCommon        : '3.0.0-SNAPSHOT',
+      febitLang          : '3.0.0-SNAPSHOT',
       febitGradleDevkit  : '1.0.0-SNAPSHOT',
   ]
 
@@ -62,6 +62,7 @@ configure(javaModules()) {
       java = 'SLASHSTAR_STYLE'
     }
     include '**/*.java'
+    exclude '**/CodegenJooq.java'
     strictCheck false
     skipExistingHeaders false
     header rootProject.file('etc/licenseheader.txt')
@@ -86,8 +87,8 @@ configure(javaModules()) {
       mavenBom "org.springframework.boot:spring-boot-dependencies:${versions.springBoot}"
     }
     dependencies {
-      dependency "org.febit:febit-common:${versions.febitCommon}"
-      dependency "org.febit.devkit-gradle:febit-devkit-gradle-common:${versions.febitGradleDevkit}"
+      dependency "org.febit:febit-lang:${versions.febitLang}"
+      dependency "org.febit.devkit.gradle:febit-gradle-common:${versions.febitGradleDevkit}"
       dependency "com.google.code.findbugs:jsr305:${versions.jsr305}"
       dependency "com.github.spotbugs:spotbugs-annotations:${versions.spotbugs}"
       dependency "org.apache.commons:commons-exec:${versions.commonsExec}"

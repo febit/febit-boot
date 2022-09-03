@@ -16,7 +16,7 @@
 package org.febit.jooq;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import jodd.exception.UncheckedException;
+import org.febit.lang.UncheckedException;
 import org.jooq.Configuration;
 import org.jooq.RecordMapper;
 import org.jooq.Table;

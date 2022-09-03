@@ -15,4 +15,3 @@
  */
 package org.febit.jooq;
 
-import org.febit.annotation.NonNullApi;

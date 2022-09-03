@@ -21,7 +21,7 @@ mavenPlugin {
 dependencies {
   implementation project(':febit-jooq-codegen-meta')
   implementation project(':febit-jooq-codegen-runtime')
-  implementation 'org.febit.devkit-gradle:febit-devkit-gradle-common'
+  implementation 'org.febit.devkit.gradle:febit-gradle-common'
 
   implementation 'org.apache.maven:maven-plugin-api'
   implementation 'org.apache.maven:maven-core'

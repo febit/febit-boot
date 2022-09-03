@@ -17,7 +17,7 @@ package org.febit.devkit.gradle.codegen.jooq;
 
 import org.febit.devkit.gradle.util.FolderUtils;
 import org.febit.devkit.gradle.util.GradleUtils;
-import org.febit.jooq.codegen.meta.CodegenJooqModule;
+import org.febit.jooq.codegen.meta.CodegenJooq;
 import org.febit.jooq.codegen.meta.MetaUtils;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -67,7 +67,7 @@ public class CodegenJooqPlugin implements Plugin<Project> {
 
         if (!internalTestingMode) {
             deps.add(RUNTIME_NAME,
-                    "org.febit.jooq.codegen:febit-jooq-codegen-runtime:" + CodegenJooqModule.version()
+                    "org.febit.jooq.codegen:febit-jooq-codegen-runtime:" + CodegenJooq.version()
             );
         }
 

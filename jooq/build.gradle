@@ -7,7 +7,7 @@ ext {
 
 dependencies {
   api 'org.jooq:jooq'
-  api 'org.febit:febit-common'
+  api 'org.febit:febit-lang'
   api 'javax.persistence:javax.persistence-api'
   api 'org.springframework:spring-core'
 

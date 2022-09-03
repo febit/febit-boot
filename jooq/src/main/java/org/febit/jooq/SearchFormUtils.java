@@ -15,12 +15,12 @@
  */
 package org.febit.jooq;
 
-import jodd.exception.UncheckedException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.febit.util.Lists;
+import org.febit.lang.UncheckedException;
+import org.febit.lang.util.Lists;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
