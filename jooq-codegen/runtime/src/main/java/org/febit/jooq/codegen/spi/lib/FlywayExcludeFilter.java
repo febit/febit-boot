@@ -17,19 +17,17 @@ package org.febit.jooq.codegen.spi.lib;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.febit.jooq.codegen.spi.DatabaseFilter;
-import org.jooq.meta.Definition;
+import org.febit.jooq.codegen.spi.TableFilter;
 import org.jooq.meta.TableDefinition;
 
 @Slf4j
-public class FlywayExcludeFilter implements DatabaseFilter {
+public class FlywayExcludeFilter implements TableFilter {
 
     @Override
-    public boolean exclude(Definition def) {
-        if ((def instanceof TableDefinition)
-                && StringUtils.startsWithIgnoreCase(def.getName(),
+    public boolean exclude(TableDefinition def) {
+        if (StringUtils.startsWithIgnoreCase(def.getName(),
                 "flyway_")) {
-            log.debug("Excluded flyway table: {}", def.getName());
+            log.info("Excluded flyway table: {}", def.getName());
             return true;
         }
         return false;

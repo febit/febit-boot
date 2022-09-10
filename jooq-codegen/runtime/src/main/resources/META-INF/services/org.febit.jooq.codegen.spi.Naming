@@ -1,1 +1,2 @@
 org.febit.jooq.codegen.spi.DefaultNaming
+org.febit.jooq.codegen.spi.DefaultPackageNaming

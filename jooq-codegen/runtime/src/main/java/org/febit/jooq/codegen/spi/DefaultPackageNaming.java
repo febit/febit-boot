@@ -15,40 +15,32 @@
  */
 package org.febit.jooq.codegen.spi;
 
-import lombok.Setter;
-import org.febit.jooq.codegen.util.NamingUtils;
 import org.jooq.codegen.GeneratorStrategy;
-import org.jooq.meta.ColumnDefinition;
 import org.jooq.meta.Definition;
 import org.jooq.meta.TableDefinition;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
-import javax.annotation.Nullable;
-
 @Order(Ordered.LOWEST_PRECEDENCE)
-public class DefaultNaming implements Naming, SpiContext.Aware {
+public class DefaultPackageNaming implements Naming {
 
-    @Setter
-    private SpiContext context;
-
-    @Nullable
     @Override
-    public String memberField(Definition def, GeneratorStrategy.Mode mode) {
-        if (def instanceof ColumnDefinition) {
-            return NamingUtils.toLowerCamelCase(
-                    context.resolveOutputName(def)
-            );
-        }
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public String identifier(Definition def) {
-        if (def instanceof TableDefinition
-                || def instanceof ColumnDefinition) {
-            return context.resolveOutputName(def).toUpperCase();
+    public String getPackageName(String basePackage, Definition def, GeneratorStrategy.Mode mode) {
+        switch (mode) {
+            case RECORD:
+                return basePackage + ".record";
+            case POJO:
+                return basePackage + ".po";
+            case DAO:
+                return basePackage + ".dao";
+            case INTERFACE:
+                return basePackage + ".interfaces";
+            case DEFAULT:
+                if (def instanceof TableDefinition) {
+                    return basePackage + ".table";
+                }
+                break;
+            default:
         }
         return null;
     }

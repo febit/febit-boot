@@ -17,6 +17,9 @@ package org.febit.jooq.codegen;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.febit.jooq.codegen.spi.SpiContext;
+import org.febit.jooq.codegen.spi.SpiContextImpl;
 import org.febit.lang.util.Lists;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
@@ -27,18 +30,41 @@ import java.util.ServiceLoader;
 @UtilityClass
 class SpiUtils {
 
-    static <T> List<T> load(Class<T> type) {
 
+    static <T> List<T> load(Class<T> type, JooqGeneratorStrategy strategy) {
+        val spies = load(type);
+        val context = SpiContextImpl.of(strategy);
+        for (T spi : spies) {
+            if (spi instanceof SpiContext.Aware) {
+                ((SpiContext.Aware) spi).setContext(context);
+            }
+        }
+        return spies;
+    }
+
+    static <T> List<T> load(Class<T> type) {
         List<T> impls = Lists.collect(ServiceLoader.load(type));
-        AnnotationAwareOrderComparator.sort(impls);
+        SpiOrderComparator.sort(impls);
 
         if (log.isInfoEnabled()) {
             var spi = type.getSimpleName();
             for (var impl : impls) {
-                log.info("Loaded SPI [{}]: {}", spi, impl.getClass());
+                log.info("Loaded SPI [{}] in order: {}", spi, impl.getClass());
             }
         }
-
         return impls;
+    }
+
+    public static class SpiOrderComparator extends AnnotationAwareOrderComparator {
+
+        @Override
+        protected Integer findOrder(Object obj) {
+            val order = super.findOrder(obj);
+            if (order != null) {
+                return order;
+            }
+            // Default as Normal Priority
+            return 0;
+        }
     }
 }

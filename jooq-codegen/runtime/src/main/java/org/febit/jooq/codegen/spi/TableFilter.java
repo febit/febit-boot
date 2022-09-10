@@ -15,30 +15,19 @@
  */
 package org.febit.jooq.codegen.spi;
 
-import org.jooq.codegen.GeneratorStrategy;
+import org.jooq.meta.Database;
 import org.jooq.meta.Definition;
+import org.jooq.meta.TableDefinition;
 
-import javax.annotation.Nullable;
+public interface TableFilter extends Database.Filter {
 
-public interface Naming {
-
-    @Nullable
-    default String memberField(Definition def, GeneratorStrategy.Mode mode) {
-        return null;
+    @Override
+    default boolean exclude(Definition definition) {
+        if (definition instanceof TableDefinition) {
+            return exclude((TableDefinition) definition);
+        }
+        return false;
     }
 
-    @Nullable
-    default String identifier(Definition def) {
-        return null;
-    }
-
-    @Nullable
-    default String getPackageName(String basePackage, Definition def, GeneratorStrategy.Mode mode) {
-        return null;
-    }
-
-    @Nullable
-    default String className(Definition def) {
-        return null;
-    }
+    boolean exclude(TableDefinition definition);
 }

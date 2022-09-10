@@ -15,30 +15,13 @@
  */
 package org.febit.jooq.codegen.spi;
 
-import org.jooq.codegen.GeneratorStrategy;
-import org.jooq.meta.Definition;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.febit.jooq.codegen.JooqGeneratorStrategy;
 
-import javax.annotation.Nullable;
+@RequiredArgsConstructor(staticName = "of")
+public class SpiContextImpl implements SpiContext {
 
-public interface Naming {
-
-    @Nullable
-    default String memberField(Definition def, GeneratorStrategy.Mode mode) {
-        return null;
-    }
-
-    @Nullable
-    default String identifier(Definition def) {
-        return null;
-    }
-
-    @Nullable
-    default String getPackageName(String basePackage, Definition def, GeneratorStrategy.Mode mode) {
-        return null;
-    }
-
-    @Nullable
-    default String className(Definition def) {
-        return null;
-    }
+    @Getter
+    private final JooqGeneratorStrategy strategy;
 }

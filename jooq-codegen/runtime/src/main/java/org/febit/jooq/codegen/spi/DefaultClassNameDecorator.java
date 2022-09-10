@@ -15,42 +15,34 @@
  */
 package org.febit.jooq.codegen.spi;
 
-import lombok.Setter;
-import org.febit.jooq.codegen.util.NamingUtils;
 import org.jooq.codegen.GeneratorStrategy;
-import org.jooq.meta.ColumnDefinition;
 import org.jooq.meta.Definition;
 import org.jooq.meta.TableDefinition;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
-import javax.annotation.Nullable;
-
 @Order(Ordered.LOWEST_PRECEDENCE)
-public class DefaultNaming implements Naming, SpiContext.Aware {
+public class DefaultClassNameDecorator implements ClassNameDecorator {
 
-    @Setter
-    private SpiContext context;
-
-    @Nullable
     @Override
-    public String memberField(Definition def, GeneratorStrategy.Mode mode) {
-        if (def instanceof ColumnDefinition) {
-            return NamingUtils.toLowerCamelCase(
-                    context.resolveOutputName(def)
-            );
-        }
-        return null;
-    }
+    public String decorate(Definition def, String name, GeneratorStrategy.Mode mode) {
 
-    @Nullable
-    @Override
-    public String identifier(Definition def) {
-        if (def instanceof TableDefinition
-                || def instanceof ColumnDefinition) {
-            return context.resolveOutputName(def).toUpperCase();
+        switch (mode) {
+            case INTERFACE:
+                return "I" + name;
+            case RECORD:
+                return name + "Record";
+            case DAO:
+                return name + "Dao";
+            case POJO:
+                return name + "PO";
+            case DEFAULT:
+                if (def instanceof TableDefinition) {
+                    return "T" + name;
+                }
+                return name;
+            default:
+                return name;
         }
-        return null;
     }
-
 }

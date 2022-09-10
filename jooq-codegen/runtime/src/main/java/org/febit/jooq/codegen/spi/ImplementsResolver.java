@@ -15,7 +15,8 @@
  */
 package org.febit.jooq.codegen.spi;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.febit.jooq.codegen.JooqGeneratorStrategy;
 import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.meta.Definition;
@@ -27,19 +28,34 @@ public interface ImplementsResolver {
 
     void resolve(Context context);
 
-    @Data
-    class Context {
+
+    interface Context extends SpiContext {
+
+        void addImpl(String impl);
+
+        JooqGeneratorStrategy getStrategy();
+
+        Definition getDef();
+
+        GeneratorStrategy.Mode getMode();
+
+        default boolean isTableDefinition() {
+            return getDef() instanceof TableDefinition;
+        }
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    class ContextImpl implements Context {
         private final JooqGeneratorStrategy strategy;
         private final Definition def;
         private final GeneratorStrategy.Mode mode;
         private final Consumer<String> consumer;
 
+        @Override
         public void addImpl(String impl) {
             consumer.accept(impl);
         }
 
-        public boolean isTableDefinition() {
-            return def instanceof TableDefinition;
-        }
     }
 }

@@ -16,7 +16,7 @@
 package org.febit.jooq.codegen;
 
 import org.febit.jooq.codegen.meta.MetaUtils;
-import org.febit.jooq.codegen.spi.DatabaseFilter;
+import org.febit.jooq.codegen.spi.TableFilter;
 import org.febit.lang.util.JacksonUtils;
 import org.jooq.codegen.FebitDevkitJavaGeneratorHack;
 import org.jooq.codegen.GeneratorStrategy;
@@ -32,11 +32,11 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"unused"})
 public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
 
-    private static final List<DatabaseFilter> DB_FILTERS = SpiUtils.load(DatabaseFilter.class);
+    private static final List<TableFilter> TABLE_FILTERS = SpiUtils.load(TableFilter.class);
 
     @Override
     protected void initDatabase(Database db) {
-        DB_FILTERS.forEach(db::addFilter);
+        TABLE_FILTERS.forEach(db::addFilter);
     }
 
     @Override

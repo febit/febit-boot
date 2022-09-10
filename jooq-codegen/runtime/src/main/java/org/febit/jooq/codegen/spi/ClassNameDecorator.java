@@ -15,7 +15,13 @@
  */
 package org.febit.jooq.codegen.spi;
 
-import org.jooq.meta.Database;
+import org.jooq.codegen.GeneratorStrategy;
+import org.jooq.meta.Definition;
 
-public interface DatabaseFilter extends Database.Filter {
+import javax.annotation.Nullable;
+
+public interface ClassNameDecorator {
+
+    @Nullable
+    String decorate(Definition def, String name, GeneratorStrategy.Mode mode);
 }

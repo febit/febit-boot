@@ -15,30 +15,12 @@
  */
 package org.febit.jooq.codegen.spi;
 
-import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.meta.Definition;
 
 import javax.annotation.Nullable;
 
-public interface Naming {
+public interface OutputNameResolver {
 
     @Nullable
-    default String memberField(Definition def, GeneratorStrategy.Mode mode) {
-        return null;
-    }
-
-    @Nullable
-    default String identifier(Definition def) {
-        return null;
-    }
-
-    @Nullable
-    default String getPackageName(String basePackage, Definition def, GeneratorStrategy.Mode mode) {
-        return null;
-    }
-
-    @Nullable
-    default String className(Definition def) {
-        return null;
-    }
+    String resolve(Definition definition);
 }

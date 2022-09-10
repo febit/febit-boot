@@ -16,8 +16,11 @@
 package org.febit.jooq.codegen;
 
 import lombok.extern.slf4j.Slf4j;
+import org.febit.jooq.codegen.spi.ClassNameDecorator;
 import org.febit.jooq.codegen.spi.ImplementsResolver;
 import org.febit.jooq.codegen.spi.Naming;
+import org.febit.jooq.codegen.spi.OutputNameResolver;
+import org.febit.jooq.codegen.util.NamingUtils;
 import org.jooq.codegen.DefaultGeneratorStrategy;
 import org.jooq.meta.*;
 
@@ -27,8 +30,11 @@ import java.util.List;
 @Slf4j
 public class JooqGeneratorStrategy extends DefaultGeneratorStrategy {
 
-    private static final List<Naming> NAMINGS = SpiUtils.load(Naming.class);
-    private static final List<ImplementsResolver> IMPLS_RESOLVERS = SpiUtils.load(ImplementsResolver.class);
+    private final List<ImplementsResolver> implsResolvers = SpiUtils.load(ImplementsResolver.class, this);
+
+    private final Spi<Naming> namingSpi = Spi.load(Naming.class, this);
+    private final Spi<OutputNameResolver> outputNameResolverSpi = Spi.load(OutputNameResolver.class, this);
+    private final Spi<ClassNameDecorator> classNameDecoratorSpi = Spi.load(ClassNameDecorator.class, this);
 
     public static ColumnDefinition getPkColumn(TableDefinition table) {
         var pk = table.getPrimaryKey();
@@ -40,6 +46,13 @@ public class JooqGeneratorStrategy extends DefaultGeneratorStrategy {
             return null;
         }
         return pks.get(0);
+    }
+
+    public String resolveOutputName(Definition definition) {
+        return outputNameResolverSpi.compute(
+                r -> r.resolve(definition),
+                definition::getOutputName
+        );
     }
 
     public String resolveColumnType(ColumnDefinition column) {
@@ -73,46 +86,40 @@ public class JooqGeneratorStrategy extends DefaultGeneratorStrategy {
     @Override
     public List<String> getJavaClassImplements(Definition def, Mode mode) {
         var impls = super.getJavaClassImplements(def, mode);
-        var context = new ImplementsResolver.Context(this, def, mode, impls::add);
-        IMPLS_RESOLVERS.forEach(r -> r.resolve(context));
+        var context = new ImplementsResolver.ContextImpl(this, def, mode, impls::add);
+        implsResolvers.forEach(r -> r.resolve(context));
         return impls;
     }
 
     @Override
     public String getJavaIdentifier(Definition def) {
-        for (var naming : NAMINGS) {
-            var name = naming.getIdentifier(def);
-            if (name != null) {
-                return name;
-            }
+        var name = namingSpi.compute(n -> n.identifier(def));
+        if (name != null) {
+            return name;
         }
         return super.getJavaIdentifier(def);
     }
 
     @Override
     public String getJavaMemberName(Definition def, Mode mode) {
-        for (var resolver : NAMINGS) {
-            var name = resolver.getJavaMemberName(def, mode);
-            if (name != null) {
-                return name;
-            }
+        var name = namingSpi.compute(n -> n.memberField(def, mode));
+        if (name != null) {
+            return name;
         }
         return super.getJavaMemberName(def, mode);
     }
 
     @Override
     public String getJavaPackageName(Definition def, Mode mode) {
-        var targetPkg = getTargetPackage();
-        if (def.getDatabase().getCatalogs().size() > 1) {
-            targetPkg += "." + getJavaIdentifier(def.getCatalog()).toLowerCase();
-        }
-        for (var resolver : NAMINGS) {
-            var name = resolver.getPackageName(targetPkg, def, mode);
-            if (name != null) {
-                return name;
-            }
-        }
-        return super.getJavaPackageName(def, mode);
+
+        var targetPkg = def.getDatabase().getCatalogs().size() <= 1
+                ? getTargetPackage()
+                : getTargetPackage() + "." + getJavaIdentifier(def.getCatalog()).toLowerCase();
+
+        return namingSpi.compute(
+                n -> n.getPackageName(targetPkg, def, mode),
+                () -> super.getJavaPackageName(def, mode)
+        );
     }
 
     @Override
@@ -128,13 +135,17 @@ public class JooqGeneratorStrategy extends DefaultGeneratorStrategy {
             return "DefaultSchema";
         }
 
-        for (var resolver : NAMINGS) {
-            var name = resolver.getClassName(def, mode);
-            if (name != null) {
-                return name;
-            }
-        }
-        throw new IllegalStateException("Should not run to here!");
+        var name = namingSpi.compute(
+                n -> n.className(def),
+                () -> NamingUtils.toUpperCamelCase(
+                        resolveOutputName(def)
+                )
+        );
+
+        return classNameDecoratorSpi.compute(
+                d -> d.decorate(def, name, mode),
+                () -> name
+        );
     }
 
 }
