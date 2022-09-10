@@ -66,10 +66,10 @@ public class JooqCodegenPlugin extends AbstractMojo {
     private boolean skip;
 
     @Parameter(
-            property = "codegen.jooq.timeToInstance",
+            property = "codegen.jooq.timeToInstant",
             defaultValue = "true"
     )
-    private boolean timeToInstance;
+    private boolean timeToInstant;
 
     /**
      * The JDBC settings.
@@ -126,7 +126,7 @@ public class JooqCodegenPlugin extends AbstractMojo {
 
     private List<ForcedType> forcedTypes() {
         var list = new ArrayList<ForcedType>();
-        if (timeToInstance) {
+        if (timeToInstant) {
             ForcedTypes.timeToInstant(list::add);
         }
 
