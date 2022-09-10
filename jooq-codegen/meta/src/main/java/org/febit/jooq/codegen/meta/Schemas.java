@@ -71,6 +71,8 @@ class Schemas {
             case "datetimez":
             case "zoneddatetime":
                 return PrimitiveSchema.of(Schema.Type.ZONED_DATETIME);
+            case "json":
+                return readElementSchema(Schema.Type.JSON, walker);
             case "array":
                 return readElementSchema(Schema.Type.ARRAY, walker);
             case "list":
