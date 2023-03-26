@@ -2,25 +2,32 @@
 root = true
 
 [*]
-end_of_line = lf
 charset = utf-8
+end_of_line = lf
 indent_style = space
 max_line_length = 120
 
-[*.{java, kt, groovy}]
+[*.{java,kt,groovy}]
 indent_size = 4
-continuation_indent_size = 8
 trim_trailing_whitespace = true
 insert_final_newline = true
+ij_continuation_indent_size = 8
+ij_java_class_count_to_use_import_on_demand = 99
+ij_java_names_count_to_use_import_on_demand = 99
+ij_java_keep_blank_lines_in_code = 1
+ij_java_keep_blank_lines_in_declarations = 1
+ij_java_keep_blank_lines_before_right_brace = 1
+ij_java_keep_blank_lines_between_package_declaration_and_header = 1
 
-[*.{js, yaml, yml, json, xml, sh, wim, props, properties, gradle}]
+[*.{sh,gradle,js,ts,vue,json,html,xml,less,scss,css,yaml,yml,wim,props,properties}]
 indent_size = 2
-continuation_indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
+ij_continuation_indent_size = 4
 
 [*.bat]
 end_of_line = crlf
+insert_final_newline = true
 
 [*.md]
 indent_size = 2

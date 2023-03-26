@@ -16,7 +16,12 @@
 package org.febit.jooq.codegen.meta;
 
 import lombok.experimental.UtilityClass;
-import org.jooq.meta.jaxb.*;
+import org.jooq.meta.jaxb.Configuration;
+import org.jooq.meta.jaxb.Database;
+import org.jooq.meta.jaxb.Generate;
+import org.jooq.meta.jaxb.Generator;
+import org.jooq.meta.jaxb.Strategy;
+import org.jooq.meta.jaxb.Target;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -39,7 +44,7 @@ public class MetaUtils {
     public static final String CLASS_GENERATOR = CODEGEN_PKG + ".JooqJavaGenerator";
     public static final String CLASS_STRATEGY = CODEGEN_PKG + ".JooqGeneratorStrategy";
     public static final String CODEGEN_JOOQ = "codegenJooq";
-    public static final String GROUP_NAME = "Codegen jOOQ";
+    public static final String GROUP_NAME = "codegen";
     public static final String CODEGEN_JOOQ_FOLDER = "codegen-jooq";
     public static final String CLASS_MAIN = "org.jooq.codegen.GenerationTool";
 
