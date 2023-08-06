@@ -1,0 +1,32 @@
+plugins {
+  id 'java-gradle-plugin'
+}
+
+test {
+}
+
+gradlePlugin {
+  plugins {
+    jooqPlugin {
+      id = 'org.febit.boot.jooq'
+      implementationClass = 'org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin'
+    }
+  }
+}
+
+dependencies {
+
+  compileOnly localGroovy()
+  compileOnly gradleApi()
+
+  implementation project(':febit-boot-devkit-jooq-meta')
+  implementation 'org.febit.devkit.gradle:febit-gradle-common'
+
+  implementation 'commons-codec:commons-codec'
+  implementation 'org.apache.commons:commons-exec'
+
+  testImplementation localGroovy()
+  testImplementation gradleApi()
+
+  testRuntimeOnly 'com.h2database:h2'
+}

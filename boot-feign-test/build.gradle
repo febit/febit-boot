@@ -1,0 +1,8 @@
+description = 'Febit Feign Test'
+
+dependencies {
+  api project(':febit-boot-feign')
+  api 'io.github.openfeign:feign-okhttp'
+  api 'com.squareup.okhttp3:logging-interceptor'
+  api 'org.springframework.cloud:spring-cloud-context'
+}

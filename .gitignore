@@ -1,17 +1,26 @@
 .DS_Store
+*.log
 
-target/
-build/
+.m2
+target
+build
+dist
+dist-ssr
+node_modules
 
-!**/src/**/target/
-!**/src/**/build/
+!**/src/**/target
+!**/src/**/build
+!**/src/**/dist
+!**/src/**/dist-ssr
 
-.gradle
-gradle.properties
-lombok.config
+/.gradle
+/gradle.properties
 
 *.iml
 .idea
 .project
 .classpath
 .settings
+
+.vscode/*
+!.vscode/extensions.json

@@ -1,4 +1,4 @@
-# Febit jOOQ
+# Febit Boot
 
 ## Building reference
 

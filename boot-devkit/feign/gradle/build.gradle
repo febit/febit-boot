@@ -1,0 +1,25 @@
+plugins {
+  id 'java-gradle-plugin'
+}
+
+description = 'A gradle plugin to generate feign client'
+
+gradlePlugin {
+  plugins {
+    feign {
+      id = 'org.febit.boot.feign'
+      implementationClass = 'org.febit.boot.devkit.feign.gradle.FeignCodegenPlugin'
+    }
+  }
+}
+
+dependencies {
+  api 'org.febit.devkit.gradle:febit-gradle-common'
+  api project(':febit-boot-devkit-feign-common')
+
+  compileOnly localGroovy()
+  compileOnly gradleApi()
+  testImplementation localGroovy()
+  testImplementation gradleApi()
+}
+

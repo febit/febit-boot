@@ -1,30 +1,36 @@
 pluginManagement {
   repositories {
-    mavenLocal()
-    gradlePluginPortal()
-    maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
-    maven { url 'https://maven.aliyun.com/repository/central' }
+    maven { url "https://repo.huaweicloud.com/repository/maven" }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    gradlePluginPortal()
   }
 }
 
-rootProject.name = 'febit-jooq'
+rootProject.name = 'febit-boot'
 
-subModule 'jooq'
+boot 'boot-bom'
+boot 'boot-dependencies'
 
-codegenModule 'meta'
-codegenModule 'runtime'
-codegenModule 'gradle-plugin'
-codegenModule 'maven-plugin'
+boot 'boot-jooq'
+boot 'boot-feign'
+boot 'boot-feign-test'
 
-def subModule(String name) {
-  String fullName = ":febit-${name}"
-  include fullName
-  project(fullName).projectDir = file("${name}")
+devkit 'feign/common'
+devkit 'feign/gradle'
+
+devkit 'jooq/gradle'
+devkit 'jooq/maven-plugin'
+devkit 'jooq/meta'
+devkit 'jooq/runtime'
+
+def boot(String dir) {
+  def name = ":febit-$dir"
+  include name
+  project(name).projectDir = file(dir)
 }
 
-def codegenModule(String name) {
-  def fullName = ':febit-jooq-codegen-' + name
-  include fullName
-  project(fullName).projectDir = file("jooq-codegen/${name}")
+def devkit(String dir) {
+  def name = ':febit-boot-devkit-' + dir.replaceAll("/", "-")
+  include name
+  project(name).projectDir = file("boot-devkit/$dir")
 }

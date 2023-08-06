@@ -1,0 +1,21 @@
+plugins {
+  id 'de.benediktritter.maven-plugin-development'
+}
+
+test {
+}
+
+mavenPlugin {
+  // see: https://www.benediktritter.de/maven-plugin-development/
+  helpMojoPackage = 'org.febit.boot.devkit.jooq.maven'
+}
+
+dependencies {
+  implementation project(':febit-boot-devkit-jooq-meta')
+  implementation project(':febit-boot-devkit-jooq-runtime')
+  implementation 'org.febit.devkit.gradle:febit-gradle-common'
+
+  implementation 'org.apache.maven:maven-plugin-api'
+  implementation 'org.apache.maven:maven-core'
+  implementation 'org.apache.maven.plugin-tools:maven-plugin-annotations'
+}

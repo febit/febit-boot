@@ -1,0 +1,2 @@
+org.febit.boot.devkit.jooq.runtime.spi.DefaultNaming
+org.febit.boot.devkit.jooq.runtime.spi.DefaultPackageNaming

@@ -4,13 +4,15 @@ root = true
 [*]
 charset = utf-8
 end_of_line = lf
-indent_style = space
 max_line_length = 120
-
-[*.{java,kt,groovy}]
-indent_size = 4
-trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
 insert_final_newline = true
+trim_trailing_whitespace = true
+ij_continuation_indent_size = 4
+
+[*.{java,kt}]
+indent_size = 4
 ij_continuation_indent_size = 8
 ij_java_class_count_to_use_import_on_demand = 99
 ij_java_names_count_to_use_import_on_demand = 99
@@ -18,22 +20,21 @@ ij_java_keep_blank_lines_in_code = 1
 ij_java_keep_blank_lines_in_declarations = 1
 ij_java_keep_blank_lines_before_right_brace = 1
 ij_java_keep_blank_lines_between_package_declaration_and_header = 1
+ij_java_packages_to_use_import_on_demand = $org.junit.jupiter.api.Assertions.**
 
-[*.{sh,gradle,js,ts,vue,json,html,xml,less,scss,css,yaml,yml,wim,props,properties}]
-indent_size = 2
-trim_trailing_whitespace = true
-insert_final_newline = true
-ij_continuation_indent_size = 4
+[*.groovy]
+indent_size = 4
+ij_groovy_keep_blank_lines_before_right_brace = 1
+ij_groovy_keep_blank_lines_in_code = 1
+ij_groovy_keep_blank_lines_in_declarations = 1
+ij_groovy_class_count_to_use_import_on_demand = 99
+ij_groovy_names_count_to_use_import_on_demand = 99
 
 [*.bat]
 end_of_line = crlf
-insert_final_newline = true
 
 [*.md]
-indent_size = 2
 trim_trailing_whitespace = false
-insert_final_newline = true
 
 [Makefile]
 indent_style = tab
-insert_final_newline = true

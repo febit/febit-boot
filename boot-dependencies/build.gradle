@@ -1,0 +1,5 @@
+description = 'Febit Boot Dependencies'
+
+standardMavenPublish {
+  importBom project(":febit-boot-bom")
+}

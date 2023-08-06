@@ -1,0 +1,11 @@
+description = 'Febit Feign'
+
+codegenModule {
+  module 'org.febit.FebitFeign', febitTmpl()
+}
+
+dependencies {
+  api 'org.febit:febit-lang'
+  api 'io.github.openfeign:feign-core'
+  api 'org.springframework.cloud:spring-cloud-openfeign-core'
+}

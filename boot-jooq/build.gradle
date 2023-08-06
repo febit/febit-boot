@@ -1,0 +1,13 @@
+dependencies {
+  api 'org.jooq:jooq'
+  api 'org.febit:febit-lang'
+  api 'jakarta.persistence:jakarta.persistence-api'
+  api 'org.springframework:spring-core'
+
+  testRuntimeOnly 'com.h2database:h2'
+}
+
+configurations {
+  testCompile.exclude module: 'logback-classic'
+}
+

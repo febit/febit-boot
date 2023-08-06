@@ -1,60 +1,48 @@
 plugins {
   id 'com.github.hierynomus.license' version '0.16.1'
-  id 'org.febit.standard-java' version '1.0.0-SNAPSHOT'
-  id 'org.febit.codegen-module' version '1.0.0-SNAPSHOT' apply false
-  id 'de.benediktritter.maven-plugin-development' version '0.4.0' apply false
+  id 'org.febit.standard-java' version '1.1.0-SNAPSHOT'
+  id 'org.febit.standard-maven-publish' version '1.1.0-SNAPSHOT'
+  id 'org.febit.codegen-module' version '1.1.0-SNAPSHOT'
+  id 'de.benediktritter.maven-plugin-development' version '0.4.2' apply false
 }
 
-group 'org.febit.jooq'
-version '1.0.0-SNAPSHOT'
+group 'org.febit.boot'
+version '3.0.0-SNAPSHOT'
+
+description = 'Febit Boot'
 
 ext {
 
   versions = [
-      jsr305             : '3.0.2',
-      spotbugs           : '4.7.1',
-      commonsIo          : '2.6',
-      commonsLang3       : '3.12.0',
+      commonsIo        : '2.13.0',
       commonsCompress    : '1.21',
       commonsCollections4: '4.4',
       commonsExec        : '1.3',
-      assertj            : '3.22.0',
-      springBoot         : '2.7.3',
-      febitLang          : '3.0.0-SNAPSHOT',
-      febitGradleDevkit  : '1.0.0-SNAPSHOT',
+
+      febitCommons     : '3.0.0-SNAPSHOT',
+      febitDevkitGradle: '1.1.0-SNAPSHOT',
+
+      springBoot       : '3.1.2',
+      springCloud      : '2022.0.4',
   ]
 
 }
 
 allprojects {
+  apply plugin: 'com.github.hierynomus.license'
 
   group rootProject.group
   version rootProject.version
 
   repositories {
-    mavenLocal()
-    maven { url "https://maven.aliyun.com/repository/central" }
+    maven { url "https://repo.huaweicloud.com/repository/maven" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
-}
 
-def javaModules() {
-  subprojects.findAll {
-    !it.name.endsWith('-bom')
-  }
-}
-
-configure(javaModules()) {
-  apply plugin: 'java-library'
-  apply plugin: 'com.github.hierynomus.license'
-
-  apply from: "${rootDir}/gradle/publish-maven.gradle"
-
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
-
-  test {
-    useJUnitPlatform()
+  standardMavenPublish {
+    pom {
+      customPom(it)
+    }
   }
 
   license {
@@ -62,21 +50,36 @@ configure(javaModules()) {
       java = 'SLASHSTAR_STYLE'
     }
     include '**/*.java'
-    exclude '**/CodegenJooq.java'
+    exclude '**/*Mojo.java'
+    exclude '**/JooqCodegen.java'
     strictCheck false
     skipExistingHeaders false
-    header rootProject.file('etc/licenseheader.txt')
+    header rootProject.file('etc/license-header.txt')
+  }
+}
+
+configure(subprojects.findAll {
+  !it.name.endsWith('-bom')
+}) {
+  apply plugin: 'java-library'
+
+  java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
+
+  test {
+    useJUnitPlatform()
   }
 
   dependencies {
-    compileOnly 'com.google.code.findbugs:jsr305'
-    compileOnly 'com.github.spotbugs:spotbugs-annotations'
+    compileOnly 'org.febit:febit-annotations-optional'
+    testCompileOnly 'org.febit:febit-annotations-optional'
 
-    testImplementation 'org.slf4j:slf4j-api'
-    testImplementation 'org.assertj:assertj-core'
-    testImplementation 'org.mockito:mockito-junit-jupiter'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.febit:febit-test-common'
+    testRuntimeOnly 'org.slf4j:slf4j-simple'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
   }
 
   dependencyManagement {
@@ -84,19 +87,16 @@ configure(javaModules()) {
       cacheChangingModulesFor 0, 'seconds'
     }
     imports {
+      mavenBom "org.febit:febit-commons-bom:${versions.febitCommons}"
       mavenBom "org.springframework.boot:spring-boot-dependencies:${versions.springBoot}"
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${versions.springCloud}"
     }
     dependencies {
-      dependency "org.febit:febit-lang:${versions.febitLang}"
-      dependency "org.febit.devkit.gradle:febit-gradle-common:${versions.febitGradleDevkit}"
-      dependency "com.google.code.findbugs:jsr305:${versions.jsr305}"
-      dependency "com.github.spotbugs:spotbugs-annotations:${versions.spotbugs}"
+      dependency "org.febit.devkit.gradle:febit-gradle-common:${versions.febitDevkitGradle}"
       dependency "org.apache.commons:commons-exec:${versions.commonsExec}"
       dependency "org.apache.commons:commons-compress:${versions.commonsCompress}"
-      dependency "org.apache.commons:commons-lang3:${versions.commonsLang3}"
       dependency "org.apache.commons:commons-collections4:${versions.commonsCollections4}"
       dependency "commons-io:commons-io:${versions.commonsIo}"
-      dependency "org.assertj:assertj-core:${versions.assertj}"
 
       dependency 'org.apache.maven:maven-plugin-api:3.0'
       dependency 'org.apache.maven:maven-core:3.0'
@@ -104,4 +104,38 @@ configure(javaModules()) {
     }
   }
 
+}
+
+def customPom(MavenPom pom) {
+  pom.with {
+    url = 'https://github.com/febit/febit-boot'
+    organization {
+      name = 'Febit'
+      url = 'https://github.com/febit'
+    }
+    licenses {
+      license {
+        name = 'Apache License, Version 2.0'
+        url = 'https://github.com/febit/febit-boot/blob/main/LICENSE.txt'
+        distribution = 'repo'
+      }
+    }
+    scm {
+      url = 'https://github.com/febit/febit-boot'
+      connection = 'scm:git:https://github.com/febit/febit-boot.git'
+      developerConnection = 'scm:git:https://github.com/febit/febit-boot.git'
+    }
+    issueManagement {
+      system = 'GitHub'
+      url = 'https://github.com/febit/febit-boot/issues'
+    }
+    developers {
+      developer {
+        id = 'zqq'
+        name = 'Zhu Qingqing'
+        email = 'zqq@febit.org'
+        timezone = '+8'
+      }
+    }
+  }
 }

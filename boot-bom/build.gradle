@@ -1,0 +1,3 @@
+apply plugin: 'org.febit.standard-bom'
+
+description = 'Febit Boot BOM'

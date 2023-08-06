@@ -1,0 +1,10 @@
+dependencies {
+  api 'commons-io:commons-io'
+  api 'org.jooq:jooq-codegen'
+  api 'org.springframework:spring-core'
+
+  api project(':febit-boot-devkit-jooq-meta')
+
+  testRuntimeOnly 'org.slf4j:slf4j-simple'
+  testRuntimeOnly 'com.h2database:h2'
+}
