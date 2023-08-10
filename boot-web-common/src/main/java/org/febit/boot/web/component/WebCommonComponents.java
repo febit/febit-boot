@@ -13,16 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.feign;
+package org.febit.boot.web.component;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class ApiArgsHolder {
-
-    static final ThreadLocal<Object[]> HOLDER = new ThreadLocal<>();
-
-    public static Object[] args() {
-        return HOLDER.get();
-    }
+public final class WebCommonComponents {
 }

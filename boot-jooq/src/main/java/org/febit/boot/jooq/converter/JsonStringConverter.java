@@ -16,7 +16,6 @@
 package org.febit.boot.jooq.converter;
 
 import com.fasterxml.jackson.databind.JavaType;
-import lombok.val;
 import org.febit.lang.util.JacksonUtils;
 import org.jooq.impl.AbstractConverter;
 
@@ -35,33 +34,33 @@ public class JsonStringConverter<V> extends AbstractConverter<String, V> {
         this.beanJsonType = beanJsonType;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes"})
     public static <V> JsonStringConverter<Map<String, V>> forBeanMap(Class<V> beanType) {
         return forBeanMap(String.class, beanType);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <K, V> JsonStringConverter<Map<K, V>> forBeanMap(Class<K> keyType, Class<V> beanType) {
-        val type = JacksonUtils.TYPE_FACTORY.constructMapType(
+        var type = JacksonUtils.TYPE_FACTORY.constructMapType(
                 Map.class, keyType, beanType);
         return new JsonStringConverter(Map.class, type);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <V> JsonStringConverter<List<V>> forBeanList(Class<V> beanType) {
-        val type = JacksonUtils.TYPE_FACTORY.constructCollectionType(
+        var type = JacksonUtils.TYPE_FACTORY.constructCollectionType(
                 List.class, beanType);
         return new JsonStringConverter(List.class, type);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <V> JsonStringConverter<V[]> forBeanArray(Class<V> beanType) {
-        val type = JacksonUtils.TYPE_FACTORY.constructArrayType(beanType);
+        var type = JacksonUtils.TYPE_FACTORY.constructArrayType(beanType);
         return new JsonStringConverter(Array.newInstance(beanType, 0).getClass(), type);
     }
 
     public static <V> JsonStringConverter<V> forBean(Class<V> beanType) {
-        val type = JacksonUtils.TYPE_FACTORY.constructType(beanType);
+        var type = JacksonUtils.TYPE_FACTORY.constructType(beanType);
         return new JsonStringConverter<>(beanType, type);
     }
 

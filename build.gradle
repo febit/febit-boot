@@ -21,7 +21,8 @@ ext {
 
       febitCommons     : '3.0.0-SNAPSHOT',
       febitDevkitGradle: '1.1.0-SNAPSHOT',
-
+      swagger3         : '2.2.15',
+      springdoc        : '2.2.0',
       springBoot       : '3.1.2',
       springCloud      : '2022.0.4',
   ]
@@ -52,6 +53,8 @@ allprojects {
     include '**/*.java'
     exclude '**/*Mojo.java'
     exclude '**/JooqCodegen.java'
+    exclude '**/FebitFeign.java'
+    exclude '**/FebitWebCommon.java'
     strictCheck false
     skipExistingHeaders false
     header rootProject.file('etc/license-header.txt')
@@ -92,11 +95,20 @@ configure(subprojects.findAll {
       mavenBom "org.springframework.cloud:spring-cloud-dependencies:${versions.springCloud}"
     }
     dependencies {
+      dependencySet(group: 'org.springdoc', version: "${versions.springdoc}") {
+        entry 'springdoc-openapi-starter-common'
+        entry 'springdoc-openapi-starter-webmvc-api'
+        entry 'springdoc-openapi-starter-webmvc-ui'
+        entry 'springdoc-openapi-starter-webflux-api'
+        entry 'springdoc-openapi-starter-webflux-ui'
+        entry 'springdoc-openapi-tests'
+      }
       dependency "org.febit.devkit.gradle:febit-gradle-common:${versions.febitDevkitGradle}"
       dependency "org.apache.commons:commons-exec:${versions.commonsExec}"
       dependency "org.apache.commons:commons-compress:${versions.commonsCompress}"
       dependency "org.apache.commons:commons-collections4:${versions.commonsCollections4}"
       dependency "commons-io:commons-io:${versions.commonsIo}"
+      dependency "io.swagger.core.v3:swagger-annotations:${versions.swagger3}"
 
       dependency 'org.apache.maven:maven-plugin-api:3.0'
       dependency 'org.apache.maven:maven-core:3.0'

@@ -36,42 +36,38 @@ import java.util.Map;
         "squid:S00112", // Generic exceptions should never be thrown
         "squid:S1172", // Unused method parameters should be removed
 })
-public class InvocationHandlerImpl implements InvocationHandler {
+public class StandardInvocationHandler implements InvocationHandler {
 
     protected final Target<?> target;
     protected final Map<Method, InvocationHandlerFactory.MethodHandler> dispatch;
     protected final Decoder decoder;
 
     public static InvocationHandlerFactory factory(Decoder decoder) {
-        return (target, dispatch) -> new InvocationHandlerImpl(target, dispatch, decoder);
+        return (target, dispatch) -> new StandardInvocationHandler(target, dispatch, decoder);
     }
 
     @Nullable
     @Override
     public Object invoke(Object proxy, Method method, @Nullable Object[] args) throws Throwable {
-        switch (method.getName()) {
-            case "equals":
-                return invokeEquals(args);
-            case "hashCode":
-                return hashCode();
-            case "toString":
-                return toString();
-            default:
-                return invoke(method, args);
-        }
+        return switch (method.getName()) {
+            case "equals" -> invokeEquals(args);
+            case "hashCode" -> hashCode();
+            case "toString" -> toString();
+            default -> invoke(method, args);
+        };
     }
 
     @Nullable
     protected Object invoke(Method method, @Nullable Object[] args) throws Throwable {
         var handler = this.dispatch.get(method);
         try {
-            ApiArgsHolder.HOLDER.set(args != null ? args : ArrayUtils.EMPTY_OBJECT_ARRAY);
+            FeignApiArgs.HOLDER.set(args != null ? args : ArrayUtils.EMPTY_OBJECT_ARRAY);
             return handler.invoke(args);
         } catch (Exception ex) {
-            ApiArgsHolder.HOLDER.remove();
-            return handleException(ex, method, args);
+            FeignApiArgs.HOLDER.remove();
+            return handleGenericException(method, args, ex);
         } finally {
-            ApiArgsHolder.HOLDER.remove();
+            FeignApiArgs.HOLDER.remove();
         }
     }
 
@@ -83,15 +79,15 @@ public class InvocationHandlerImpl implements InvocationHandler {
     }
 
     @Nullable
-    protected Object handleException(Exception ex, Method method, @Nullable Object[] args) throws Exception {
+    protected Object handleGenericException(Method method, @Nullable Object[] args, Exception ex) throws Exception {
         if (ex instanceof ResponseErrorException) {
-            return handleException((ResponseErrorException) ex, method, args);
+            return handleResponseErrorException(method, args, (ResponseErrorException) ex);
         }
         throw ex;
     }
 
     @Nullable
-    protected Object handleException(ResponseErrorException ex, Method method, @Nullable Object[] args)
+    protected Object handleResponseErrorException(Method method, @Nullable Object[] args, ResponseErrorException ex)
             throws Exception {
         var type = method.getGenericReturnType();
         if (type == void.class) {
@@ -108,10 +104,10 @@ public class InvocationHandlerImpl implements InvocationHandler {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof InvocationHandlerImpl)) {
+        if (!(obj instanceof StandardInvocationHandler)) {
             return false;
         }
-        return this.target.equals(((InvocationHandlerImpl) obj).target);
+        return this.target.equals(((StandardInvocationHandler) obj).target);
     }
 
     @Override

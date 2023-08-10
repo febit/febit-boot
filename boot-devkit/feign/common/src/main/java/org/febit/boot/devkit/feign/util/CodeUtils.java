@@ -16,7 +16,6 @@
 package org.febit.boot.devkit.feign.util;
 
 import lombok.experimental.UtilityClass;
-import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.lang.util.JacksonUtils;
 import org.springframework.core.ResolvableType;
@@ -79,8 +78,8 @@ public class CodeUtils {
     }
 
     public static ResolvableType getPropertyResolvableType(PropertyDescriptor prop) {
-        val getter = prop.getReadMethod();
-        val setter = prop.getWriteMethod();
+        var getter = prop.getReadMethod();
+        var setter = prop.getWriteMethod();
         return getter != null
                 ? ResolvableType.forMethodReturnType(getter)
                 : ResolvableType.forMethodParameter(setter, 0);

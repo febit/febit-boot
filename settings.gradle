@@ -11,9 +11,15 @@ rootProject.name = 'febit-boot'
 boot 'boot-bom'
 boot 'boot-dependencies'
 
+boot 'boot-common'
 boot 'boot-jooq'
+
 boot 'boot-feign'
 boot 'boot-feign-test'
+boot 'boot-starter-feign'
+
+boot 'boot-web-common'
+boot 'boot-starter-web'
 
 devkit 'feign/common'
 devkit 'feign/gradle'

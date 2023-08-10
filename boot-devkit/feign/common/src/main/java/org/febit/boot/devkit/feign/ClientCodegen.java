@@ -18,7 +18,6 @@ package org.febit.boot.devkit.feign;
 import lombok.Builder;
 import lombok.Singular;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.febit.boot.devkit.feign.meta.ClientDef;
 import org.febit.boot.devkit.feign.util.ClassNaming;
 import org.febit.boot.devkit.feign.util.ClassWriter;
@@ -71,12 +70,12 @@ public class ClientCodegen {
         Stream.of(type.getGenerics())
                 .forEach(this::emitPojoIfAbsent);
 
-        val cls = type.resolve();
+        var cls = type.resolve();
         if (cls == null) {
             log.info("Unresolvable type: {}", type);
             return;
         }
-        val componentClass = CodeUtils.resolveFinalComponentType(cls);
+        var componentClass = CodeUtils.resolveFinalComponentType(cls);
         if (emittedTypes.contains(componentClass)) {
             return;
         }
@@ -93,7 +92,7 @@ public class ClientCodegen {
 
         if (componentClass.isEnum()) {
             @SuppressWarnings("unchecked")
-            val enumType = (Class<? extends Enum<?>>) componentClass;
+            var enumType = (Class<? extends Enum<?>>) componentClass;
             emitEnum(enumType);
             return;
         }
@@ -103,17 +102,17 @@ public class ClientCodegen {
 
     private void emitEnum(Class<? extends Enum<?>> cls) {
 
-        val fullName = pojoNaming.resolve(cls.getName());
+        var fullName = pojoNaming.resolve(cls.getName());
         if (excludedClasses.contains(fullName)) {
             return;
         }
 
         log.info("Emit enum: {}", cls);
-        val out = ClassWriter.create(pojoNaming, fullName);
+        var out = ClassWriter.create(pojoNaming, fullName);
         out.appendClassHeader();
         out.appendDeclare("enum");
 
-        for (val e : cls.getEnumConstants()) {
+        for (var e : cls.getEnumConstants()) {
             out.tab(1).append("")
                     .append(e.name())
                     .append(",\n");
@@ -125,20 +124,20 @@ public class ClientCodegen {
     }
 
     private void emitPojo(Class<?> cls) {
-        val fullName = pojoNaming.resolve(cls.getName());
+        var fullName = pojoNaming.resolve(cls.getName());
         if (excludedClasses.contains(fullName)) {
             return;
         }
 
         log.info("Emit POJO: {} <= {}", fullName, cls.getName());
-        val out = ClassWriter.create(pojoNaming, fullName);
+        var out = ClassWriter.create(pojoNaming, fullName);
         out.appendClassHeader();
         out.appendDeclare("class");
 
-        val props = BeanUtils.getPropertyDescriptors(cls);
+        var props = BeanUtils.getPropertyDescriptors(cls);
 
-        for (val prop : props) {
-            val type = CodeUtils.getPropertyResolvableType(prop);
+        for (var prop : props) {
+            var type = CodeUtils.getPropertyResolvableType(prop);
             out.getImports().add(type);
             emitPojoIfAbsent(type);
         }
@@ -156,7 +155,7 @@ public class ClientCodegen {
         );
         out.appendDeclare("class");
 
-        for (val prop : props) {
+        for (var prop : props) {
             if ("class".equals(prop.getName())) {
                 continue;
             }
@@ -165,8 +164,8 @@ public class ClientCodegen {
                 out.tab(1).append("@Deprecated\n");
             }
 
-            val type = CodeUtils.getPropertyResolvableType(prop);
-            val isKeyword = JavaUtils.isKeyword(prop.getName());
+            var type = CodeUtils.getPropertyResolvableType(prop);
+            var isKeyword = JavaUtils.isKeyword(prop.getName());
 
             if (isKeyword) {
                 out.tab(1).append("@com.fasterxml.jackson.annotation.JsonProperty(\"")

@@ -1,0 +1,9 @@
+dependencies {
+  api 'org.febit:febit-lang'
+
+  api 'io.swagger.core.v3:swagger-annotations'
+  api 'jakarta.validation:jakarta.validation-api'
+
+  api 'org.springframework:spring-core'
+  api 'org.springframework:spring-context'
+}

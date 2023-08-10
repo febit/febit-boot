@@ -18,7 +18,7 @@ package org.febit.boot.jooq;
 import lombok.Data;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.febit.lang.protocal.Sort;
+import org.febit.lang.protocol.Sort;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -26,11 +26,7 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

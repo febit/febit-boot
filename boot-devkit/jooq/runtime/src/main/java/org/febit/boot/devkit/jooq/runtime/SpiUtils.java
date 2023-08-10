@@ -17,7 +17,6 @@ package org.febit.boot.devkit.jooq.runtime;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.febit.boot.devkit.jooq.runtime.spi.SpiContext;
 import org.febit.boot.devkit.jooq.runtime.spi.SpiContextImpl;
 import org.febit.lang.util.Lists;
@@ -31,8 +30,8 @@ import java.util.ServiceLoader;
 class SpiUtils {
 
     static <T> List<T> load(Class<T> type, JooqGeneratorStrategy strategy) {
-        val spies = load(type);
-        val context = SpiContextImpl.of(strategy);
+        var spies = load(type);
+        var context = SpiContextImpl.of(strategy);
         for (T spi : spies) {
             if (spi instanceof SpiContext.Aware) {
                 ((SpiContext.Aware) spi).setContext(context);
@@ -58,7 +57,7 @@ class SpiUtils {
 
         @Override
         protected Integer findOrder(Object obj) {
-            val order = super.findOrder(obj);
+            var order = super.findOrder(obj);
             if (order != null) {
                 return order;
             }

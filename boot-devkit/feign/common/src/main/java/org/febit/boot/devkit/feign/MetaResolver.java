@@ -16,17 +16,16 @@
 package org.febit.boot.devkit.feign;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.febit.boot.devkit.feign.meta.ApiDef;
 import org.febit.boot.devkit.feign.meta.ApiParameterDef;
 import org.febit.boot.devkit.feign.meta.ClientDef;
 import org.febit.boot.devkit.feign.meta.RequestDef;
 import org.febit.boot.devkit.feign.util.CodeUtils;
 import org.febit.lang.UncheckedException;
-import org.febit.lang.protocal.IListResponse;
-import org.febit.lang.protocal.IPageResponse;
-import org.febit.lang.protocal.IResponse;
-import org.febit.lang.protocal.Page;
+import org.febit.lang.protocol.IListResponse;
+import org.febit.lang.protocol.IPageResponse;
+import org.febit.lang.protocol.IResponse;
+import org.febit.lang.protocol.Page;
 import org.febit.lang.util.Maps;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -41,11 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -61,9 +56,9 @@ public class MetaResolver {
     );
 
     public Map<String, BeanDefinition> scanBeans(Collection<String> packages) {
-        val registry = new SimpleBeanDefinitionRegistry();
+        var registry = new SimpleBeanDefinitionRegistry();
 
-        val scanner = new ClassPathBeanDefinitionScanner(registry, false);
+        var scanner = new ClassPathBeanDefinitionScanner(registry, false);
         scanner.setResourceLoader(new DefaultResourceLoader(classloader));
         scanner.addIncludeFilter((r, f) -> true);
         scanner.setBeanNameGenerator((def, reg) -> Objects.requireNonNull(
@@ -95,21 +90,21 @@ public class MetaResolver {
         } catch (ClassNotFoundException e) {
             throw new UncheckedException(e);
         }
-        val mappingAnno = AnnotatedElementUtils.findMergedAnnotation(
+        var mappingAnno = AnnotatedElementUtils.findMergedAnnotation(
                 type, RequestMapping.class);
         if (mappingAnno == null) {
             // GradleUtils.println("Not found RequestMapping for: {0}", type);
             return null;
         }
 
-        val builder = ClientDef.builder()
+        var builder = ClientDef.builder()
                 .type(type)
                 .deprecated(CodeUtils.isDeprecated(type))
                 .request(RequestDef.of(mappingAnno));
 
         ReflectionUtils.doWithMethods(type,
                 m -> {
-                    val api = resolveApi(m, type);
+                    var api = resolveApi(m, type);
                     if (api != null) {
                         builder.api(api);
                     }
@@ -121,7 +116,7 @@ public class MetaResolver {
 
     @Nullable
     private ApiDef resolveApi(Method method, Class<?> parentClass) {
-        val mappingAnno = AnnotatedElementUtils.findMergedAnnotation(
+        var mappingAnno = AnnotatedElementUtils.findMergedAnnotation(
                 method, RequestMapping.class);
         if (mappingAnno == null) {
             return null;
@@ -139,12 +134,12 @@ public class MetaResolver {
     }
 
     private ResolvableType replaceResponseImpl(ResolvableType type) {
-        val params = type.getGenerics();
+        var params = type.getGenerics();
         if (params.length != 1) {
             return type;
         }
-        val dataType = params[0];
-        val dataCls = dataType.resolve(Object.class);
+        var dataType = params[0];
+        var dataCls = dataType.resolve(Object.class);
         if (List.class.equals(dataCls)
                 || Collection.class.equals(dataCls)) {
             return ResolvableType.forClassWithGenerics(IListResponse.class, dataType.getGenerics());
@@ -156,7 +151,7 @@ public class MetaResolver {
     }
 
     private ResolvableType fixReturnType(ResolvableType origin) {
-        val rawCls = origin.resolve(Object.class);
+        var rawCls = origin.resolve(Object.class);
         if (IResponse.class.equals(rawCls)) {
             return replaceResponseImpl(origin);
         }

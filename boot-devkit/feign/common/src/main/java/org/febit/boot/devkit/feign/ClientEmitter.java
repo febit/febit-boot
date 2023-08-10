@@ -16,7 +16,6 @@
 package org.febit.boot.devkit.feign;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.devkit.feign.meta.ApiDef;
 import org.febit.boot.devkit.feign.meta.ApiParameterDef;
@@ -49,13 +48,13 @@ class ClientEmitter {
         this.codegen = codegen;
         this.client = client;
 
-        val fullName = codegen.clientNaming.resolve(client.getType().getCanonicalName());
+        var fullName = codegen.clientNaming.resolve(client.getType().getCanonicalName());
         this.out = ClassWriter.create(codegen.pojoNaming, fullName);
         this.imports = this.out.getImports();
 
         DEFAULT_IMPORTS.forEach(this.imports::add);
 
-        val path = client.getRequest().getPrimaryPath();
+        var path = client.getRequest().getPrimaryPath();
         // NOTE: Path-Variables are not support in client-level settings.
         this.clientPath = StringUtils.substringBefore(path, "/{");
         this.apiPathPrefix = StringUtils.removeEnd(
@@ -134,7 +133,7 @@ class ClientEmitter {
                 .append(api.getName())
                 .append('(');
 
-        val params = api.getParameters();
+        var params = api.getParameters();
         if (!params.isEmpty()) {
             out.append('\n');
             out.foreach(params, ",\n", "\n", this::emitApiParameter);
@@ -145,7 +144,7 @@ class ClientEmitter {
     }
 
     private void emitApiRequestMapping(ApiDef api) {
-        val req = api.getRequest();
+        var req = api.getRequest();
 
         out.tab(1).append("");
         if (req.getMethods().size() != 1) {
@@ -205,7 +204,7 @@ class ClientEmitter {
     private void emitApiParameter(ApiParameterDef param) {
         out.tab(3);
 
-        val bindName = StringUtils.isNotEmpty(param.getBindName())
+        var bindName = StringUtils.isNotEmpty(param.getBindName())
                 ? param.getBindName()
                 : param.getName();
 

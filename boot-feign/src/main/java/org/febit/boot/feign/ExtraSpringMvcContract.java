@@ -32,14 +32,14 @@ import java.util.Map;
 import java.util.Set;
 
 @Slf4j
-public class SpringMvcExtraContract extends SpringMvcContract {
+public class ExtraSpringMvcContract extends SpringMvcContract {
 
     private final Map<MethodMetadata, Method> metaToMethodMapping = new IdentityHashMap<>();
     private final Set<Class<?>> ignoreParameterTypes;
     private final boolean decodeSplash;
 
     @lombok.Builder(builderClassName = "Builder")
-    protected SpringMvcExtraContract(
+    protected ExtraSpringMvcContract(
             @Singular List<AnnotatedParameterProcessor> annotatedParameterProcessors,
             @Nullable Boolean decodeSplash,
             @Nullable ConversionService conversionService,

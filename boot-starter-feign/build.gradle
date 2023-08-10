@@ -1,0 +1,7 @@
+dependencies {
+  api 'org.febit:febit-lang'
+  api project(':febit-boot-feign')
+
+  api 'io.github.openfeign:feign-okhttp'
+  api 'org.springframework.cloud:spring-cloud-starter-openfeign'
+}

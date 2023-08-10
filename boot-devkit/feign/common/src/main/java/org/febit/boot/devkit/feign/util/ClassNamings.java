@@ -16,7 +16,6 @@
 package org.febit.boot.devkit.feign.util;
 
 import lombok.experimental.UtilityClass;
-import lombok.val;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ClassNamings {
 
     public static ClassNaming cache(ClassNaming naming) {
-        val caching = new ConcurrentHashMap<String, String>(128);
+        var caching = new ConcurrentHashMap<String, String>(128);
         return origin -> caching.computeIfAbsent(origin, naming::resolve);
     }
 
@@ -35,9 +34,9 @@ public class ClassNamings {
     }
 
     public static ClassNaming chain(Collection<ClassNaming> namings) {
-        val copied = List.copyOf(namings);
+        var copied = List.copyOf(namings);
         return cache(origin -> {
-            for (val naming : copied) {
+            for (var naming : copied) {
                 origin = naming.resolve(origin);
             }
             return origin;

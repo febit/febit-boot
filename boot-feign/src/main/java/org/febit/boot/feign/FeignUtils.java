@@ -56,10 +56,9 @@ public class FeignUtils {
 
     @Nullable
     public static Type getFirstTypeArgumentIfMatch(Type type, Class<?> expectType) {
-        if (!(type instanceof ParameterizedType)) {
+        if (!(type instanceof ParameterizedType parameterized)) {
             return null;
         }
-        var parameterized = (ParameterizedType) type;
         if (expectType != parameterized.getRawType()) {
             return null;
         }

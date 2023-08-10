@@ -16,14 +16,13 @@
 package org.febit.boot.devkit.jooq.runtime.util;
 
 import lombok.experimental.UtilityClass;
-import lombok.val;
 import org.jooq.tools.StringUtils;
 
 @UtilityClass
 public class NamingUtils {
 
     public static String toLowerCamelCase(String name) {
-        val camel = toUpperCamelCase(name);
+        var camel = toUpperCamelCase(name);
         return lowerFirst(camel);
     }
 

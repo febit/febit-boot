@@ -15,7 +15,6 @@
  */
 package org.febit.boot.devkit.feign.gradle;
 
-import lombok.val;
 import org.febit.boot.devkit.feign.ClientCodegen;
 import org.febit.boot.devkit.feign.MetaResolver;
 import org.febit.boot.devkit.feign.util.ClassNamings;
@@ -41,14 +40,14 @@ public class FeignCodegenExtensionTask extends DefaultTask {
             FeignCodegenExtension extension,
             ClassLoader classloader
     ) {
-        val metaResolver = MetaResolver.create(classloader);
+        var metaResolver = MetaResolver.create(classloader);
 
-        val beans = metaResolver.scanBeans(extension.getScanPackages());
-        val clients = metaResolver.resolveClients(beans.values());
+        var beans = metaResolver.scanBeans(extension.getScanPackages());
+        var clients = metaResolver.resolveClients(beans.values());
 
         GradleUtils.println("Found [{0}] clients", clients.size());
 
-        val codegen = ClientCodegen.builder()
+        var codegen = ClientCodegen.builder()
                 .beans(beans)
                 .clients(clients)
                 .clientName(extension.getClient().getName())
@@ -77,21 +76,21 @@ public class FeignCodegenExtensionTask extends DefaultTask {
 
     @TaskAction
     public void run() {
-        val extension = getExtension();
-        val classloader = resolveClassLoader();
+        var extension = getExtension();
+        var classloader = resolveClassLoader();
 
         generate(extension, classloader);
     }
 
     private ClassLoader resolveClassLoader() {
-        val extension = getExtension();
+        var extension = getExtension();
 
-        val sourceProj = extension.getSourceProject();
+        var sourceProj = extension.getSourceProject();
 
-        val classpath = GradleUtils.mainSourceSet(sourceProj).getOutput()
+        var classpath = GradleUtils.mainSourceSet(sourceProj).getOutput()
                 .plus(sourceProj.getConfigurations().getByName("compileClasspath"));
 
-        val urls = DefaultClassPath.of(classpath.getFiles())
+        var urls = DefaultClassPath.of(classpath.getFiles())
                 .getAsURLArray();
 
         // NOTE: Using current classloader as parent.

@@ -15,7 +15,6 @@
  */
 package org.febit.boot.devkit.feign.util;
 
-import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.lang.Tuple2;
 
@@ -79,11 +78,11 @@ public class ClassNamingImpl implements ClassNaming {
                     .collect(Collectors.joining());
         }
 
-        val buf = new StringBuilder();
+        var buf = new StringBuilder();
         if (StringUtils.isNotEmpty(prefix)) {
             buf.append(prefix);
         }
-        for (val pair : suffixPairs) {
+        for (var pair : suffixPairs) {
             if (!name.endsWith(pair.a())) {
                 continue;
             }
@@ -100,7 +99,7 @@ public class ClassNamingImpl implements ClassNaming {
     }
 
     private String fixPkg(String pkg) {
-        for (val pair : pkgPairs) {
+        for (var pair : pkgPairs) {
             if (!pkg.startsWith(pair.a())) {
                 continue;
             }
@@ -112,7 +111,7 @@ public class ClassNamingImpl implements ClassNaming {
 
     @Override
     public String resolve(String origin) {
-        val direct = mapping.get(origin);
+        var direct = mapping.get(origin);
         if (StringUtils.isNotEmpty(direct)) {
             return direct;
         }

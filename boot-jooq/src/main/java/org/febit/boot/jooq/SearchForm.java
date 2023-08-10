@@ -15,7 +15,6 @@
  */
 package org.febit.boot.jooq;
 
-import lombok.val;
 import org.febit.lang.annotation.NonNullArgs;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -34,7 +33,7 @@ public interface SearchForm {
 
     @Nonnull
     default List<Condition> toConditions(DSLContext dsl) {
-        val conditions = new ArrayList<Condition>();
+        var conditions = new ArrayList<Condition>();
         SearchFormUtils.collectAnnotatedConditions(dsl, this, conditions::add);
         apply(dsl, conditions::add);
         return conditions;

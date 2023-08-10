@@ -35,9 +35,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 /**
- * Feign config for json api.
+ * Config for standard json API.
  */
-public class JsonApiFeignConfig {
+public class StandardJsonApiFeignConfig {
 
     @Bean
     public ObjectMapper objectMapper() {
@@ -79,12 +79,12 @@ public class JsonApiFeignConfig {
     public Feign.Builder feignBuilder(Retryer retryer, Decoder decoder) {
         return Feign.builder()
                 .retryer(retryer)
-                .invocationHandlerFactory(InvocationHandlerImpl.factory(decoder));
+                .invocationHandlerFactory(StandardInvocationHandler.factory(decoder));
     }
 
     @Bean
     public Contract contract(ConversionService feignConversionService) {
-        return SpringMvcExtraContract.builder()
+        return ExtraSpringMvcContract.builder()
                 .conversionService(feignConversionService)
                 .build();
     }

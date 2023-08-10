@@ -17,7 +17,6 @@ package org.febit.boot.devkit.feign.meta;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.val;
 import org.febit.boot.devkit.feign.util.CodeUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
@@ -41,20 +40,20 @@ public class ApiParameterDef {
     private final Boolean isDeprecated;
 
     public static ApiParameterDef of(Parameter param) {
-        val type = ResolvableType.forMethodParameter(
+        var type = ResolvableType.forMethodParameter(
                 MethodParameter.forParameter(param)
         );
 
-        val builder = ApiParameterDef.builder()
+        var builder = ApiParameterDef.builder()
                 .type(type)
                 .name(param.getName())
                 .isDeprecated(CodeUtils.isDeprecated(param));
 
-        val bodyAnno = AnnotatedElementUtils.findMergedAnnotation(param, RequestBody.class);
-        val pathVarAnno = AnnotatedElementUtils.findMergedAnnotation(param, PathVariable.class);
-        val queryAnno = AnnotatedElementUtils.findMergedAnnotation(param, RequestParam.class);
-        val headerAnno = AnnotatedElementUtils.findMergedAnnotation(param, RequestHeader.class);
-        val modelAttrAnno = AnnotatedElementUtils.findMergedAnnotation(param, ModelAttribute.class);
+        var bodyAnno = AnnotatedElementUtils.findMergedAnnotation(param, RequestBody.class);
+        var pathVarAnno = AnnotatedElementUtils.findMergedAnnotation(param, PathVariable.class);
+        var queryAnno = AnnotatedElementUtils.findMergedAnnotation(param, RequestParam.class);
+        var headerAnno = AnnotatedElementUtils.findMergedAnnotation(param, RequestHeader.class);
+        var modelAttrAnno = AnnotatedElementUtils.findMergedAnnotation(param, ModelAttribute.class);
 
         if (pathVarAnno != null) {
             builder.in(In.PATH_VAR)

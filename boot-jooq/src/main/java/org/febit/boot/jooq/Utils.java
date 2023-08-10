@@ -16,7 +16,6 @@
 package org.febit.boot.jooq;
 
 import lombok.experimental.UtilityClass;
-import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Configuration;
@@ -90,7 +89,7 @@ class Utils {
             dsl = conf.dsl();
         }
 
-        val idField = table.pkField();
+        var idField = table.pkField();
 
         for (P po : pos) {
             R record = dsl.newRecord(table, po);
@@ -157,7 +156,7 @@ class Utils {
             dsl = conf.dsl();
         }
 
-        val idField = table.pkField();
+        var idField = table.pkField();
         R record = dsl.newRecord(table, po);
         if (forUpdate) {
             record.changed(idField, false);

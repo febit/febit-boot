@@ -15,7 +15,6 @@
  */
 package org.febit.boot.devkit.feign.gradle;
 
-import lombok.val;
 import org.febit.devkit.gradle.util.FolderUtils;
 import org.febit.devkit.gradle.util.GradleUtils;
 import org.gradle.api.Plugin;
@@ -39,14 +38,14 @@ public class FeignCodegenPlugin implements Plugin<Project> {
     }
 
     private void afterEvaluate(Project proj) {
-        val extension = proj.getExtensions()
+        var extension = proj.getExtensions()
                 .getByType(FeignCodegenExtension.class);
 
-        val targetDir = extension.getTargetSourceDir();
+        var targetDir = extension.getTargetSourceDir();
         FolderUtils.mkdirs(targetDir);
         GradleUtils.mainSourceSet(proj).getJava().srcDir(targetDir);
 
-        val tasks = proj.getTasks();
+        var tasks = proj.getTasks();
 
         // Depend on lombok plugin
         tasks.named(Constants.TASK_GEN_LOMBOK_CONFIG, task -> {
@@ -54,7 +53,7 @@ public class FeignCodegenPlugin implements Plugin<Project> {
         });
 
         tasks.named(Constants.TASK_GEN_CLIENT, task -> {
-            val sourceProjectCompileTask = extension.getSourceProject().getTasks()
+            var sourceProjectCompileTask = extension.getSourceProject().getTasks()
                     .getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME);
             task.dependsOn(sourceProjectCompileTask);
         });

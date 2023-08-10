@@ -17,7 +17,6 @@ package org.febit.boot.devkit.feign.util;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.ResolvableType;
 
@@ -40,7 +39,7 @@ public class ClassWriter {
     private final String fullName;
 
     public static ClassWriter create(ClassNaming naming, String fullName) {
-        val imports = new ImportSet(naming);
+        var imports = new ImportSet(naming);
         return create(imports, fullName);
     }
 
@@ -53,7 +52,7 @@ public class ClassWriter {
     }
 
     public ClassWriter appendClassHeader() {
-        val pkg = CodeUtils.pkg(fullName);
+        var pkg = CodeUtils.pkg(fullName);
         buf.append("package ").append(pkg).append(";\n")
                 .append("\n");
 
@@ -129,12 +128,12 @@ public class ClassWriter {
     }
 
     public void sink(File targetDir) {
-        val pkg = CodeUtils.pkg(fullName);
-        val name = CodeUtils.classSimpleName(fullName);
+        var pkg = CodeUtils.pkg(fullName);
+        var name = CodeUtils.classSimpleName(fullName);
 
         try {
-            val folder = new File(targetDir, pkg.replace('.', '/'));
-            val classFile = new File(folder, name + ".java");
+            var folder = new File(targetDir, pkg.replace('.', '/'));
+            var classFile = new File(folder, name + ".java");
             FileUtils.forceMkdir(folder);
             FileUtils.write(classFile, buf, StandardCharsets.UTF_8);
         } catch (IOException e) {

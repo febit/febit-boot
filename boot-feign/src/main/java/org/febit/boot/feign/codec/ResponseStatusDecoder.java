@@ -18,7 +18,7 @@ package org.febit.boot.feign.codec;
 import feign.Response;
 import feign.codec.Decoder;
 import lombok.RequiredArgsConstructor;
-import org.febit.lang.protocal.HttpStatusAware;
+import org.febit.lang.protocol.HttpStatusAware;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -32,7 +32,7 @@ public class ResponseStatusDecoder implements Decoder {
     public Object decode(Response response, Type type) throws IOException {
         Object result = this.delegate.decode(response, type);
         if (result instanceof HttpStatusAware) {
-            ((HttpStatusAware) result).setHttpStatus(response.status());
+            ((HttpStatusAware) result).setStatus(response.status());
         }
         return result;
     }

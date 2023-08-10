@@ -16,7 +16,6 @@
 package org.febit.boot.jooq.converter;
 
 import com.fasterxml.jackson.databind.JavaType;
-import lombok.val;
 import org.febit.lang.util.JacksonUtils;
 import org.jooq.JSONB;
 import org.jooq.impl.AbstractConverter;
@@ -36,33 +35,33 @@ public class JsonbConverter<V> extends AbstractConverter<JSONB, V> {
         this.beanJsonType = beanJsonType;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes"})
     public static <V> JsonbConverter<Map<String, V>> forBeanMap(Class<V> beanType) {
         return forBeanMap(String.class, beanType);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <K, V> JsonbConverter<Map<K, V>> forBeanMap(Class<K> keyType, Class<V> beanType) {
-        val type = JacksonUtils.TYPE_FACTORY.constructMapType(
+        var type = JacksonUtils.TYPE_FACTORY.constructMapType(
                 Map.class, keyType, beanType);
         return new JsonbConverter(Map.class, type);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <V> JsonbConverter<List<V>> forBeanList(Class<V> beanType) {
-        val type = JacksonUtils.TYPE_FACTORY.constructCollectionType(
+        var type = JacksonUtils.TYPE_FACTORY.constructCollectionType(
                 List.class, beanType);
         return new JsonbConverter(List.class, type);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <V> JsonbConverter<V[]> forBeanArray(Class<V> beanType) {
-        val type = JacksonUtils.TYPE_FACTORY.constructArrayType(beanType);
+        var type = JacksonUtils.TYPE_FACTORY.constructArrayType(beanType);
         return new JsonbConverter(Array.newInstance(beanType, 0).getClass(), type);
     }
 
     public static <V> JsonbConverter<V> forBean(Class<V> beanType) {
-        val type = JacksonUtils.TYPE_FACTORY.constructType(beanType);
+        var type = JacksonUtils.TYPE_FACTORY.constructType(beanType);
         return new JsonbConverter<>(beanType, type);
     }
 

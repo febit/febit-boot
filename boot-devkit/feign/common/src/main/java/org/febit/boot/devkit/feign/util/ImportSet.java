@@ -16,7 +16,6 @@
 package org.febit.boot.devkit.feign.util;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.lang.util.Lists;
 import org.springframework.core.ResolvableType;
@@ -37,7 +36,7 @@ public class ImportSet {
     private final ClassNaming classNaming;
 
     public void emit(StringBuilder buf, String currentPkg) {
-        val count = new AtomicInteger(0);
+        var count = new AtomicInteger(0);
         imported.stream()
                 .filter(cls -> !CodeUtils.isInPackage(cls, PKG_JAVA_LANG))
                 .filter(cls -> !CodeUtils.isInPackage(cls, currentPkg))
@@ -57,7 +56,7 @@ public class ImportSet {
             return;
         }
         resolvedTypes.add(type);
-        val cls = type.resolve(Object.class);
+        var cls = type.resolve(Object.class);
         add(cls);
         Stream.of(type.getGenerics())
                 .forEach(this::add);
@@ -115,7 +114,7 @@ public class ImportSet {
             return resolveClassEmitName(cls.getComponentType())
                     + "[]";
         }
-        val full = transfer(cls);
+        var full = transfer(cls);
         if (cls.isPrimitive()) {
             return full;
         }
@@ -129,10 +128,10 @@ public class ImportSet {
             return resolveTypeEmitName(type.getComponentType())
                     + "[]";
         }
-        val cls = type.resolve(Object.class);
-        val main = resolveClassEmitName(cls);
+        var cls = type.resolve(Object.class);
+        var main = resolveClassEmitName(cls);
 
-        val params = type.getGenerics();
+        var params = type.getGenerics();
         if (params.length == 0) {
             return main;
         }
