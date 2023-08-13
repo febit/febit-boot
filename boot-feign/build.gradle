@@ -1,7 +1,7 @@
 description = 'Febit Feign'
 
 codegenModule {
-  module 'org.febit.boot.FebitFeign', febitTmpl()
+    module 'org.febit.boot.FebitFeign'
 }
 
 dependencies {

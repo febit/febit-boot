@@ -13,17 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.devkit.feign.gradle;
+@NonNullApi
+package org.febit.boot.devkit.flyway.gradle;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-class Constants {
-
-    static final String GROUP_NAME = "codegen";
-    static final String EXT_NAME = "codegenFeign";
-
-    static final String TASK_GEN_CLIENT = "generateFeign";
-    static final String TASK_GEN_LOMBOK_CONFIG = "generateEffectiveLombokConfig";
-}
+import org.febit.lang.annotation.NonNullApi;

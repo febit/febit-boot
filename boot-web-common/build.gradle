@@ -1,7 +1,7 @@
 description = 'Febit boot web common'
 
 codegenModule {
-  module 'org.febit.boot.FebitWebCommon', febitTmpl()
+  module 'org.febit.boot.FebitWebCommon'
 }
 
 dependencies {

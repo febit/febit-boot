@@ -131,9 +131,6 @@ public class ClientCodegen {
 
         log.info("Emit POJO: {} <= {}", fullName, cls.getName());
         var out = ClassWriter.create(pojoNaming, fullName);
-        out.appendClassHeader();
-        out.appendDeclare("class");
-
         var props = BeanUtils.getPropertyDescriptors(cls);
 
         for (var prop : props) {

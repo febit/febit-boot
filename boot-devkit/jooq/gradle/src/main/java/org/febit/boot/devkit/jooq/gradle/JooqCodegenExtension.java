@@ -18,19 +18,36 @@ package org.febit.boot.devkit.jooq.gradle;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import lombok.Getter;
+import org.febit.boot.devkit.jooq.gradle.embedded.EmbeddedPostgresCodegenHook;
 import org.febit.boot.devkit.jooq.meta.MetaUtils;
 import org.febit.devkit.gradle.util.GradleUtils;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.gradle.api.Project;
-import org.jooq.meta.jaxb.Configuration;
-import org.jooq.meta.jaxb.Generate;
-import org.jooq.meta.jaxb.Generator;
-import org.jooq.meta.jaxb.Jdbc;
-import org.jooq.meta.jaxb.SchemaMappingType;
+import org.jooq.meta.jaxb.*;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JooqCodegenExtension {
 
+
+    /**
+     * Location to scan recursively for migrations.
+     * (default: db/migration)
+     *
+     * @see FluentConfiguration#locations(String...)
+     */
+    @Getter
+    private final List<String> migrationsDirs = new ArrayList<>();
+
+    @Getter
+    private final EmbeddedPostgresConfig embeddedPostgres = new EmbeddedPostgresConfig();
+
+    @Getter
+    private ICodegenHook hook = ICodegenHook.noop();
+
+    private final Project project;
     @Getter
     private final ForcedTypesHandler forcedTypes;
     @Getter
@@ -40,6 +57,7 @@ public class JooqCodegenExtension {
 
     @Inject
     public JooqCodegenExtension(Project project) {
+        this.project = project;
         this.jdbc = new Jdbc();
         this.forcedTypes = new ForcedTypesHandler();
         this.generator = MetaUtils.createAndInitGenerator();
@@ -61,6 +79,28 @@ public class JooqCodegenExtension {
         return this.generator
                 .getTarget()
                 .getDirectory();
+    }
+
+    /**
+     * Location to scan recursively for migrations.
+     * (default: db/migration)
+     *
+     * @see #migrationsDir(String...)
+     * @see FluentConfiguration#locations(String...)
+     */
+    public void migrationsDir(String dir) {
+        this.migrationsDirs.add(dir);
+    }
+
+    /**
+     * Location to scan recursively for migrations.
+     * (default: db/migration)
+     *
+     * @see #migrationsDir(String)
+     * @see FluentConfiguration#locations(String...)
+     */
+    public void migrationsDir(String... dirs) {
+        this.migrationsDirs.addAll(List.of(dirs));
     }
 
     public void forcedTypes(@DelegatesTo(ForcedTypesHandler.class) Closure<?> closure) {
@@ -91,6 +131,19 @@ public class JooqCodegenExtension {
     }
 
     public void presetJdbc(@DelegatesTo(Jdbc.class) Closure<?> closure) {
+        this.hook = ICodegenHook.noop();
         GradleUtils.to(closure, this.jdbc);
     }
+
+    public void embeddedPostgres(@DelegatesTo(EmbeddedPostgresConfig.class) Closure<?> closure) {
+        embeddedPostgres();
+        GradleUtils.to(closure, this.embeddedPostgres);
+    }
+
+    public void embeddedPostgres() {
+        EmbeddedPostgresCodegenHook.prepare(project);
+        this.hook = new EmbeddedPostgresCodegenHook();
+        this.jdbc.setUrl(null);
+    }
+
 }

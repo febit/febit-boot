@@ -15,23 +15,15 @@
  */
 package org.febit.boot.devkit.jooq.meta;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import lombok.experimental.UtilityClass;
-import org.jooq.meta.jaxb.Configuration;
-import org.jooq.meta.jaxb.Database;
-import org.jooq.meta.jaxb.Generate;
-import org.jooq.meta.jaxb.Generator;
-import org.jooq.meta.jaxb.Strategy;
-import org.jooq.meta.jaxb.Target;
-import org.xml.sax.SAXException;
+import org.apache.commons.io.FileUtils;
+import org.jooq.meta.jaxb.*;
+import org.jooq.util.jaxb.tools.MiniJAXB;
 
-import javax.xml.XMLConstants;
-import javax.xml.validation.SchemaFactory;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -39,8 +31,9 @@ import java.util.function.Supplier;
 public class MetaUtils {
 
     public static final String JOOQ_PKG = "org.febit.boot.jooq";
+    public static final String JOOQ_DEVKIT_PKG = "org.febit.boot.devkit.jooq";
     public static final String CORE_PKG = JOOQ_PKG;
-    public static final String RUNTIME_PKG = JOOQ_PKG + ".runtime";
+    public static final String RUNTIME_PKG = JOOQ_DEVKIT_PKG + ".runtime";
     public static final String CLASS_GENERATOR = RUNTIME_PKG + ".JooqJavaGenerator";
     public static final String CLASS_STRATEGY = RUNTIME_PKG + ".JooqGeneratorStrategy";
     public static final String CODEGEN_JOOQ = "codegenJooq";
@@ -94,21 +87,11 @@ public class MetaUtils {
             MetaUtils.emitConfig(conf, file);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
-        } catch (JAXBException | SAXException e) {
-            throw new RuntimeException(e);
         }
     }
 
-    public static void emitConfig(Configuration conf, File file) throws IOException, JAXBException, SAXException {
-        var marshaller = JAXBContext.newInstance(Configuration.class)
-                .createMarshaller();
-
-        var schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-                .newSchema(org.jooq.meta.Constants.class.getResource("/xsd/" + org.jooq.meta.Constants.XSD_CODEGEN));
-        marshaller.setSchema(schema);
-
-        try (var out = new FileOutputStream(file)) {
-            marshaller.marshal(conf, out);
-        }
+    public static void emitConfig(Configuration conf, File file) throws IOException {
+        var content = MiniJAXB.marshal(conf);
+        FileUtils.write(file, content, StandardCharsets.UTF_8);
     }
 }

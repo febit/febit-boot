@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.devkit.feign.gradle;
+package org.febit.boot.devkit.jooq.gradle;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-class Constants {
+import java.io.File;
 
-    static final String GROUP_NAME = "codegen";
-    static final String EXT_NAME = "codegenFeign";
+@Data
+public class EmbeddedPostgresConfig {
 
-    static final String TASK_GEN_CLIENT = "generateFeign";
-    static final String TASK_GEN_LOMBOK_CONFIG = "generateEffectiveLombokConfig";
+    public static final String DEFAULT_VERSION = "14.8.0";
+
+    /**
+     * Version of embedded-postgres-binaries-bom.
+     * Ref: <a href="https://central.sonatype.com/artifact/io.zonky.test.postgres/embedded-postgres-binaries-bom/">...</a>
+     */
+    private String version = DEFAULT_VERSION;
+    private File workingDir;
 }

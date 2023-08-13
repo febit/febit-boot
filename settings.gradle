@@ -1,8 +1,8 @@
 pluginManagement {
   repositories {
+    maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
     maven { url "https://repo.huaweicloud.com/repository/maven" }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    gradlePluginPortal()
   }
 }
 
@@ -23,6 +23,8 @@ boot 'boot-starter-web'
 
 devkit 'feign/common'
 devkit 'feign/gradle'
+
+devkit 'flyway'
 
 devkit 'jooq/gradle'
 devkit 'jooq/maven-plugin'

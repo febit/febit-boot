@@ -1,5 +1,5 @@
 codegenModule {
-  module "org.febit.boot.devkit.jooq.meta.JooqCodegen", febitTmpl()
+  module "org.febit.boot.devkit.jooq.meta.JooqCodegen"
 }
 
 dependencies {
@@ -7,8 +7,4 @@ dependencies {
   api 'org.jooq:jooq-meta'
   api 'org.apache.commons:commons-lang3'
   api 'org.febit:febit-lang'
-
-  api 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
-  api 'com.sun.xml.bind:jaxb-core:4.0.3'
-  api 'com.sun.xml.bind:jaxb-impl:4.0.3'
 }

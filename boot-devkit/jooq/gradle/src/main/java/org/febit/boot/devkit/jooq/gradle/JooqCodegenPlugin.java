@@ -28,27 +28,24 @@ import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class JooqCodegenPlugin implements Plugin<Project> {
+
+    public static final AtomicBoolean INTERNAL_TESTING_MODE = new AtomicBoolean(false);
 
     public static final String RUNTIME_NAME = MetaUtils.CODEGEN_JOOQ;
     public static final String EXTENSION_NAME = MetaUtils.CODEGEN_JOOQ;
     public static final String TASK_NAME_GEN = MetaUtils.CODEGEN_JOOQ;
+    public static final String TASK_NAME_PREPARE = MetaUtils.CODEGEN_JOOQ + "PrepareDatabase";
 
     static final String DIR_GENERATED_SRC = "build/generated/sources/" + MetaUtils.CODEGEN_JOOQ_FOLDER;
 
     private static final String DIR_CODEGEN_SRC_JAVA = "src/" + MetaUtils.CODEGEN_JOOQ_FOLDER + "/java";
     private static final String DIR_CODEGEN_SRC_RESOURCES = "src/" + MetaUtils.CODEGEN_JOOQ_FOLDER + "/resources";
 
-    private static volatile boolean internalTestingMode = false;
-
-    static void setInternalTestingMode(boolean value) {
-        internalTestingMode = value;
-    }
-
     @Override
     public void apply(Project project) {
-
         project.getPlugins().apply(JavaBasePlugin.class);
 
         var extension = project.getExtensions()
@@ -65,33 +62,47 @@ public class JooqCodegenPlugin implements Plugin<Project> {
 
         var deps = project.getDependencies();
 
-        if (!internalTestingMode) {
+        if (!INTERNAL_TESTING_MODE.get()) {
             deps.add(RUNTIME_NAME,
                     "org.febit.boot:febit-boot-devkit-jooq-runtime:" + JooqCodegen.version()
             );
         }
 
+        var tasks = project.getTasks();
         var sourceSet = createSourceSet(sourceSets, project);
         sourceSet.setCompileClasspath(runtime);
 
-        var codegenTask = project.getTasks()
-                .create(TASK_NAME_GEN, JooqCodegenTask.class,
-                        runtime.plus(sourceSet.getOutput()),
-                        extension.getJooqConfig());
+        var prepareTask = tasks.create(
+                TASK_NAME_PREPARE,
+                CodegenPrepareTask.class,
+                runtime
+        );
+
+        var codegenTask = tasks.create(TASK_NAME_GEN, JooqCodegenTask.class,
+                runtime.plus(sourceSet.getOutput()),
+                extension.getJooqConfig());
 
         codegenTask.dependsOn(
                 sourceSet.getCompileJavaTaskName(),
-                sourceSet.getProcessResourcesTaskName()
+                sourceSet.getProcessResourcesTaskName(),
+                prepareTask
         );
-        project.getTasks()
-                .getByName(mainSourceSet.getCompileJavaTaskName())
+        tasks.getByName(mainSourceSet.getCompileJavaTaskName())
                 .dependsOn(codegenTask.getName());
 
+
         project.afterEvaluate(proj ->
-                proj.getTasks().named(sourceSet.getProcessResourcesTaskName(), Copy.class,
+                tasks.named(sourceSet.getProcessResourcesTaskName(), Copy.class,
                         task -> task.setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
                 )
         );
+        project.afterEvaluate(this::afterEvaluate);
+    }
+
+    private void afterEvaluate(Project project) {
+        var extension = project.getExtensions()
+                .getByType(JooqCodegenExtension.class);
+        extension.getHook().afterEvaluate(project);
     }
 
     private SourceSet createSourceSet(SourceSetContainer sourceSets, Project project) {

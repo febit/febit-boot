@@ -14,17 +14,19 @@ description = 'Febit Boot'
 ext {
 
   versions = [
-      commonsIo        : '2.13.0',
+          commonsIo        : '2.13.0',
       commonsCompress    : '1.21',
       commonsCollections4: '4.4',
       commonsExec        : '1.3',
 
-      febitCommons     : '3.0.0-SNAPSHOT',
-      febitDevkitGradle: '1.1.0-SNAPSHOT',
-      swagger3         : '2.2.15',
-      springdoc        : '2.2.0',
-      springBoot       : '3.1.2',
-      springCloud      : '2022.0.4',
+          febitCommons     : '3.0.0-SNAPSHOT',
+          febitDevkitGradle: '1.1.0-SNAPSHOT',
+          swagger3         : '2.2.15',
+          springdoc        : '2.2.0',
+          springBoot       : '3.1.2',
+          springCloud      : '2022.0.4',
+
+          embeddedPostgres : '2.0.4',
   ]
 
 }
@@ -46,15 +48,16 @@ allprojects {
     }
   }
 
+  codegenModule {
+    defaultTemplate = fromFile("$rootDir/etc/module.java.tmpl")
+  }
+
   license {
     mapping {
       java = 'SLASHSTAR_STYLE'
     }
     include '**/*.java'
     exclude '**/*Mojo.java'
-    exclude '**/JooqCodegen.java'
-    exclude '**/FebitFeign.java'
-    exclude '**/FebitWebCommon.java'
     strictCheck false
     skipExistingHeaders false
     header rootProject.file('etc/license-header.txt')
@@ -109,6 +112,7 @@ configure(subprojects.findAll {
       dependency "org.apache.commons:commons-collections4:${versions.commonsCollections4}"
       dependency "commons-io:commons-io:${versions.commonsIo}"
       dependency "io.swagger.core.v3:swagger-annotations:${versions.swagger3}"
+      dependency "io.zonky.test:embedded-postgres:${versions.embeddedPostgres}"
 
       dependency 'org.apache.maven:maven-plugin-api:3.0'
       dependency 'org.apache.maven:maven-core:3.0'
