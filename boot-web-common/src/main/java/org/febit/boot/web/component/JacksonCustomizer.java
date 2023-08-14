@@ -16,6 +16,8 @@
 package org.febit.boot.web.component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.febit.lang.protocol.IResponse;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
@@ -31,6 +33,14 @@ public class JacksonCustomizer implements Jackson2ObjectMapperBuilderCustomizer 
         builder.mixIn(IResponse.class, ResponseMixin.class);
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonPropertyOrder({
+            "success",
+            "code",
+            "message",
+            "timestamp",
+            "data"
+    })
     public interface ResponseMixin {
 
         @JsonIgnore
