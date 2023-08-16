@@ -46,8 +46,10 @@ public class PackageUtils {
                     "amd64",
                     "ia32e",
                     "em64t",
-                    "x64",
-                    "aarch64" -> Arch.AMD64;
+                    "x64" -> Arch.AMD64;
+            case "arm64",
+                    "arm64v8",
+                    "aarch64" -> Arch.ARM64;
             case "x8632",
                     "x86",
                     "i386",
@@ -76,6 +78,7 @@ public class PackageUtils {
     public enum Arch {
         I386("i386"),
         AMD64("amd64"),
+        ARM64("arm64v8"),
         ;
 
         private final String artifact;
