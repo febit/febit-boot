@@ -52,15 +52,14 @@ public class ValuedEnumConverter<DO extends Serializable, V extends Valued<DO> &
     @Nullable
     @Override
     public V from(@Nullable DO dbObj) {
-        return this.mapping.get(dbObj);
+        return dbObj == null ? null
+                : this.mapping.get(dbObj);
     }
 
     @Nullable
     @Override
     public DO to(@Nullable V customObj) {
-        if (customObj == null) {
-            return null;
-        }
-        return customObj.getValue();
+        return customObj == null ? null
+                : customObj.getValue();
     }
 }
