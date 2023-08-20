@@ -21,8 +21,8 @@ import org.febit.boot.devkit.feign.meta.ApiDef;
 import org.febit.boot.devkit.feign.meta.ApiParameterDef;
 import org.febit.boot.devkit.feign.meta.ClientDef;
 import org.febit.boot.devkit.feign.util.ClassWriter;
-import org.febit.boot.devkit.feign.util.CodeUtils;
 import org.febit.boot.devkit.feign.util.ImportSet;
+import org.febit.devkit.gradle.util.JavaUtils;
 
 import java.util.List;
 
@@ -156,7 +156,7 @@ class ClientEmitter {
             out.tab(2).append("},\n");
         } else {
             out.append("@")
-                    .append(CodeUtils.upperFirst(req.getMethods().get(0).name().toLowerCase()))
+                    .append(JavaUtils.upperFirst(req.getMethods().get(0).name().toLowerCase()))
                     .append("Mapping(\n");
         }
 

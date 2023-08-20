@@ -30,4 +30,5 @@ public class EmbeddedPostgresConfig {
      */
     private String version = DEFAULT_VERSION;
     private File workingDir;
+    private File dataDir;
 }

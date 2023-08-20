@@ -1,8 +1,11 @@
 dependencies {
+  api project(':febit-boot-common')
+
   api 'org.jooq:jooq'
-  api 'org.febit:febit-lang'
-  api 'jakarta.persistence:jakarta.persistence-api'
   api 'org.springframework:spring-core'
+  api 'jakarta.persistence:jakarta.persistence-api'
+
+  compileOnly 'jakarta.xml.bind:jakarta.xml.bind-api'
 
   testRuntimeOnly 'com.h2database:h2'
 }

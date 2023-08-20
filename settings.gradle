@@ -13,6 +13,7 @@ boot 'boot-dependencies'
 
 boot 'boot-common'
 boot 'boot-jooq'
+boot 'boot-starter-jooq'
 
 boot 'boot-feign'
 boot 'boot-feign-test'

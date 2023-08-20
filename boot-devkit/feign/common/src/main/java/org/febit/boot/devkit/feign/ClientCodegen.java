@@ -75,7 +75,7 @@ public class ClientCodegen {
             log.info("Unresolvable type: {}", type);
             return;
         }
-        var componentClass = CodeUtils.resolveFinalComponentType(cls);
+        var componentClass = JavaUtils.resolveFinalComponentType(cls);
         if (emittedTypes.contains(componentClass)) {
             return;
         }
@@ -141,7 +141,7 @@ public class ClientCodegen {
 
         out.appendClassHeader();
 
-        if (CodeUtils.isDeprecated(cls)) {
+        if (JavaUtils.isDeprecated(cls)) {
             out.append("@Deprecated\n");
         }
         out.append("@lombok.Data\n"
@@ -157,7 +157,7 @@ public class ClientCodegen {
                 continue;
             }
 
-            if (CodeUtils.isDeprecated(prop)) {
+            if (JavaUtils.isDeprecated(prop)) {
                 out.tab(1).append("@Deprecated\n");
             }
 

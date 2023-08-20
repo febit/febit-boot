@@ -17,6 +17,7 @@ package org.febit.boot.devkit.feign.util;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.febit.devkit.gradle.util.JavaUtils;
 import org.febit.lang.util.Lists;
 import org.springframework.core.ResolvableType;
 
@@ -38,8 +39,8 @@ public class ImportSet {
     public void emit(StringBuilder buf, String currentPkg) {
         var count = new AtomicInteger(0);
         imported.stream()
-                .filter(cls -> !CodeUtils.isInPackage(cls, PKG_JAVA_LANG))
-                .filter(cls -> !CodeUtils.isInPackage(cls, currentPkg))
+                .filter(cls -> !JavaUtils.isInPackage(cls, PKG_JAVA_LANG))
+                .filter(cls -> !JavaUtils.isInPackage(cls, currentPkg))
                 .sorted()
                 .forEach(cls -> {
                     count.incrementAndGet();
@@ -67,7 +68,7 @@ public class ImportSet {
             return;
         }
         if (cls.isArray()) {
-            add(CodeUtils.resolveFinalComponentType(cls.getComponentType()));
+            add(JavaUtils.resolveFinalComponentType(cls.getComponentType()));
             return;
         }
         transferAndAdd(cls.getName());
@@ -86,7 +87,7 @@ public class ImportSet {
             return true;
         }
         if (cls.isArray()) {
-            return contains(CodeUtils.resolveFinalComponentType(cls.getComponentType()));
+            return contains(JavaUtils.resolveFinalComponentType(cls.getComponentType()));
         }
         return contains(transfer(cls));
     }
@@ -119,7 +120,7 @@ public class ImportSet {
             return full;
         }
         return contains(cls)
-                ? CodeUtils.classSimpleName(full)
+                ? JavaUtils.classSimpleName(full)
                 : full;
     }
 

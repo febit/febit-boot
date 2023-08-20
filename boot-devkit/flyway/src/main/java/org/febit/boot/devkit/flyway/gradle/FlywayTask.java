@@ -31,7 +31,12 @@ import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.flywaydb.core.internal.jdbc.DriverDataSource;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.FileCollection;
-import org.gradle.api.tasks.*;
+import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.InputFiles;
+import org.gradle.api.tasks.Internal;
+import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.TaskAction;
+import org.gradle.work.InputChanges;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -129,7 +134,7 @@ public class FlywayTask extends DefaultTask {
     }
 
     @TaskAction
-    public void runTask() {
+    public void runTask(InputChanges inputChanges) {
         try {
             var conf = createFlywayConf();
             printConf(conf);

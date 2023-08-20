@@ -16,6 +16,7 @@
 package org.febit.boot.devkit.feign.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.febit.devkit.gradle.util.JavaUtils;
 import org.febit.lang.Tuple2;
 
 import java.util.ArrayList;
@@ -120,8 +121,8 @@ public class ClassNamingImpl implements ClassNaming {
             return fixName(origin);
         }
 
-        String pkg = CodeUtils.pkg(origin) + '.';
-        String name = CodeUtils.classSimpleName(origin);
+        String pkg = JavaUtils.pkg(origin) + '.';
+        String name = JavaUtils.classSimpleName(origin);
         return fixPkg(pkg)
                 + fixName(name);
     }

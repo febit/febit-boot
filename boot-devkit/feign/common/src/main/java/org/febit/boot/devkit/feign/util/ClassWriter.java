@@ -18,6 +18,7 @@ package org.febit.boot.devkit.feign.util;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
+import org.febit.devkit.gradle.util.JavaUtils;
 import org.springframework.core.ResolvableType;
 
 import java.io.File;
@@ -52,7 +53,7 @@ public class ClassWriter {
     }
 
     public ClassWriter appendClassHeader() {
-        var pkg = CodeUtils.pkg(fullName);
+        var pkg = JavaUtils.pkg(fullName);
         buf.append("package ").append(pkg).append(";\n")
                 .append("\n");
 
@@ -64,7 +65,7 @@ public class ClassWriter {
         buf.append("public ")
                 .append(type)
                 .append(" ")
-                .append(CodeUtils.classSimpleName(fullName))
+                .append(JavaUtils.classSimpleName(fullName))
                 .append(" {\n\n");
         return this;
     }
@@ -128,8 +129,8 @@ public class ClassWriter {
     }
 
     public void sink(File targetDir) {
-        var pkg = CodeUtils.pkg(fullName);
-        var name = CodeUtils.classSimpleName(fullName);
+        var pkg = JavaUtils.pkg(fullName);
+        var name = JavaUtils.classSimpleName(fullName);
 
         try {
             var folder = new File(targetDir, pkg.replace('.', '/'));

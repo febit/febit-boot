@@ -3,8 +3,6 @@ codegenModule {
 }
 
 dependencies {
-  api 'org.slf4j:slf4j-api'
-  api 'org.jooq:jooq-meta'
-  api 'org.apache.commons:commons-lang3'
   api 'org.febit:febit-lang'
+  api 'org.jooq:jooq-meta'
 }

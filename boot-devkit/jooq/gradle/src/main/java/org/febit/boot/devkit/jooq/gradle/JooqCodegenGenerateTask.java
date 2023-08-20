@@ -26,13 +26,16 @@ import javax.inject.Inject;
 import java.io.File;
 import java.util.List;
 
-public class JooqCodegenTask extends DefaultTask {
+public class JooqCodegenGenerateTask extends DefaultTask {
 
     private final FileCollection classpath;
     private final Configuration conf;
 
     @Inject
-    public JooqCodegenTask(FileCollection classpath, Configuration conf) {
+    public JooqCodegenGenerateTask(
+            FileCollection classpath,
+            Configuration conf
+    ) {
         setGroup(MetaUtils.GROUP_NAME);
         setDescription("Generates the jOOQ sources");
         this.classpath = classpath;

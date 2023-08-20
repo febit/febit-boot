@@ -20,7 +20,7 @@ import org.febit.boot.devkit.feign.meta.ApiDef;
 import org.febit.boot.devkit.feign.meta.ApiParameterDef;
 import org.febit.boot.devkit.feign.meta.ClientDef;
 import org.febit.boot.devkit.feign.meta.RequestDef;
-import org.febit.boot.devkit.feign.util.CodeUtils;
+import org.febit.devkit.gradle.util.JavaUtils;
 import org.febit.lang.UncheckedException;
 import org.febit.lang.protocol.IListResponse;
 import org.febit.lang.protocol.IPageResponse;
@@ -40,7 +40,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -99,7 +103,7 @@ public class MetaResolver {
 
         var builder = ClientDef.builder()
                 .type(type)
-                .deprecated(CodeUtils.isDeprecated(type))
+                .deprecated(JavaUtils.isDeprecated(type))
                 .request(RequestDef.of(mappingAnno));
 
         ReflectionUtils.doWithMethods(type,
@@ -124,7 +128,7 @@ public class MetaResolver {
 
         return ApiDef.builder()
                 .name(method.getName())
-                .deprecated(CodeUtils.isDeprecated(method))
+                .deprecated(JavaUtils.isDeprecated(method))
                 .returnType(fixReturnType(
                         ResolvableType.forMethodReturnType(method, parentClass)
                 ))

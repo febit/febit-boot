@@ -17,6 +17,8 @@ package org.febit.boot.devkit.jooq.gradle;
 
 import org.gradle.api.Project;
 
+import java.util.List;
+
 public interface ICodegenHook {
 
     static ICodegenHook noop() {
@@ -27,7 +29,11 @@ public interface ICodegenHook {
     default void afterEvaluate(Project project) {
     }
 
-    default void beforePrepareTask(CodegenPrepareTask task) {
+    default List<Object> getOutputs(JooqCodegenPrepareTask task) {
+        return List.of();
+    }
+
+    default void beforePrepareTask(JooqCodegenPrepareTask task) {
     }
 
 }

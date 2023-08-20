@@ -19,15 +19,15 @@ dependencies {
   compileOnly localGroovy()
   compileOnly gradleApi()
 
-    implementation project(':febit-boot-devkit-flyway')
+  implementation project(':febit-boot-devkit-flyway')
   implementation project(':febit-boot-devkit-jooq-meta')
   implementation 'org.febit.devkit.gradle:febit-gradle-common'
 
   implementation 'commons-codec:commons-codec'
   implementation 'org.apache.commons:commons-exec'
-    implementation('io.zonky.test:embedded-postgres') {
-        exclude group: 'io.zonky.test.postgres'
-    }
+  implementation('io.zonky.test:embedded-postgres') {
+    exclude group: 'io.zonky.test.postgres'
+  }
 
   testImplementation localGroovy()
   testImplementation gradleApi()

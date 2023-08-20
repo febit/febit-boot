@@ -1,0 +1,4 @@
+dependencies {
+  api project(':febit-boot-jooq')
+  api 'org.springframework.boot:spring-boot-starter-jooq'
+}

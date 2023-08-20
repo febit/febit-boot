@@ -21,18 +21,41 @@ import org.febit.boot.devkit.flyway.gradle.FlywayActions;
 import org.febit.boot.devkit.flyway.gradle.FlywayTask;
 import org.febit.boot.devkit.jooq.meta.MetaUtils;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.tasks.InputFiles;
+import org.gradle.api.tasks.OutputDirectories;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.work.Incremental;
+import org.gradle.work.InputChanges;
 
 import javax.inject.Inject;
 import java.util.List;
 
+import static org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension.DEFAULT_MIGRATIONS_DIR;
+
 @Slf4j
-public class CodegenPrepareTask extends FlywayTask {
+public class JooqCodegenPrepareTask extends FlywayTask {
 
     private final Configuration runtime;
 
+    @Incremental
+    @InputFiles
+    public List<String> getInputDirs() {
+        var extension = codegenExtension();
+        var dirs = extension.getMigrationsDirs();
+        if (dirs.isEmpty()) {
+            dirs = DEFAULT_MIGRATIONS_DIR;
+        }
+        return dirs;
+    }
+
+    @OutputDirectories
+    public List<Object> getOutputDirs() {
+        var extension = codegenExtension();
+        return extension.getHook().getOutputs(this);
+    }
+
     @Inject
-    public CodegenPrepareTask(
+    public JooqCodegenPrepareTask(
             Configuration runtime
     ) {
         super(FlywayActions.migrate());
@@ -65,10 +88,28 @@ public class CodegenPrepareTask extends FlywayTask {
 
     @Override
     @TaskAction
-    public void runTask() {
+    public void runTask(InputChanges inputChanges) {
+//        var project = getProject();
+//        var changed = new AtomicBoolean(true);
+//        if (inputChanges.isIncremental()) {
+//            changed.set(false);
+//            inputChanges.getFileChanges(
+//                            project.files(getInputDirs())
+//                    )
+//                    .forEach(f -> {
+//                        changed.set(true);
+//                        println("INFO: Changes: {0} - {1}", f.getChangeType(), f.getNormalizedPath());
+//                    });
+//        }
+//
+//        if (!changed.get()) {
+//            println("Skip prepare since nothing changed");
+//            return;
+//        }
+
         var extension = codegenExtension();
         extension.getHook().beforePrepareTask(this);
         fillConfig();
-        super.runTask();
+        super.runTask(inputChanges);
     }
 }

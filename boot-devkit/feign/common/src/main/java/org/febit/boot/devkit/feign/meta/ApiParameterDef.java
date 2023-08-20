@@ -17,7 +17,7 @@ package org.febit.boot.devkit.feign.meta;
 
 import lombok.Builder;
 import lombok.Data;
-import org.febit.boot.devkit.feign.util.CodeUtils;
+import org.febit.devkit.gradle.util.JavaUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -47,7 +47,7 @@ public class ApiParameterDef {
         var builder = ApiParameterDef.builder()
                 .type(type)
                 .name(param.getName())
-                .isDeprecated(CodeUtils.isDeprecated(param));
+                .isDeprecated(JavaUtils.isDeprecated(param));
 
         var bodyAnno = AnnotatedElementUtils.findMergedAnnotation(param, RequestBody.class);
         var pathVarAnno = AnnotatedElementUtils.findMergedAnnotation(param, PathVariable.class);

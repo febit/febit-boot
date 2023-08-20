@@ -22,10 +22,10 @@ import io.zonky.test.db.postgres.util.LinuxUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.febit.boot.devkit.jooq.gradle.CodegenPrepareTask;
 import org.febit.boot.devkit.jooq.gradle.ICodegenHook;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin;
+import org.febit.boot.devkit.jooq.gradle.JooqCodegenPrepareTask;
 import org.febit.boot.devkit.jooq.meta.JooqCodegen;
 import org.febit.boot.devkit.jooq.meta.embedded.PackageUtils;
 import org.febit.lang.util.Lists;
@@ -40,6 +40,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.List;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
@@ -48,7 +49,8 @@ import static org.febit.devkit.gradle.util.GradleUtils.println;
 public class EmbeddedPostgresCodegenHook implements ICodegenHook {
 
     static final String RUNTIME_NAME_PG = JooqCodegenPlugin.RUNTIME_NAME + "EmbeddedPostgres";
-    private static final String DATA_DIR = "codegen-embedded-pg-data";
+    private static final String WORK_DIR = "codegen-embedded-pg";
+    private static final String DATA_DIR = "data";
     private static final String POSTGRES = "postgres";
 
     public static void prepare(Project project) {
@@ -82,15 +84,41 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
     }
 
     @Override
+    public List<Object> getOutputs(JooqCodegenPrepareTask task) {
+        var extension = task.codegenExtension();
+        var project = task.getProject();
+        return List.of(
+                resolveDataDir(project, extension)
+        );
+    }
+
+    private File resolveDataDir(Project project, JooqCodegenExtension extension) {
+        var conf = extension.getEmbeddedPostgres();
+        var dataDir = conf.getDataDir();
+        if (dataDir != null) {
+            return dataDir;
+        }
+        return new File(project.getBuildDir(), WORK_DIR + "/" + DATA_DIR);
+    }
+
+    private File resolveWorkDir(Project project, JooqCodegenExtension extension) {
+        var conf = extension.getEmbeddedPostgres();
+        var workDir = conf.getWorkingDir();
+        if (workDir != null) {
+            return workDir;
+        }
+        return new File(project.getRootProject().getBuildDir(), WORK_DIR);
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
-    public void beforePrepareTask(CodegenPrepareTask task) {
+    public void beforePrepareTask(JooqCodegenPrepareTask task) {
         var extension = task.codegenExtension();
         var project = task.getProject();
         var conf = extension.getEmbeddedPostgres();
-        var workDir = conf.getWorkingDir();
-        if (workDir == null) {
-            workDir = new File(project.getBuildDir(), DATA_DIR);
-        }
+
+        var workDir = resolveWorkDir(project, extension);
+        var dataDir = resolveDataDir(project, extension);
 
         final EmbeddedPostgres postgres;
         try (var classLoader = new URLClassLoader(resolveUrls(
@@ -98,7 +126,8 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
         ))) {
             //noinspection resource
             postgres = EmbeddedPostgres.builder()
-                    .setDataDirectory(workDir)
+                    .setOverrideWorkingDirectory(workDir)
+                    .setDataDirectory(dataDir)
                     .setPgBinaryResolver(
                             PgBinaryResolverImpl.create(classLoader)
                     )

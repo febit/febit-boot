@@ -23,7 +23,11 @@ import org.febit.boot.devkit.jooq.meta.MetaUtils;
 import org.febit.devkit.gradle.util.GradleUtils;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.gradle.api.Project;
-import org.jooq.meta.jaxb.*;
+import org.jooq.meta.jaxb.Configuration;
+import org.jooq.meta.jaxb.Generate;
+import org.jooq.meta.jaxb.Generator;
+import org.jooq.meta.jaxb.Jdbc;
+import org.jooq.meta.jaxb.SchemaMappingType;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -31,6 +35,7 @@ import java.util.List;
 
 public class JooqCodegenExtension {
 
+    public static final List<String> DEFAULT_MIGRATIONS_DIR = List.of("db/migration");
 
     /**
      * Location to scan recursively for migrations.

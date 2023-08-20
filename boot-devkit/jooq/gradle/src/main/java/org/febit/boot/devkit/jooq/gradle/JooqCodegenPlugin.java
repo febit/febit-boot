@@ -36,8 +36,8 @@ public class JooqCodegenPlugin implements Plugin<Project> {
 
     public static final String RUNTIME_NAME = MetaUtils.CODEGEN_JOOQ;
     public static final String EXTENSION_NAME = MetaUtils.CODEGEN_JOOQ;
-    public static final String TASK_NAME_GEN = MetaUtils.CODEGEN_JOOQ;
-    public static final String TASK_NAME_PREPARE = MetaUtils.CODEGEN_JOOQ + "PrepareDatabase";
+    public static final String TASK_NAME_PREPARE = MetaUtils.CODEGEN_JOOQ + "Prepare";
+    public static final String TASK_NAME_GENERATE_JOOQ = "generateJooq";
 
     static final String DIR_GENERATED_SRC = "build/generated/sources/" + MetaUtils.CODEGEN_JOOQ_FOLDER;
 
@@ -74,28 +74,34 @@ public class JooqCodegenPlugin implements Plugin<Project> {
 
         var prepareTask = tasks.create(
                 TASK_NAME_PREPARE,
-                CodegenPrepareTask.class,
+                JooqCodegenPrepareTask.class,
                 runtime
         );
 
-        var codegenTask = tasks.create(TASK_NAME_GEN, JooqCodegenTask.class,
+        var generateTask = tasks.create(TASK_NAME_GENERATE_JOOQ, JooqCodegenGenerateTask.class,
                 runtime.plus(sourceSet.getOutput()),
-                extension.getJooqConfig());
+                extension.getJooqConfig()
+        );
 
-        codegenTask.dependsOn(
+        generateTask.dependsOn(
                 sourceSet.getCompileJavaTaskName(),
                 sourceSet.getProcessResourcesTaskName(),
                 prepareTask
         );
         tasks.getByName(mainSourceSet.getCompileJavaTaskName())
-                .dependsOn(codegenTask.getName());
-
+                .dependsOn(generateTask.getName());
 
         project.afterEvaluate(proj ->
                 tasks.named(sourceSet.getProcessResourcesTaskName(), Copy.class,
                         task -> task.setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
                 )
         );
+
+        var cachingChecker = CachingChecker.create(project);
+        prepareTask.onlyIf("If has updated", task -> cachingChecker.hasUpdated());
+        generateTask.onlyIf("If has updated", task -> cachingChecker.hasUpdated());
+        generateTask.doLast(task -> cachingChecker.update());
+
         project.afterEvaluate(this::afterEvaluate);
     }
 

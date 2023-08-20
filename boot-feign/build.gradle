@@ -5,11 +5,9 @@ codegenModule {
 }
 
 dependencies {
-  api 'org.febit:febit-lang'
   api project(':febit-boot-common')
-
-  compileOnly 'com.squareup.okhttp3:okhttp'
-
   api 'io.github.openfeign:feign-core'
   api 'org.springframework.cloud:spring-cloud-openfeign-core'
+
+  compileOnly 'com.squareup.okhttp3:okhttp'
 }
