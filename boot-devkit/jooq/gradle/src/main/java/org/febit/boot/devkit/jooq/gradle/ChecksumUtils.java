@@ -17,6 +17,7 @@ package org.febit.boot.devkit.jooq.gradle;
 
 import lombok.experimental.UtilityClass;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.febit.lang.util.Maps;
 
 import java.io.File;
@@ -38,8 +39,11 @@ public class ChecksumUtils {
         if (files.size() != checksums.size()) {
             return false;
         }
+        var prefix = dir.getAbsolutePath() + '/';
         for (File file : files) {
-            var key = file.getAbsolutePath();
+            var key = StringUtils.removeStart(
+                    file.getAbsolutePath(), prefix
+            );
             if (!checksums.containsKey(key)) {
                 return false;
             }
@@ -59,8 +63,11 @@ public class ChecksumUtils {
         if (files.isEmpty()) {
             return Map.of();
         }
+        var prefix = dir.getAbsolutePath() + '/';
         return Maps.mapping(files,
-                File::getAbsolutePath,
+                file -> StringUtils.removeStart(
+                        file.getAbsolutePath(), prefix
+                ),
                 ChecksumUtils::checksum
         );
     }

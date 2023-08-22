@@ -56,8 +56,7 @@ public class JooqCodegenPlugin implements Plugin<Project> {
                 .setDescription("Classpath for jOOQ generator, add your JDBC drivers or extension libs here.");
 
         var sourceSets = GradleUtils.sourceSets(project);
-
-        var mainSourceSet = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME);
+        var mainSourceSet = GradleUtils.mainSourceSet(project);
         mainSourceSet.getJava().srcDir(extension.getTargetDir());
 
         var deps = project.getDependencies();
@@ -88,8 +87,6 @@ public class JooqCodegenPlugin implements Plugin<Project> {
                 sourceSet.getProcessResourcesTaskName(),
                 prepareTask
         );
-        tasks.getByName(mainSourceSet.getCompileJavaTaskName())
-                .dependsOn(generateTask.getName());
 
         project.afterEvaluate(proj ->
                 tasks.named(sourceSet.getProcessResourcesTaskName(), Copy.class,
@@ -97,17 +94,23 @@ public class JooqCodegenPlugin implements Plugin<Project> {
                 )
         );
 
-        var cachingChecker = CachingChecker.create(project);
-        prepareTask.onlyIf("If has updated", task -> cachingChecker.hasUpdated());
-        generateTask.onlyIf("If has updated", task -> cachingChecker.hasUpdated());
-        generateTask.doLast(task -> cachingChecker.update());
-
         project.afterEvaluate(this::afterEvaluate);
     }
 
     private void afterEvaluate(Project project) {
         var extension = project.getExtensions()
                 .getByType(JooqCodegenExtension.class);
+
+        var tasks = project.getTasks();
+        var cachingChecker = CachingChecker.create(project);
+
+        tasks.getByName(TASK_NAME_GENERATE_JOOQ)
+                .doLast(task -> cachingChecker.update());
+
+        if (cachingChecker.hasUpdated()) {
+            tasks.getByName(GradleUtils.mainSourceSet(project).getCompileJavaTaskName())
+                    .dependsOn(TASK_NAME_GENERATE_JOOQ);
+        }
         extension.getHook().afterEvaluate(project);
     }
 
