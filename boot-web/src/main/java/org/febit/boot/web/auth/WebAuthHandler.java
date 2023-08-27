@@ -47,33 +47,39 @@ public class WebAuthHandler<T extends AuthSubject> {
     private final WebRequestAuthSubjectResolver<T> authSubjectResolver;
 
     public IResponse<AuthSubject> verify(WebRequest request, Method handler) {
-        var permission = this.permissionManager.getPermission(handler);
-        return switch (permission.getType()) {
-            case IGNORED -> IResponse.success(null);
-            case FORBIDDEN -> AuthErrors.FORBIDDEN_NO_PERMISSION
-                    .response(permission.getMessage());
-            case ALLOW_LIST -> verifyAllows(request, permission.getItems());
-        };
-    }
-
-    private IResponse<AuthSubject> verifyAllows(WebRequest request, List<PermissionItem> allows) {
         var resolved = authSubjectResolver.resolveAuth(request);
+        store(request, resolved.orElse(null));
+
+        var permission = this.permissionManager.getPermission(handler);
+        switch (permission.getType()) {
+            case IGNORED -> {
+                return IResponse.success(null);
+            }
+            case FORBIDDEN -> {
+                return AuthErrors.FORBIDDEN_NO_PERMISSION
+                        .response(permission.getMessage());
+            }
+        }
+
         if (resolved.isEmpty()) {
             return AuthErrors.UNAUTHORIZED
                     .response(AuthErrors.UNAUTHORIZED.getCode());
         }
 
         var auth = resolved.get();
+        return verifyAllows(auth, permission.getItems());
+    }
+
+    private IResponse<AuthSubject> verifyAllows(T auth, List<PermissionItem> allows) {
         var allowed = this.permissionVerifier.isAllow(auth, allows);
         if (!allowed) {
             return AuthErrors.FORBIDDEN_NO_PERMISSION
                     .response(AuthErrors.FORBIDDEN_NO_PERMISSION.getCode());
         }
-        store(request, auth);
         return IResponse.success(auth);
     }
 
-    private void store(WebRequest request, @Nullable AuthSubject auth) {
+    private void store(WebRequest request, @Nullable T auth) {
         if (auth == null) {
             request.removeAttribute(ATTR_AUTH, SCOPE_REQUEST);
             request.removeAttribute(ATTR_AUTH_CODE, SCOPE_REQUEST);
