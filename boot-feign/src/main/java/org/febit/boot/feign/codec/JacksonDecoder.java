@@ -17,12 +17,12 @@ package org.febit.boot.feign.codec;
 
 import feign.Response;
 import feign.codec.Decoder;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.feign.FeignUtils;
 import org.febit.lang.util.JacksonWrapper;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Type;
 

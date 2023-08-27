@@ -19,8 +19,9 @@ boot 'boot-feign'
 boot 'boot-feign-test'
 boot 'boot-starter-feign'
 
-boot 'boot-web-common'
-boot 'boot-starter-web'
+boot 'boot-web'
+boot 'boot-starter-webmvc'
+boot 'boot-starter-web-auth'
 
 devkit 'feign/common'
 devkit 'feign/gradle'

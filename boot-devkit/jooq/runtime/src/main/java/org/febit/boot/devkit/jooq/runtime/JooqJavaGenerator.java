@@ -94,7 +94,7 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
 
         var columns = table.getColumns().stream()
                 .filter(col -> !col.isIdentity())
-                .collect(Collectors.toList());
+                .toList();
 
         out.println();
         out.ref(Collectors.class);

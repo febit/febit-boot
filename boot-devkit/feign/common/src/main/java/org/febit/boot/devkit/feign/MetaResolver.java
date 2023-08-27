@@ -15,6 +15,7 @@
  */
 package org.febit.boot.devkit.feign;
 
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.febit.boot.devkit.feign.meta.ApiDef;
 import org.febit.boot.devkit.feign.meta.ApiParameterDef;
@@ -37,7 +38,6 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;

@@ -3,5 +3,4 @@ dependencies {
 
   api 'io.github.openfeign:feign-okhttp'
   api 'org.springframework.cloud:spring-cloud-starter-openfeign'
-  api 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
 }

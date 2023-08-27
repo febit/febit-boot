@@ -15,11 +15,11 @@
  */
 package org.febit.boot.jooq.converter;
 
+import jakarta.annotation.Nullable;
 import org.febit.lang.Valued;
 import org.jooq.impl.AbstractConverter;
 import org.springframework.core.ResolvableType;
 
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Map;
 

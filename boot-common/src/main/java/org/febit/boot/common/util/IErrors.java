@@ -15,6 +15,7 @@
  */
 package org.febit.boot.common.util;
 
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.common.exception.BusinessException;
@@ -23,7 +24,6 @@ import org.febit.lang.protocol.IResponse;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;

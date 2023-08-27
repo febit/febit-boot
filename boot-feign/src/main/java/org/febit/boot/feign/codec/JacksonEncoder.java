@@ -18,10 +18,10 @@ package org.febit.boot.feign.codec;
 import feign.RequestTemplate;
 import feign.codec.EncodeException;
 import feign.codec.Encoder;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.febit.lang.util.JacksonWrapper;
 
-import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;

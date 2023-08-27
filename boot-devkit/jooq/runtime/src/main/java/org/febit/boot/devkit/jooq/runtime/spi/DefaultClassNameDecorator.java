@@ -27,22 +27,14 @@ public class DefaultClassNameDecorator implements ClassNameDecorator {
     @Override
     public String decorate(Definition def, String name, GeneratorStrategy.Mode mode) {
 
-        switch (mode) {
-            case INTERFACE:
-                return "I" + name;
-            case RECORD:
-                return name + "Record";
-            case DAO:
-                return name + "Dao";
-            case POJO:
-                return name + "PO";
-            case DEFAULT:
-                if (def instanceof TableDefinition) {
-                    return "T" + name;
-                }
-                return name;
-            default:
-                return name;
-        }
+        return switch (mode) {
+            case INTERFACE -> "I" + name;
+            case RECORD -> name + "Record";
+            case DAO -> name + "Dao";
+            case POJO -> name + "PO";
+            case DEFAULT -> def instanceof TableDefinition
+                    ? "T" + name : name;
+            default -> name;
+        };
     }
 }

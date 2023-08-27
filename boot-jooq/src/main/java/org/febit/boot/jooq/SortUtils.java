@@ -24,9 +24,10 @@ import org.jooq.impl.DSL;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -64,21 +65,14 @@ public class SortUtils {
     }
 
     private static Map<String, SortEntry> resolve(Class<?> mappingType) {
-        var configs = declaredFields(mappingType)
+        return declaredFields(mappingType)
                 .map(SortUtils::resolveEntry)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(
+                .collect(Collectors.toUnmodifiableMap(
                         SortEntry::getName,
                         Function.identity()
                 ));
-
-        if (configs.isEmpty()) {
-            return Collections.emptyMap();
-        }
-        return Collections.unmodifiableMap(configs);
     }
 
-    @Nullable
     public static SortEntry resolveEntry(Field field) {
         var anno = AnnotatedElementUtils.findMergedAnnotation(field, Column.class);
         var name = Utils.name(anno, field.getName());

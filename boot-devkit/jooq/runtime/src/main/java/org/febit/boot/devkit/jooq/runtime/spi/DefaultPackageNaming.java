@@ -25,24 +25,16 @@ import org.springframework.core.annotation.Order;
 public class DefaultPackageNaming implements Naming {
 
     @Override
-    public String getPackageName(String basePackage, Definition def, GeneratorStrategy.Mode mode) {
-        switch (mode) {
-            case RECORD:
-                return basePackage + ".record";
-            case POJO:
-                return basePackage + ".po";
-            case DAO:
-                return basePackage + ".dao";
-            case INTERFACE:
-                return basePackage + ".interfaces";
-            case DEFAULT:
-                if (def instanceof TableDefinition) {
-                    return basePackage + ".table";
-                }
-                break;
-            default:
-        }
-        return null;
+    public String getPackageName(String basePkg, Definition def, GeneratorStrategy.Mode mode) {
+        return switch (mode) {
+            case RECORD -> basePkg + ".record";
+            case POJO -> basePkg + ".po";
+            case DAO -> basePkg + ".dao";
+            case INTERFACE -> basePkg + ".interfaces";
+            case DEFAULT -> def instanceof TableDefinition
+                    ? basePkg + ".table" : null;
+            default -> null;
+        };
     }
 
 }

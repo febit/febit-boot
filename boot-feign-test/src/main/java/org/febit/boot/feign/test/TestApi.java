@@ -27,6 +27,7 @@ import feign.codec.Decoder;
 import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
 import feign.okhttp.OkHttpClient;
+import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.StaticApplicationContext;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;

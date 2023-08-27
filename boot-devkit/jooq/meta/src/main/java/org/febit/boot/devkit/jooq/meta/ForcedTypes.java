@@ -15,10 +15,10 @@
  */
 package org.febit.boot.devkit.jooq.meta;
 
+import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 import org.jooq.meta.jaxb.ForcedType;
 
-import javax.annotation.Nullable;
 import java.time.Instant;
 import java.util.function.Consumer;
 

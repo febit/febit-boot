@@ -16,17 +16,17 @@
 package org.febit.boot.devkit.jooq.runtime.spi.lib;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.devkit.jooq.runtime.spi.TableFilter;
 import org.jooq.meta.TableDefinition;
+
+import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
 
 @Slf4j
 public class FlywayExcludeFilter implements TableFilter {
 
     @Override
     public boolean exclude(TableDefinition def) {
-        if (StringUtils.startsWithIgnoreCase(def.getName(),
-                "flyway_")) {
+        if (startsWithIgnoreCase(def.getName(), "flyway_")) {
             log.info("Excluded flyway table: {}", def.getName());
             return true;
         }

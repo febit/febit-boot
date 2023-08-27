@@ -15,13 +15,23 @@
  */
 package org.febit.boot.jooq;
 
+import jakarta.annotation.Nullable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.febit.lang.protocol.Page;
 import org.febit.lang.protocol.Pagination;
+import org.jooq.Condition;
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.OrderField;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.RecordMapper;
+import org.jooq.RecordType;
+import org.jooq.SelectQuery;
+import org.jooq.Table;
+import org.jooq.TableLike;
+import org.jooq.TableRecord;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;

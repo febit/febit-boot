@@ -15,6 +15,7 @@
  */
 package org.febit.boot.jooq;
 
+import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
@@ -28,7 +29,6 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.util.Collection;

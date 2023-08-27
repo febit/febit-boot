@@ -16,10 +16,10 @@
 package org.febit.boot.jooq.converter;
 
 import com.fasterxml.jackson.databind.JavaType;
+import jakarta.annotation.Nullable;
 import org.febit.lang.util.JacksonUtils;
 import org.jooq.impl.AbstractConverter;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;

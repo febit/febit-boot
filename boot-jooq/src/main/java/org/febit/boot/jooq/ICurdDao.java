@@ -15,6 +15,7 @@
  */
 package org.febit.boot.jooq;
 
+import jakarta.annotation.Nullable;
 import org.febit.lang.util.Lists;
 import org.jooq.Condition;
 import org.jooq.Field;
@@ -22,7 +23,6 @@ import org.jooq.InsertSetStep;
 import org.jooq.UpdatableRecord;
 import org.jooq.UpdateSetFirstStep;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;

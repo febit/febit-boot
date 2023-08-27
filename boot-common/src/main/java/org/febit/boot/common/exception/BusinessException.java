@@ -15,10 +15,9 @@
  */
 package org.febit.boot.common.exception;
 
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import org.febit.lang.protocol.IResponse;
-
-import javax.annotation.Nullable;
 
 @Getter
 public class BusinessException extends RuntimeException {
@@ -39,7 +38,7 @@ public class BusinessException extends RuntimeException {
     }
 
     public BusinessException(int status, String code, String message, @Nullable Throwable cause) {
-        super(message, cause, true, true);
+        super(message, cause, true, false);
         this.status = status;
         this.code = code;
     }

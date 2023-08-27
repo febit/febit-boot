@@ -1,0 +1,26 @@
+description = 'Febit boot web common'
+
+codegenModule {
+  module 'org.febit.boot.FebitWebCommon'
+}
+
+configurations {
+  testRuntimeClasspath.exclude module: 'logback-classic'
+}
+
+dependencies {
+  api project(':febit-boot-common')
+
+  compileOnly project(':febit-boot-jooq')
+  compileOnly 'org.springframework:spring-webmvc'
+
+  api 'jakarta.servlet:jakarta.servlet-api'
+  api 'org.springdoc:springdoc-openapi-starter-common'
+  api 'org.springframework:spring-web'
+
+  testRuntimeOnly 'com.h2database:h2'
+  testImplementation project(':febit-boot-starter-jooq')
+  testImplementation 'org.springframework:spring-webmvc'
+  testImplementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

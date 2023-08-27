@@ -20,7 +20,7 @@ ij_java_keep_blank_lines_in_code = 1
 ij_java_keep_blank_lines_in_declarations = 1
 ij_java_keep_blank_lines_before_right_brace = 1
 ij_java_keep_blank_lines_between_package_declaration_and_header = 1
-ij_java_packages_to_use_import_on_demand = $org.junit.jupiter.api.Assertions.**
+ij_java_packages_to_use_import_on_demand = $org.junit.jupiter.api.Assertions.**, $java.lang.annotation.**
 
 [*.groovy]
 indent_size = 4

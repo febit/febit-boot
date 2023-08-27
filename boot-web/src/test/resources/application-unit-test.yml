@@ -1,0 +1,8 @@
+server.tomcat:
+  threads:
+    min-spare: 1
+
+spring.datasource:
+  url: jdbc:h2:./build/db-dev/data
+  username: root
+  password: root

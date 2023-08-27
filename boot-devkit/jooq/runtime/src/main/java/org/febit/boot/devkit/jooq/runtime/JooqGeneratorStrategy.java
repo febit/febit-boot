@@ -20,11 +20,11 @@ import org.febit.boot.devkit.jooq.runtime.spi.ClassNameDecorator;
 import org.febit.boot.devkit.jooq.runtime.spi.ImplementsResolver;
 import org.febit.boot.devkit.jooq.runtime.spi.Naming;
 import org.febit.boot.devkit.jooq.runtime.spi.OutputNameResolver;
+import org.febit.boot.devkit.jooq.runtime.util.ColumnUtils;
 import org.febit.boot.devkit.jooq.runtime.util.NamingUtils;
 import org.jooq.codegen.DefaultGeneratorStrategy;
 import org.jooq.meta.CatalogDefinition;
 import org.jooq.meta.ColumnDefinition;
-import org.jooq.meta.DataTypeDefinition;
 import org.jooq.meta.Definition;
 import org.jooq.meta.SchemaDefinition;
 import org.jooq.meta.TableDefinition;
@@ -61,31 +61,7 @@ public class JooqGeneratorStrategy extends DefaultGeneratorStrategy {
     }
 
     public String resolveColumnType(ColumnDefinition column) {
-        DataTypeDefinition type = column.getType();
-        String fixed = type.getType().toLowerCase();
-        int split = fixed.indexOf('(');
-        if (split >= 0) {
-            fixed = fixed.substring(0, split)
-                    .trim();
-        }
-        switch (fixed) {
-            case "long":
-            case "bigint":
-                return "Long";
-            case "int":
-            case "integer":
-                return "Integer";
-            case "string":
-            case "text":
-            case "char":
-            case "varchar":
-            case "character":
-            case "character varying":
-            case "varchar_ignorecase":
-                return "String";
-            default:
-        }
-        return type.getType();
+        return ColumnUtils.type(column);
     }
 
     @Override

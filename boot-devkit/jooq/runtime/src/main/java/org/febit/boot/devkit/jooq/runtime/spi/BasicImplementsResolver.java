@@ -43,13 +43,10 @@ public class BasicImplementsResolver implements ImplementsResolver {
                 .getJavaClassName(table, GeneratorStrategy.Mode.RECORD);
 
         switch (context.getMode()) {
-            case DEFAULT:
-                context.addImpl(MetaUtils.CORE_PKG + ".ITable<" + recordClassName + ", " + pkType + ">");
-                break;
-            case POJO:
-                context.addImpl(MetaUtils.CORE_PKG + ".IEntity<" + pkType + ">");
-                break;
-            default:
+            case DEFAULT -> context.addImpl(MetaUtils.CORE_PKG
+                    + ".ITable<" + recordClassName + ", " + pkType + ">");
+            case POJO -> context.addImpl(MetaUtils.CORE_PKG
+                    + ".IEntity<" + pkType + ">");
         }
     }
 

@@ -1,7 +1,0 @@
-dependencies {
-  api project(':febit-boot-web-common')
-
-  api 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
-  api 'org.springframework.boot:spring-boot-starter-web'
-  api 'org.springframework.boot:spring-boot-starter-validation'
-}

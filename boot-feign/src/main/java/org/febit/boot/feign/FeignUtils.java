@@ -16,11 +16,11 @@
 package org.febit.boot.feign;
 
 import feign.Response;
+import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

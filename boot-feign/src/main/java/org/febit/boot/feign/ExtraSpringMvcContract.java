@@ -16,6 +16,7 @@
 package org.febit.boot.feign;
 
 import feign.MethodMetadata;
+import jakarta.annotation.Nullable;
 import lombok.Singular;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.AnnotatedParameterProcessor;
@@ -23,8 +24,7 @@ import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 
-import javax.annotation.Nullable;
-import java.lang.annotation.Annotation;
+import java.lang.annotation.*;
 import java.lang.reflect.Method;
 import java.util.IdentityHashMap;
 import java.util.List;

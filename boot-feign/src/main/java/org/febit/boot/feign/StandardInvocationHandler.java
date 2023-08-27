@@ -18,12 +18,12 @@ package org.febit.boot.feign;
 import feign.InvocationHandlerFactory;
 import feign.Target;
 import feign.codec.Decoder;
+import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;

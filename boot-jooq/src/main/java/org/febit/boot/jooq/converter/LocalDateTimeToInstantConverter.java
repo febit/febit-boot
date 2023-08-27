@@ -15,10 +15,10 @@
  */
 package org.febit.boot.jooq.converter;
 
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Converter;
 
-import javax.annotation.Nullable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

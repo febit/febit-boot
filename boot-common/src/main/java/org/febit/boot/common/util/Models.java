@@ -15,6 +15,7 @@
  */
 package org.febit.boot.common.util;
 
+import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -25,7 +26,6 @@ import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.util.ClassUtils;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.function.Supplier;
