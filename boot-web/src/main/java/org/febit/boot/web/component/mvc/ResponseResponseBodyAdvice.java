@@ -37,18 +37,18 @@ public class ResponseResponseBodyAdvice implements ResponseBodyAdvice<IResponse<
 
     @Override
     public boolean supports(
-            MethodParameter returnType,
+            MethodParameter parameter,
             Class<? extends HttpMessageConverter<?>> converterType
     ) {
         return IResponse.class
-                .isAssignableFrom(returnType.getParameterType());
+                .isAssignableFrom(parameter.getParameterType());
     }
 
     @Override
     @Nullable
     public IResponse<?> beforeBodyWrite(
             @Nullable IResponse<?> body,
-            MethodParameter returnType,
+            MethodParameter parameter,
             MediaType contentType,
             Class<? extends HttpMessageConverter<?>> converterType,
             ServerHttpRequest request,
