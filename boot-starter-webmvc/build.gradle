@@ -1,6 +1,7 @@
 dependencies {
   api project(':febit-boot-web')
 
+  api 'jakarta.servlet:jakarta.servlet-api'
   api 'org.springframework:spring-webmvc'
   api 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
   api 'org.springframework.boot:spring-boot-starter-web'

@@ -13,12 +13,13 @@ dependencies {
 
   compileOnly project(':febit-boot-jooq')
   compileOnly 'org.springframework:spring-webmvc'
+  compileOnly 'jakarta.servlet:jakarta.servlet-api'
 
-  api 'jakarta.servlet:jakarta.servlet-api'
   api 'org.springdoc:springdoc-openapi-starter-common'
   api 'org.springframework:spring-web'
 
   testRuntimeOnly 'com.h2database:h2'
+  testImplementation 'jakarta.servlet:jakarta.servlet-api'
   testImplementation project(':febit-boot-starter-jooq')
   testImplementation 'org.springframework:spring-webmvc'
   testImplementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
