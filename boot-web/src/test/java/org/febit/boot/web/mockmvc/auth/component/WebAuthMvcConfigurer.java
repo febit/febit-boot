@@ -17,7 +17,7 @@ package org.febit.boot.web.mockmvc.auth.component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.febit.boot.web.auth.WebAuthHandler;
+import org.febit.boot.auth.WebAuthHandler;
 import org.febit.boot.web.util.AuthHandlerInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

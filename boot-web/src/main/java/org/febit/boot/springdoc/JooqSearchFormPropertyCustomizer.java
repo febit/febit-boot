@@ -13,29 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web.component.springdoc;
+package org.febit.boot.springdoc;
 
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.oas.models.media.Schema;
-import lombok.extern.slf4j.Slf4j;
-import org.febit.boot.web.util.SpringdocUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.febit.boot.jooq.Column;
+import org.febit.boot.jooq.SearchForm;
 import org.springdoc.core.customizers.PropertyCustomizer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
-public class ExtraMetaPropertyCustomizer implements PropertyCustomizer {
+@ConditionalOnClass({
+        SearchForm.class,
+        PropertyCustomizer.class
+})
+public class JooqSearchFormPropertyCustomizer implements PropertyCustomizer {
 
-    private static final String EX_CLASS = "x-class";
+    private static final String EX_SEARCH_FILTER = "x-search-filter";
 
     @Override
     @SuppressWarnings("rawtypes")
     public Schema customize(Schema schema, AnnotatedType annotatedType) {
-        var type = SpringdocUtils.extractRawClass(annotatedType);
-        if (type == null) {
+        var annotations = annotatedType.getCtxAnnotations();
+        if (ArrayUtils.isEmpty(annotations)) {
             return schema;
         }
-        schema.addExtension(EX_CLASS, type.getSimpleName());
+        var colAnno = AnnotatedElementUtils.findMergedAnnotation(
+                AnnotatedElementUtils.forAnnotations(annotatedType.getCtxAnnotations()),
+                Column.class
+        );
+        if (colAnno == null) {
+            return schema;
+        }
+        schema.addExtension(EX_SEARCH_FILTER, colAnno.operator().name());
         return schema;
     }
 }

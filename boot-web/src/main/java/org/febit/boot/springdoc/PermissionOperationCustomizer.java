@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web.component.springdoc;
+package org.febit.boot.springdoc;
 
 import io.swagger.v3.oas.models.Operation;
 import lombok.Getter;
@@ -26,7 +26,6 @@ import org.febit.boot.common.permission.ResolvedPermission;
 import org.febit.lang.util.Lists;
 import org.springdoc.core.customizers.GlobalOperationCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 
@@ -34,9 +33,6 @@ import java.util.List;
 
 @Slf4j
 @Component
-@ConditionalOnClass({
-        GlobalOperationCustomizer.class
-})
 @ConditionalOnBean({
         PermissionManager.class
 })

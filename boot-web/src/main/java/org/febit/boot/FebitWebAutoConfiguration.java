@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web;
+package org.febit.boot;
 
 import org.febit.boot.common.util.FebitBootBeanNameGenerator;
 import org.febit.boot.web.component.WebCommonComponents;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ComponentScan(
         basePackageClasses = {
                 WebCommonComponents.class
         },
         nameGenerator = FebitBootBeanNameGenerator.class
 )
-public class FebitBootWebAutoConfiguration {
+@ConditionalOnWebApplication
+public class FebitWebAutoConfiguration {
 
 }

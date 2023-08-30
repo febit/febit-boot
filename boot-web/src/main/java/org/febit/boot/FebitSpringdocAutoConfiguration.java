@@ -13,24 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web.component.springdoc;
+package org.febit.boot;
 
 import io.swagger.v3.core.jackson.ModelResolver;
 import io.swagger.v3.core.util.Json;
+import org.febit.boot.common.util.FebitBootBeanNameGenerator;
 import org.febit.boot.common.util.Priority;
-import org.springdoc.core.utils.Constants;
+import org.febit.boot.springdoc.GenericTypeNameResolver;
+import org.springdoc.core.configuration.SpringDocConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-@Configuration
-@ConditionalOnProperty(
-        name = Constants.SPRINGDOC_ENABLED,
-        matchIfMissing = true
+import static org.springdoc.core.utils.Constants.SPRINGDOC_ENABLED;
+
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnClass({
+        SpringDocConfiguration.class
+})
+@ConditionalOnProperty(name = SPRINGDOC_ENABLED, matchIfMissing = true)
+@ConditionalOnWebApplication
+@ComponentScan(
+        basePackageClasses = {
+                GenericTypeNameResolver.class
+        },
+        nameGenerator = FebitBootBeanNameGenerator.class
 )
-public class SpringdocConfig {
+public class FebitSpringdocAutoConfiguration {
 
     @Bean
     @Order(Priority.HIGHEST)

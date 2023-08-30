@@ -13,7 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@NonNullApi
-package org.febit.boot.web.auth;
+package org.febit.boot;
 
-import org.febit.lang.annotation.NonNullApi;
+import org.springframework.context.annotation.Import;
+
+import java.lang.annotation.*;
+
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Import({
+        FebitAuthConfiguration.class,
+})
+public @interface EnableFebitAuth {
+
+}

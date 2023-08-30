@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web.auth;
+package org.febit.boot.auth;
 
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +25,7 @@ import org.febit.boot.common.permission.PermissionVerifier;
 import org.febit.boot.common.util.AuthErrors;
 import org.febit.boot.common.util.Priority;
 import org.febit.lang.protocol.IResponse;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequest;
@@ -40,6 +41,7 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_RE
 @Component
 @Order(Priority.HIGH)
 @RequiredArgsConstructor
+@ConditionalOnWebApplication
 public class WebAuthHandler<T extends AuthSubject> {
 
     private final PermissionManager permissionManager;

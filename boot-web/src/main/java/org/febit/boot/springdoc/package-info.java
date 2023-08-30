@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 @NonNullApi
-package org.febit.boot.web.component.springdoc;
+package org.febit.boot.springdoc;
 
 import org.febit.lang.annotation.NonNullApi;

@@ -6,22 +6,23 @@ pluginManagement {
   }
 }
 
-rootProject.name = 'febit-boot'
+rootProject.name = 'febit-boot-parent'
 
 boot 'boot-bom'
 boot 'boot-dependencies'
 
 boot 'boot-common'
 boot 'boot-jooq'
-boot 'boot-starter-jooq'
 
 boot 'boot-feign'
 boot 'boot-feign-test'
-boot 'boot-starter-feign'
 
 boot 'boot-web'
+
 boot 'boot-starter-webmvc'
-boot 'boot-starter-web-auth'
+boot 'boot-starter-jwt'
+boot 'boot-starter-feign'
+boot 'boot-starter-jooq'
 
 devkit 'feign/common'
 devkit 'feign/gradle'

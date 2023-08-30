@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web.auth.mvc;
+package org.febit.boot.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +23,7 @@ import org.febit.boot.common.permission.MethodPermissionResolvers;
 import org.febit.boot.common.permission.PermissionItem;
 import org.febit.boot.common.permission.PermissionManager;
 import org.febit.boot.common.permission.ResolvedPermission;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.SmartLifecycle;
@@ -41,6 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@ConditionalOnClass(RequestMappingInfoHandlerMapping.class)
 @ConditionalOnWebApplication(
         type = ConditionalOnWebApplication.Type.SERVLET
 )

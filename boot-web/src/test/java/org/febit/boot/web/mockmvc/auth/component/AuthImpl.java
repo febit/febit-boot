@@ -15,9 +15,9 @@
  */
 package org.febit.boot.web.mockmvc.auth.component;
 
+import org.febit.boot.auth.WebRequestAuthSubjectResolver;
 import org.febit.boot.common.permission.PermissionItem;
 import org.febit.boot.common.permission.PermissionVerifier;
-import org.febit.boot.web.auth.WebRequestAuthSubjectResolver;
 import org.febit.lang.annotation.NonNullApi;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequest;

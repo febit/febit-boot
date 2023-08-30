@@ -1,0 +1,4 @@
+dependencies {
+  api project(':febit-boot-common')
+  api 'com.nimbusds:nimbus-jose-jwt'
+}

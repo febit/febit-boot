@@ -15,7 +15,8 @@
  */
 package org.febit.boot.web.mockmvc.basic;
 
-import org.febit.boot.web.FebitBootWebAutoConfiguration;
+import org.febit.boot.FebitSpringdocAutoConfiguration;
+import org.febit.boot.FebitWebAutoConfiguration;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -34,7 +35,8 @@ public abstract class BaseMvcTest {
     @SpringBootApplication
     @ImportAutoConfiguration(
             classes = {
-                    FebitBootWebAutoConfiguration.class
+                    FebitSpringdocAutoConfiguration.class,
+                    FebitWebAutoConfiguration.class,
             }
     )
     public static class TestApplication {

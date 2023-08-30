@@ -14,20 +14,20 @@ description = 'Febit Boot'
 ext {
 
   versions = [
-          commonsIo        : '2.13.0',
+      commonsIo        : '2.13.0',
       commonsCompress    : '1.21',
       commonsCollections4: '4.4',
       commonsExec        : '1.3',
-          nimbusJoseJwt    : '9.31',
+      nimbusJoseJwt    : '9.31',
 
-          febitCommons     : '3.0.0-SNAPSHOT',
-          febitDevkitGradle: '1.1.0-SNAPSHOT',
-          swagger3         : '2.2.15',
-          springdoc        : '2.2.0',
-          springBoot       : '3.1.2',
-          springCloud      : '2022.0.4',
+      febitCommons     : '3.0.0-SNAPSHOT',
+      febitDevkitGradle: '1.1.0-SNAPSHOT',
+      swagger3         : '2.2.15',
+      springdoc        : '2.2.0',
+      springBoot       : '3.1.2',
+      springCloud      : '2022.0.4',
 
-          embeddedPostgres : '2.0.4',
+      embeddedPostgres : '2.0.4',
   ]
 
 }
@@ -65,17 +65,23 @@ allprojects {
   }
 }
 
+def STARTER_PREFIX = 'febit-boot-starter-'
+
 configure(subprojects.findAll {
   !it.name.endsWith('-bom')
 }) {
   apply plugin: 'java-library'
+
+  def isStarter = name.startsWith(STARTER_PREFIX)
 
   java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 
     // withJavadocJar()
-    withSourcesJar()
+    if (!isStarter) {
+      withSourcesJar()
+    }
   }
 
   test {
@@ -126,6 +132,14 @@ configure(subprojects.findAll {
     }
   }
 
+}
+
+configure(subprojects.findAll {
+  it.name.startsWith(STARTER_PREFIX)
+}) {
+  jar.manifest {
+    attributes 'Spring-Boot-Jar-Type': 'dependencies-starter'
+  }
 }
 
 def customPom(MavenPom pom) {

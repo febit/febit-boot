@@ -13,15 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web.auth;
+@NonNullApi
+package org.febit.boot.auth;
 
-import org.febit.boot.common.auth.AuthSubject;
-
-/**
- * @deprecated use {@link org.febit.boot.auth.WebRequestAuthSubjectResolver} instead.
- */
-@Deprecated
-public interface WebRequestAuthSubjectResolver<T extends AuthSubject>
-        extends org.febit.boot.auth.WebRequestAuthSubjectResolver<T> {
-
-}
+import org.febit.lang.annotation.NonNullApi;

@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web;
+package org.febit.boot;
 
+import org.febit.boot.auth.WebAuthHandler;
 import org.febit.boot.common.permission.AnnotatedMethodPermissionResolver;
 import org.febit.boot.common.util.FebitBootBeanNameGenerator;
-import org.febit.boot.web.auth.WebAuthHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ComponentScan(
         nameGenerator = FebitBootBeanNameGenerator.class,
         basePackageClasses = {
                 WebAuthHandler.class
         }
 )
-public class FebitBootWebAuthAutoConfiguration {
+public class FebitAuthConfiguration {
 
     @Bean
     public AnnotatedMethodPermissionResolver annotatedMethodPermissionResolver() {
