@@ -1,4 +1,5 @@
 dependencies {
   api project(':febit-boot-jooq')
+  api 'jakarta.persistence:jakarta.persistence-api'
   api 'org.springframework.boot:spring-boot-starter-jooq'
 }

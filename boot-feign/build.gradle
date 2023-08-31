@@ -8,6 +8,4 @@ dependencies {
   api project(':febit-boot-common')
   api 'io.github.openfeign:feign-core'
   api 'org.springframework.cloud:spring-cloud-openfeign-core'
-
-  compileOnly 'com.squareup.okhttp3:okhttp'
 }

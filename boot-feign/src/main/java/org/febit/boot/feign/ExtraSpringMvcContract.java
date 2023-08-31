@@ -70,7 +70,7 @@ public class ExtraSpringMvcContract extends SpringMvcContract {
 
         // Ignore by ApiIgnore
         for (var anno : annotations) {
-            if (anno instanceof ApiIgnore) {
+            if (anno instanceof ApiIgnored) {
                 return true;
             }
         }

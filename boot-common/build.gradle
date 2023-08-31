@@ -7,6 +7,11 @@ dependencies {
   api 'org.springframework:spring-core'
   api 'org.springframework:spring-context'
 
+  compileOnly 'com.squareup.okhttp3:okhttp'
   compileOnly 'com.nimbusds:nimbus-jose-jwt'
   compileOnly 'org.springframework.boot:spring-boot'
+}
+
+codegenModule {
+  module 'org.febit.boot.FebitBoot'
 }

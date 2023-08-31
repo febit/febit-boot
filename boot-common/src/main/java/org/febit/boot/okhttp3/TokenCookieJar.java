@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.feign;
+package org.febit.boot.okhttp3;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +35,8 @@ public class TokenCookieJar implements CookieJar {
     public void saveFromResponse(HttpUrl httpUrl, List<Cookie> cookies) {
         for (Cookie cookie : cookies) {
             if (key.equals(cookie.name())) {
-                cookieRef.set(cookie);
                 log.debug("Received cookie: {}", key);
+                cookieRef.set(cookie);
             }
         }
     }

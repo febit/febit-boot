@@ -149,8 +149,7 @@ public class TestApi<T> {
 
         @Bean
         @ConditionalOnMissingBean
-        public Client client(
-        ) {
+        public Client client() {
             var interceptor = new HttpLoggingInterceptor(log::info);
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
