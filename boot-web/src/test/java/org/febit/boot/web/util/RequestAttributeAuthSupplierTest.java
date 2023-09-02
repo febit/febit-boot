@@ -16,9 +16,9 @@
 package org.febit.boot.web.util;
 
 import org.febit.boot.common.auth.AuthConstants;
-import org.febit.boot.common.exception.BusinessException;
 import org.febit.boot.common.util.Errors;
 import org.febit.boot.web.mockmvc.auth.component.TestAuthSubject;
+import org.febit.lang.protocol.BusinessException;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;

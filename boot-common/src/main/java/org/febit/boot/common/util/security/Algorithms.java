@@ -20,8 +20,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 class Algorithms {
 
-
     static final String EC = "EC";
     static final String RSA = "RSA";
-
 }

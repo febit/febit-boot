@@ -16,8 +16,8 @@
 package org.febit.boot.web.component.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.febit.boot.common.exception.BusinessException;
 import org.febit.boot.common.util.Priority;
+import org.febit.lang.protocol.BusinessException;
 import org.febit.lang.protocol.IResponse;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;

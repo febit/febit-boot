@@ -18,7 +18,7 @@ package org.febit.boot.common.util;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.febit.boot.common.exception.BusinessException;
+import org.febit.lang.protocol.BusinessException;
 import org.febit.lang.protocol.Fallible;
 import org.febit.lang.protocol.IResponse;
 import org.springframework.util.CollectionUtils;
