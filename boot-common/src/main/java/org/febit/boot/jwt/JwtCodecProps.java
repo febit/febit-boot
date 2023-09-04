@@ -19,7 +19,7 @@ import com.nimbusds.jose.JWSSigner;
 import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.febit.lang.util.Lazy;
+import org.febit.lang.Lazy;
 import org.febit.lang.util.Maps;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
 

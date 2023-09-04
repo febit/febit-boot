@@ -22,8 +22,8 @@ import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.factories.DefaultJWSVerifierFactory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.febit.lang.Lazy;
 import org.febit.lang.UncheckedException;
-import org.febit.lang.util.Lazy;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 import java.security.PrivateKey;
