@@ -115,7 +115,6 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
     public void beforePrepareTask(JooqCodegenPrepareTask task) {
         var extension = task.codegenExtension();
         var project = task.getProject();
-        var conf = extension.getEmbeddedPostgres();
 
         var workDir = resolveWorkDir(project, extension);
         var dataDir = resolveDataDir(project, extension);

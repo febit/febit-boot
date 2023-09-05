@@ -15,23 +15,10 @@
  */
 package org.febit.boot.web;
 
-import org.febit.lang.protocol.IResponse;
+/**
+ * @deprecated Use {@link org.febit.lang.protocol.IBasicApi} instead.
+ */
+@Deprecated
+public interface IBasicApi extends org.febit.lang.protocol.IBasicApi {
 
-public interface IBasicApi {
-
-    default <T> IResponse<T> ok() {
-        return IResponse.success();
-    }
-
-    default <T> IResponse<T> ok(T data) {
-        return IResponse.success(data);
-    }
-
-    default <T> IResponse<T> created() {
-        return IResponse.success(201, null);
-    }
-
-    default <T> IResponse<T> accepted() {
-        return IResponse.success(202, null);
-    }
 }

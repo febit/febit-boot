@@ -18,5 +18,5 @@ package org.febit.boot.web.component;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public final class WebCommonComponents {
+public class WebComponentsPackage {
 }

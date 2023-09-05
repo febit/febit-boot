@@ -16,7 +16,7 @@
 package org.febit.boot;
 
 import org.febit.boot.common.util.FebitBootBeanNameGenerator;
-import org.febit.boot.web.component.WebCommonComponents;
+import org.febit.boot.web.component.WebComponentsPackage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 @ComponentScan(
         basePackageClasses = {
-                WebCommonComponents.class
+                WebComponentsPackage.class
         },
         nameGenerator = FebitBootBeanNameGenerator.class
 )
