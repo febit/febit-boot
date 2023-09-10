@@ -43,7 +43,7 @@ public class SubscriberManager<S extends ISubscriber<?>, X> {
                         .flatMap(f -> f.subjectTypes().stream()
                                 .map(t -> Tuple2.of(t, f))
                         ),
-                Tuple2::a, Tuple2::b
+                Tuple2::v1, Tuple2::v2
         );
     }
 

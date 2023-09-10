@@ -84,11 +84,11 @@ public class ClassNamingImpl implements ClassNaming {
             buf.append(prefix);
         }
         for (var pair : suffixPairs) {
-            if (!name.endsWith(pair.a())) {
+            if (!name.endsWith(pair.v1())) {
                 continue;
             }
-            name = StringUtils.removeEnd(name, pair.a())
-                    + pair.b();
+            name = StringUtils.removeEnd(name, pair.v1())
+                    + pair.v2();
         }
 
         buf.append(name);
@@ -101,11 +101,11 @@ public class ClassNamingImpl implements ClassNaming {
 
     private String fixPkg(String pkg) {
         for (var pair : pkgPairs) {
-            if (!pkg.startsWith(pair.a())) {
+            if (!pkg.startsWith(pair.v1())) {
                 continue;
             }
-            pkg = pair.b()
-                    + StringUtils.removeStart(pkg, pair.a());
+            pkg = pair.v2()
+                    + StringUtils.removeStart(pkg, pair.v1());
         }
         return pkg;
     }
