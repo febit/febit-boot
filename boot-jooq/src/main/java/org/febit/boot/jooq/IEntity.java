@@ -17,11 +17,14 @@ package org.febit.boot.jooq;
 
 import org.jooq.UpdatableRecord;
 
+import javax.annotation.Nullable;
+
 @SuppressWarnings({
         "squid:S1609" // @FunctionalInterface annotation should be used to flag Single Abstract Method interfaces
 })
 public interface IEntity<I> {
 
+    @Nullable
     I id();
 
     <R extends UpdatableRecord<R>> R toRecord();

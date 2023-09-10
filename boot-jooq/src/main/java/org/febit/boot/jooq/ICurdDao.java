@@ -55,7 +55,11 @@ public interface ICurdDao<TB extends ITable<R, ID>, PO extends IEntity<ID>, ID, 
     }
 
     default int delete(PO po) {
-        return deleteById(po.id());
+        var id = po.id();
+        if (id == null) {
+            return 0;
+        }
+        return deleteById(id);
     }
 
     default int deleteById(ID id) {

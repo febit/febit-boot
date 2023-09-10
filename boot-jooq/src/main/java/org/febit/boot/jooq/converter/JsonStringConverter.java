@@ -34,7 +34,6 @@ public class JsonStringConverter<V> extends AbstractConverter<String, V> {
         this.beanJsonType = beanJsonType;
     }
 
-    @SuppressWarnings({"rawtypes"})
     public static <V> JsonStringConverter<Map<String, V>> forBeanMap(Class<V> beanType) {
         return forBeanMap(String.class, beanType);
     }
