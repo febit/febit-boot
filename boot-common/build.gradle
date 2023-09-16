@@ -13,5 +13,5 @@ dependencies {
 }
 
 codegenModule {
-  module 'org.febit.boot.FebitBoot'
+  module 'org.febit.boot.FebitBootCommon'
 }

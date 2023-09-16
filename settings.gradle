@@ -12,12 +12,12 @@ boot 'boot-bom'
 boot 'boot-dependencies'
 
 boot 'boot-common'
+boot 'boot'
+
 boot 'boot-jooq'
 
 boot 'boot-feign'
 boot 'boot-feign-test'
-
-boot 'boot-web'
 
 boot 'boot-starter-webmvc'
 boot 'boot-starter-jwt'
