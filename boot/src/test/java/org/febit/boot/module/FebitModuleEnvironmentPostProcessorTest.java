@@ -91,18 +91,18 @@ class FebitModuleEnvironmentPostProcessorTest {
                 .containsEntry("febit-boot-common.version", FebitBootCommon.version())
                 .containsEntry("febit-boot-common.commit-id", FebitBootCommon.commitId())
                 .containsEntry("febit-boot-common.short-commit-id", FebitBootCommon.commitId().substring(0, 8))
-                .containsEntry("febit-boot-common.built-at", FebitBootCommon.builtAt().toString())
-                .containsEntry("febit-boot-common.built-at-millis",
-                        FebitBootCommon.builtAt().toEpochMilli()
+                .containsEntry("febit-boot-common.build-time", FebitBootCommon.buildTime().toString())
+                .containsEntry("febit-boot-common.build-time-in-millis",
+                        FebitBootCommon.buildTime().toEpochMilli()
                 )
                 .containsEntry("febit-boot.group-id", FebitBoot.groupId())
                 .containsEntry("febit-boot.artifact-id", FebitBoot.artifactId())
                 .containsEntry("febit-boot.version", FebitBoot.version())
                 .containsEntry("febit-boot.commit-id", FebitBoot.commitId())
                 .containsEntry("febit-boot.short-commit-id", FebitBoot.commitId().substring(0, 8))
-                .containsEntry("febit-boot.built-at", FebitBoot.builtAt().toString())
-                .containsEntry("febit-boot.built-at-millis",
-                        FebitBoot.builtAt().toEpochMilli()
+                .containsEntry("febit-boot.build-time", FebitBoot.buildTime().toString())
+                .containsEntry("febit-boot.build-time-in-millis",
+                        FebitBoot.buildTime().toEpochMilli()
                 );
     }
 

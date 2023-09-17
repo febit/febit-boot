@@ -15,14 +15,13 @@
  */
 package ${classPackage};
 
-import org.febit.lang.module.IModule;
-
 import java.time.Instant;
 
 @SuppressWarnings({
         "squid:S3400" // Methods should not return constants
 })
-public class ${classSimpleName} implements IModule {
+@org.febit.lang.annotation.Generated
+public class ${classSimpleName} implements org.febit.lang.module.IModule {
 
     public static String groupId() {
         return "${groupId}";
@@ -40,9 +39,9 @@ public class ${classSimpleName} implements IModule {
         return "${commitId}";
     }
 
-    public static Instant builtAt() {
-        // At: ${builtAt}
-        return Instant.ofEpochSecond(${builtAt.epochSecond});
+    public static Instant buildTime() {
+        // ${buildTime}
+        return Instant.ofEpochSecond(${buildTime.epochSecond}L);
     }
 
     @Override
@@ -66,7 +65,7 @@ public class ${classSimpleName} implements IModule {
     }
 
     @Override
-    public Instant getBuiltAt() {
-        return builtAt();
+    public Instant getBuildTime() {
+        return buildTime();
     }
 }

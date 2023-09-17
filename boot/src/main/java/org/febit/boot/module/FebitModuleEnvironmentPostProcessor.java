@@ -41,8 +41,8 @@ public class FebitModuleEnvironmentPostProcessor implements EnvironmentPostProce
     private static final String VERSION = "version";
     private static final String COMMIT_ID = "commit-id";
     private static final String SHORT_COMMIT_ID = "short-commit-id";
-    private static final String BUILT_AT = "built-at";
-    private static final String BUILT_AT_MILLIS = "built-at-millis";
+    private static final String BUILD_TIME = "build-time";
+    private static final String BUILD_TIME_IN_MILLIS = "build-time-in-millis";
 
     @Override
     public int getOrder() {
@@ -97,9 +97,9 @@ public class FebitModuleEnvironmentPostProcessor implements EnvironmentPostProce
             props.put(prefix + VERSION, module.getVersion());
             props.put(prefix + COMMIT_ID, module.getCommitId());
             props.put(prefix + SHORT_COMMIT_ID, shortCommitId);
-            props.put(prefix + BUILT_AT, module.getBuiltAt().toString());
-            props.put(prefix + BUILT_AT_MILLIS,
-                    module.getBuiltAt().toEpochMilli()
+            props.put(prefix + BUILD_TIME, module.getBuildTime().toString());
+            props.put(prefix + BUILD_TIME_IN_MILLIS,
+                    module.getBuildTime().toEpochMilli()
             );
         }
         return props;
