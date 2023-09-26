@@ -17,11 +17,11 @@ package org.febit.boot.jooq;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.febit.lang.UncheckedException;
+import org.febit.lang.util.TypeParameters;
 import org.jooq.Configuration;
 import org.jooq.RecordMapper;
 import org.jooq.Table;
 import org.jooq.TableRecord;
-import org.springframework.core.ResolvableType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
@@ -53,10 +53,10 @@ public abstract class BaseDao<TB extends Table<R>, PO, R extends TableRecord<R>>
     protected BaseDao(Configuration conf) {
         this.conf = conf;
 
-        var resolvableType = ResolvableType.forClass(BaseDao.class, getClass());
-        this.tableType = (Class<TB>) resolvableType.resolveGeneric(0);
-        this.poType = (Class<PO>) resolvableType.resolveGeneric(1);
-        this.recordType = (Class<R>) resolvableType.resolveGeneric(2);
+        var resolved = TypeParameters.forType(getClass());
+        this.tableType = resolved.resolve(BaseDao.class, 0).get();
+        this.poType = resolved.resolve(BaseDao.class, 1).get();
+        this.recordType = resolved.resolve(BaseDao.class, 2).get();
 
         Objects.requireNonNull(this.tableType);
         Objects.requireNonNull(this.poType);

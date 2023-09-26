@@ -22,10 +22,10 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.febit.lang.UncheckedException;
 import org.febit.lang.util.Lists;
+import org.febit.lang.util.TypeParameters;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
@@ -198,12 +198,14 @@ public class SearchFormUtils {
     }
 
     static Class<?> resolveComponentType(Field field) {
-        if (Object[].class.isAssignableFrom(field.getType())) {
+        var type = field.getType();
+        if (Object[].class.isAssignableFrom(type)) {
             return field.getType().getComponentType();
         }
-        if (Collection.class.isAssignableFrom(field.getType())) {
-            var resolved = ResolvableType.forField(field).asCollection()
-                    .resolveGeneric(0);
+        if (Collection.class.isAssignableFrom(type)) {
+            var resolved = TypeParameters.forField(field)
+                    .resolve(Collection.class, 0)
+                    .get();
             return resolved != null ? resolved : Object.class;
         }
         throw new IllegalArgumentException("Field type not supported, collection types are accepted: " + field);

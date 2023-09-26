@@ -67,6 +67,10 @@ allprojects {
     skipExistingHeaders false
     header rootProject.file('etc/license-header.txt')
   }
+
+  tasks.withType(AbstractPublishToMaven).configureEach {
+    mustRunAfter tasks.withType(Sign)
+  }
 }
 
 def STARTER_PREFIX = 'febit-boot-starter-'

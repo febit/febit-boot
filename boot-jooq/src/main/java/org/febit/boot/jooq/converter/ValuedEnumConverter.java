@@ -17,8 +17,8 @@ package org.febit.boot.jooq.converter;
 
 import jakarta.annotation.Nullable;
 import org.febit.lang.Valued;
+import org.febit.lang.util.TypeParameters;
 import org.jooq.impl.AbstractConverter;
-import org.springframework.core.ResolvableType;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -39,9 +39,7 @@ public class ValuedEnumConverter<DO extends Serializable, V extends Valued<DO> &
 
     public static <DO extends Serializable, E extends Valued<DO> & Serializable>
     ValuedEnumConverter<DO, E> forEnum(Class<E> enumType) {
-        @SuppressWarnings({"unchecked"})
-        Class<DO> keyClass = (Class<DO>) ResolvableType.forClass(Valued.class, enumType)
-                .resolveGeneric(0);
+        Class<DO> keyClass = TypeParameters.resolve(enumType, Valued.class, 0);
         if (keyClass == null) {
             throw new IllegalArgumentException("Only Valued<?> Enums are accepted,"
                     + " or cannot resolve first generic type: " + enumType);

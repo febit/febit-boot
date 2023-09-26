@@ -16,9 +16,9 @@
 package org.febit.boot.jooq;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.febit.lang.util.TypeParameters;
 import org.jooq.Configuration;
 import org.jooq.UpdatableRecord;
-import org.springframework.core.ResolvableType;
 
 import java.util.Objects;
 
@@ -37,14 +37,12 @@ public abstract class BaseCurdDao<TB extends ITable<R, ID>, PO extends IEntity<I
 
     private final Class<ID> pkType;
 
-    @SuppressWarnings({"unchecked"})
     @SuppressFBWarnings({
             "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"
     })
     protected BaseCurdDao(Configuration conf) {
         super(conf);
-        this.pkType = (Class<ID>) ResolvableType.forClass(BaseCurdDao.class, getClass())
-                .resolveGeneric(2);
+        this.pkType = TypeParameters.resolve(getClass(), BaseCurdDao.class, 2);
         Objects.requireNonNull(this.pkType);
     }
 
