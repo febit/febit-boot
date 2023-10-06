@@ -15,6 +15,7 @@
  */
 package org.febit.boot.devkit.jooq.runtime;
 
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -32,10 +33,12 @@ class Spi<S> {
         );
     }
 
+    @Nullable
     public <T> T compute(Function<S, T> computer) {
         return compute(computer, () -> null);
     }
 
+    @Nullable
     public <T> T compute(Function<S, T> computer, Supplier<T> defaultSupplier) {
         for (var f : spies) {
             var result = computer.apply(f);

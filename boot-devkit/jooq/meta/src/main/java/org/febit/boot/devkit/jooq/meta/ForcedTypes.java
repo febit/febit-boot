@@ -17,6 +17,7 @@ package org.febit.boot.devkit.jooq.meta;
 
 import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
+import org.febit.lang.modeler.Schema;
 import org.jooq.meta.jaxb.ForcedType;
 
 import java.time.Instant;
@@ -46,7 +47,7 @@ public class ForcedTypes {
     }
 
     public static void to(Sink sink, String expr, Schema schema) {
-        switch (schema.getType()) {
+        switch (schema.type()) {
             case BOOLEAN:
                 toBoolean(sink, expr);
                 break;
@@ -54,10 +55,10 @@ public class ForcedTypes {
                 timeToInstant(sink, expr);
                 break;
             case ENUM:
-                toEnum(sink, expr, schema.getValueType().toTypeString());
+                toEnum(sink, expr, schema.valueType().toJavaTypeString());
                 break;
             case JSON:
-                jsonTo(sink, expr, schema.getValueType());
+                jsonTo(sink, expr, schema.valueType());
                 break;
             case RAW:
             case STRING:
@@ -68,18 +69,18 @@ public class ForcedTypes {
             case DOUBLE:
             case DATE:
             case TIME:
-            case LOCAL_DATETIME:
-            case ZONED_DATETIME:
+            case DATETIME:
+            case DATETIME_ZONED:
             case ARRAY:
             case LIST:
             case MAP:
             default:
-                throw new IllegalArgumentException("Not support json type: " + schema.toTypeString());
+                throw new IllegalArgumentException("Not support json type: " + schema.toJavaTypeString());
         }
     }
 
     public static void jsonTo(Sink sink, String expr, Schema type) {
-        switch (type.getType()) {
+        switch (type.type()) {
             case RAW:
             case ENUM:
             case STRING:
@@ -92,33 +93,33 @@ public class ForcedTypes {
             case INSTANT:
             case DATE:
             case TIME:
-            case LOCAL_DATETIME:
-            case ZONED_DATETIME:
-                jsonToBean(sink, expr, type.toTypeString());
+            case DATETIME:
+            case DATETIME_ZONED:
+                jsonToBean(sink, expr, type.toJavaTypeString());
                 break;
             case ARRAY:
-                jsonToBeanArray(sink, expr, type.getValueType().toTypeString());
+                jsonToBeanArray(sink, expr, type.valueType().toJavaTypeString());
                 break;
             case LIST:
-                jsonToBeanList(sink, expr, type.getValueType().toTypeString());
+                jsonToBeanList(sink, expr, type.valueType().toJavaTypeString());
                 break;
             case MAP:
                 jsonToBeanMap(sink, expr,
-                        type.getKeyType().toTypeString(),
-                        type.getValueType().toTypeString()
+                        type.keyType().toJavaTypeString(),
+                        type.valueType().toJavaTypeString()
                 );
                 break;
             case JSON:
             default:
-                throw new IllegalArgumentException("Not support json type: " + type.toTypeString());
+                throw new IllegalArgumentException("Not support json type: " + type.toJavaTypeString());
         }
     }
 
     public static void toBoolean(Sink sink, String expr) {
         sink.accept(next()
                 .expr(expr)
-                .name(Types.BOOLEAN)
-                .type(Types.ANY)
+                .name(TypePatterns.BOOLEAN)
+                .type(TypePatterns.ANY)
         );
     }
 
@@ -127,7 +128,7 @@ public class ForcedTypes {
                 .converter(Converters.VALUED_ENUM + ".forEnum(" + enumType + ".class)")
                 .expr(expr)
                 .javaType(enumType)
-                .type(Types.ANY)
+                .type(TypePatterns.ANY)
         );
     }
 
@@ -147,21 +148,21 @@ public class ForcedTypes {
                 .converter(Converters.JSONB + call)
                 .expr(expr)
                 .javaType(beanType)
-                .type(Types.JSONB)
+                .type(TypePatterns.JSONB)
         );
 
         sink.accept(next()
                 .converter(Converters.JSON + call)
                 .expr(expr)
                 .javaType(beanType)
-                .type(Types.JSON)
+                .type(TypePatterns.JSON)
         );
 
         sink.accept(next()
                 .converter(Converters.JSON_STRING + call)
                 .expr(expr)
                 .javaType(beanType)
-                .type(Types.STRING)
+                .type(TypePatterns.STRING)
         );
     }
 
@@ -192,13 +193,13 @@ public class ForcedTypes {
                 .converter(Converters.LOCAL_DATE_TIME_INSTANT)
                 .expr(expr != null ? expr : EXPR_ALL)
                 .javaType(Instant.class.getName())
-                .type(Types.DATETIME_OR_TIMESTAMP)
+                .type(TypePatterns.DATETIME_OR_TIMESTAMP)
         );
         sink.accept(next()
                 .converter(Converters.OFFSET_DATE_TIME_INSTANT)
                 .expr(EXPR_ALL)
                 .javaType(Instant.class.getName())
-                .type(Types.TIMESTAMP_TZ)
+                .type(TypePatterns.TIMESTAMP_TZ)
         );
     }
 
@@ -212,7 +213,7 @@ public class ForcedTypes {
         String JSONB = PKG + "JsonbConverter";
     }
 
-    public interface Types {
+    public interface TypePatterns {
         String ANY = ".*";
         String BOOLEAN = "boolean";
 
@@ -221,8 +222,8 @@ public class ForcedTypes {
         String DATETIME_OR_TIMESTAMP = DATETIME + "|" + TIMESTAMP;
 
         String TIMESTAMP_TZ = "("
-                + "TIMESTAMPTZ|TIMESTAMP_TZ"
-                + "|(TIMESTAMP(\\s|_)?WITH(\\s|_)?TIME(\\s|_)?ZONE)"
+                + "timestamptz|timestamp_tz"
+                + "|(timestamp(\\s|_)?with(\\s|_)?time(\\s|_)?zone)"
                 + ")([(].*)?";
 
         String STRING = "("

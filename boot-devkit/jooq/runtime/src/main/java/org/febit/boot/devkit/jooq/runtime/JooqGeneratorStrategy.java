@@ -15,6 +15,7 @@
  */
 package org.febit.boot.devkit.jooq.runtime;
 
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.febit.boot.devkit.jooq.runtime.spi.ClassNameDecorator;
 import org.febit.boot.devkit.jooq.runtime.spi.ImplementsResolver;
@@ -30,6 +31,7 @@ import org.jooq.meta.SchemaDefinition;
 import org.jooq.meta.TableDefinition;
 
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings({"unused"})
 @Slf4j
@@ -41,6 +43,7 @@ public class JooqGeneratorStrategy extends DefaultGeneratorStrategy {
     private final Spi<OutputNameResolver> outputNameResolverSpi = Spi.load(OutputNameResolver.class, this);
     private final Spi<ClassNameDecorator> classNameDecoratorSpi = Spi.load(ClassNameDecorator.class, this);
 
+    @Nullable
     public static ColumnDefinition getPkColumn(TableDefinition table) {
         var pk = table.getPrimaryKey();
         if (pk == null) {
@@ -54,10 +57,12 @@ public class JooqGeneratorStrategy extends DefaultGeneratorStrategy {
     }
 
     public String resolveOutputName(Definition definition) {
-        return outputNameResolverSpi.compute(
+        var name = outputNameResolverSpi.compute(
                 r -> r.resolve(definition),
                 definition::getOutputName
         );
+        Objects.requireNonNull(name, () -> "OutputName is null for def: " + definition);
+        return name;
     }
 
     public String resolveColumnType(ColumnDefinition column) {
@@ -92,15 +97,16 @@ public class JooqGeneratorStrategy extends DefaultGeneratorStrategy {
 
     @Override
     public String getJavaPackageName(Definition def, Mode mode) {
-
         var targetPkg = def.getDatabase().getCatalogs().size() <= 1
                 ? getTargetPackage()
                 : getTargetPackage() + "." + getJavaIdentifier(def.getCatalog()).toLowerCase();
 
-        return namingSpi.compute(
+        var pkg = namingSpi.compute(
                 n -> n.getPackageName(targetPkg, def, mode),
                 () -> super.getJavaPackageName(def, mode)
         );
+        Objects.requireNonNull(pkg, () -> "pkg is null for def: " + def + ", mode: " + mode);
+        return pkg;
     }
 
     @Override
@@ -123,10 +129,14 @@ public class JooqGeneratorStrategy extends DefaultGeneratorStrategy {
                 )
         );
 
-        return classNameDecoratorSpi.compute(
+        Objects.requireNonNull(name, () -> "ClassName is null for def: " + def + ", mode: " + mode);
+        var fixedName = classNameDecoratorSpi.compute(
                 d -> d.decorate(def, name, mode),
                 () -> name
         );
+
+        Objects.requireNonNull(fixedName);
+        return fixedName;
     }
 
 }

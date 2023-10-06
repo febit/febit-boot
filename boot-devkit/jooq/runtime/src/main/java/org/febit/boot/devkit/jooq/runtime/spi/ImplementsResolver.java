@@ -38,6 +38,7 @@ public interface ImplementsResolver {
 
         GeneratorStrategy.Mode getMode();
 
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         default boolean isTableDefinition() {
             return getDef() instanceof TableDefinition;
         }

@@ -13,19 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jooq.codegen;
+@NonNullApi
+package org.febit.boot.devkit.jooq.runtime.spi;
 
 import org.febit.lang.annotation.NonNullApi;
-import org.jooq.meta.Database;
-
-@NonNullApi
-public abstract class FebitDevkitJavaGeneratorHack extends JavaGenerator {
-
-    @Override
-    void logDatabaseParameters(Database db) {
-        initDatabase(db);
-        super.logDatabaseParameters(db);
-    }
-
-    protected abstract void initDatabase(Database db);
-}

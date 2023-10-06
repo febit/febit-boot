@@ -15,6 +15,7 @@
  */
 package org.febit.boot.devkit.jooq.runtime.spi;
 
+import jakarta.annotation.Nullable;
 import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.meta.Definition;
 import org.jooq.meta.TableDefinition;
@@ -25,6 +26,7 @@ import org.springframework.core.annotation.Order;
 public class DefaultPackageNaming implements Naming {
 
     @Override
+    @Nullable
     public String getPackageName(String basePkg, Definition def, GeneratorStrategy.Mode mode) {
         return switch (mode) {
             case RECORD -> basePkg + ".record";

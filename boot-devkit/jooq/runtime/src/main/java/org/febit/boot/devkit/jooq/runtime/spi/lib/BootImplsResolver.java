@@ -15,8 +15,6 @@
  */
 package org.febit.boot.devkit.jooq.runtime.spi.lib;
 
-import org.febit.boot.common.model.IChangeTracing;
-import org.febit.boot.common.model.INamed;
 import org.febit.boot.devkit.jooq.runtime.spi.ImplementsResolver;
 import org.febit.boot.devkit.jooq.runtime.util.ColumnUtils;
 import org.jooq.codegen.GeneratorStrategy;
@@ -24,8 +22,8 @@ import org.jooq.meta.TableDefinition;
 
 public class BootImplsResolver implements ImplementsResolver {
 
-    private static final String CLS_NAMED = INamed.class.getName();
-    private static final String CLS_CHANGE_TRACING = IChangeTracing.class.getName();
+    private static final String CLS_NAMED = "org.febit.boot.common.model.INamed";
+    private static final String CLS_CHANGE_TRACING = "org.febit.boot.common.model.IChangeTracing";
 
     @Override
     public void resolve(Context context) {

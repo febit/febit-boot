@@ -23,7 +23,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.febit.boot.devkit.jooq.meta.ForcedTypes;
 import org.febit.boot.devkit.jooq.meta.MetaUtils;
-import org.febit.boot.devkit.jooq.meta.Schema;
+import org.febit.lang.modeler.Schema;
 import org.febit.lang.util.ArraysUtils;
 import org.jooq.codegen.GenerationTool;
 import org.jooq.meta.jaxb.Configuration;
