@@ -1,0 +1,39 @@
+[versions]
+hierynomus-license = '0.16.1'
+maven-plugin-development = '0.4.2'
+
+febit-devkit = '1.1.0'
+febit-commons = '3.0.0'
+
+embedded-postgres = '2.0.6'
+nimbus-jose-jwt = '9.37.3'
+spring-boot = '3.1.7'
+spring-cloud = '2022.0.4'
+springdoc = '2.3.0'
+swagger3 = '2.2.19'
+
+
+[libraries]
+febit-commons-bom = { module = 'org.febit:febit-commons-bom', version.ref = 'febit-commons' }
+febit-commons-deps = { module = 'org.febit:febit-commons-dependencies', version.ref = 'febit-commons' }
+spring-boot-deps = { module = 'org.springframework.boot:spring-boot-dependencies', version.ref = 'spring-boot' }
+spring-cloud-deps = { module = 'org.springframework.cloud:spring-cloud-dependencies', version.ref = 'spring-cloud' }
+
+embedded-postgres = { module = 'io.zonky.test:embedded-postgres', version.ref = 'embedded-postgres' }
+febit-gradle-common = { module = 'org.febit.devkit.gradle:febit-gradle-common', version.ref = 'febit-devkit' }
+nimbus-jose-jwt = { module = 'com.nimbusds:nimbus-jose-jwt', version.ref = 'nimbus-jose-jwt' }
+swagger-annotations = { module = 'io.swagger.core.v3:swagger-annotations', version.ref = 'swagger3' }
+
+maven-core = { module = 'org.apache.maven:maven-core', version = '3.0' }
+maven-plugin-api = { module = 'org.apache.maven:maven-plugin-api', version = '3.0' }
+maven-plugin-annotations = { module = 'org.apache.maven.plugin-tools:maven-plugin-annotations', version = '3.5' }
+
+
+[plugins]
+febit-bom = { id = 'org.febit.standard-bom', version.ref = 'febit-devkit' }
+febit-codegen-module = { id = 'org.febit.codegen-module', version.ref = 'febit-devkit' }
+febit-java = { id = 'org.febit.standard-java', version.ref = 'febit-devkit' }
+febit-maven-publish = { id = 'org.febit.standard-maven-publish', version.ref = 'febit-devkit' }
+
+license = { id = 'com.github.hierynomus.license', version.ref = 'hierynomus-license' }
+maven-plugin-development = { id = 'de.benediktritter.maven-plugin-development', version.ref = 'maven-plugin-development' }

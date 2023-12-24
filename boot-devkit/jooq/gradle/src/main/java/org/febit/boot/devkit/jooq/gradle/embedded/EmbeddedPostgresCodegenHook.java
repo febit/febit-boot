@@ -98,7 +98,8 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
         if (dataDir != null) {
             return dataDir;
         }
-        return new File(project.getBuildDir(), WORK_DIR + "/" + DATA_DIR);
+        var buildDir = project.getLayout().getBuildDirectory().getAsFile().get();
+        return new File(buildDir, WORK_DIR + "/" + DATA_DIR);
     }
 
     private File resolveWorkDir(Project project, JooqCodegenExtension extension) {
@@ -107,7 +108,10 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
         if (workDir != null) {
             return workDir;
         }
-        return new File(project.getRootProject().getBuildDir(), WORK_DIR);
+        var buildDir = project.getRootProject()
+                .getLayout().getBuildDirectory()
+                .getAsFile().get();
+        return new File(buildDir, WORK_DIR);
     }
 
     @Override

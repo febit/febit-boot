@@ -54,7 +54,8 @@ public class FeignCodegenExtension {
 
     @Inject
     public FeignCodegenExtension(Project project) {
-        this.targetSourceDir = new File(project.getBuildDir(),
+        var buildDir = project.getLayout().getBuildDirectory().getAsFile().get();
+        this.targetSourceDir = new File(buildDir,
                 "generated/sources/codegen-feign");
     }
 

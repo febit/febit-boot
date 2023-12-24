@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.febit.boot.web.mockmvc.JsonPathUtils.PATH_200_JSON_SCHEMA_REF;
 import static org.febit.boot.web.mockmvc.JsonPathUtils.j;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,7 +41,8 @@ class CommonApiSpringdocTest extends BaseMvcTest {
     @Test
     void spec() throws Exception {
         var result = result()
-                .andDo(print());
+                // .andDo(print())
+                ;
 
         // Not Response
         result.andExpect(jsonPath("$.status").doesNotExist())

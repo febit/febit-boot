@@ -26,7 +26,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension.DEFAULT_MIGRATIONS_DIR;
 import static org.febit.lang.util.JacksonUtils.TYPE_FACTORY;
@@ -120,7 +124,8 @@ public class CachingChecker {
     }
 
     private File checksumsFile() {
-        return new File(project.getBuildDir(), CHECK_FILE);
+        var buildDir = project.getLayout().getBuildDirectory().getAsFile().get();
+        return new File(buildDir, CHECK_FILE);
     }
 
     private Map<String, Map<String, String>> checksums() {

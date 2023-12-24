@@ -1,9 +1,8 @@
 plugins {
-  id 'com.github.hierynomus.license' version '0.16.1'
-  id 'org.febit.standard-java' version '1.1.0'
-  id 'org.febit.standard-maven-publish' version '1.1.0'
-  id 'org.febit.codegen-module' version '1.1.0'
-  id 'de.benediktritter.maven-plugin-development' version '0.4.2' apply false
+  alias libs.plugins.febit.java
+  alias libs.plugins.febit.maven.publish
+  alias libs.plugins.febit.codegen.module
+  alias libs.plugins.license
 }
 
 group 'org.febit.boot'
@@ -12,27 +11,6 @@ version '3.0.0-SNAPSHOT'
 description = 'Febit Boot'
 
 ext {
-
-  versions = [
-      commonsLang3     : '3.13.0',
-      commonsCollections4: '4.4',
-      commonsCodec     : '1.16.0',
-      commonsCompress  : '1.24.0',
-      commonsIo        : '2.13.0',
-      commonsExec        : '1.3',
-
-      febitCommons     : '3.0.0-SNAPSHOT',
-      febitGradleCommon: '1.1.0',
-
-      swagger3         : '2.2.16',
-      springdoc        : '2.2.0',
-      springBoot       : '3.1.4',
-      springCloud      : '2022.0.4',
-
-      nimbusJoseJwt    : '9.31',
-      embeddedPostgres : '2.0.4',
-  ]
-
 }
 
 allprojects {
@@ -43,8 +21,8 @@ allprojects {
 
   repositories {
     maven { url "https://repo.huaweicloud.com/repository/maven" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     mavenCentral()
+    // maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
   standardMavenPublish {
@@ -111,35 +89,23 @@ configure(subprojects.findAll {
       cacheChangingModulesFor 0, 'seconds'
     }
     imports {
-      mavenBom "org.febit:febit-commons-bom:${versions.febitCommons}"
-      mavenBom "org.springframework.boot:spring-boot-dependencies:${versions.springBoot}"
-      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${versions.springCloud}"
+      mavenBom "${libs.spring.boot.deps.get()}"
+      mavenBom "${libs.spring.cloud.deps.get()}"
+      mavenBom "${libs.febit.commons.deps.get()}"
     }
     dependencies {
-      dependencySet(group: 'org.springdoc', version: "${versions.springdoc}") {
+      dependencySet(group: 'org.springdoc', version: "${libs.versions.springdoc.get()}") {
         entry 'springdoc-openapi-starter-common'
-        entry 'springdoc-openapi-starter-webmvc-api'
-        entry 'springdoc-openapi-starter-webmvc-ui'
         entry 'springdoc-openapi-starter-webflux-api'
         entry 'springdoc-openapi-starter-webflux-ui'
+        entry 'springdoc-openapi-starter-webmvc-api'
+        entry 'springdoc-openapi-starter-webmvc-ui'
         entry 'springdoc-openapi-tests'
       }
-      dependency "io.swagger.core.v3:swagger-annotations:${versions.swagger3}"
-
-      dependency "commons-io:commons-io:${versions.commonsIo}"
-      dependency "commons-codec:commons-codec:${versions.commonsCodec}"
-      dependency "org.apache.commons:commons-lang3:${versions.commonsLang3}"
-      dependency "org.apache.commons:commons-collections4:${versions.commonsCollections4}"
-      dependency "org.apache.commons:commons-compress:${versions.commonsCompress}"
-      dependency "org.apache.commons:commons-exec:${versions.commonsExec}"
-      dependency "org.febit.devkit.gradle:febit-gradle-common:${versions.febitGradleCommon}"
-
-      dependency "io.zonky.test:embedded-postgres:${versions.embeddedPostgres}"
-      dependency "com.nimbusds:nimbus-jose-jwt:${versions.nimbusJoseJwt}"
-
-      dependency 'org.apache.maven:maven-plugin-api:3.0'
-      dependency 'org.apache.maven:maven-core:3.0'
-      dependency 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.5'
+      dependency "${libs.embedded.postgres.get()}"
+      dependency "${libs.febit.gradle.common.get()}"
+      dependency "${libs.nimbus.jose.jwt.get()}"
+      dependency "${libs.swagger.annotations.get()}"
     }
   }
 
