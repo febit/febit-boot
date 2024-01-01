@@ -2,12 +2,14 @@ plugins {
   id 'java-gradle-plugin'
 }
 
-description = 'A gradle plugin to generate feign client'
+description = 'Gradle plugin to generate feign clients'
 
 gradlePlugin {
   plugins {
     feign {
       id = 'org.febit.boot.feign'
+      displayName = 'Febit Boot Feign Plugin'
+      description = 'Feign clients codegen plugin'
       implementationClass = 'org.febit.boot.devkit.feign.gradle.FeignCodegenPlugin'
     }
   }

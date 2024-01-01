@@ -1,3 +1,5 @@
+description = 'Febit Boot Feign Starter'
+
 dependencies {
   api project(':febit-boot-feign')
 

@@ -1,3 +1,5 @@
+description = 'Febit Boot jOOQ Meta'
+
 codegenModule {
   module "org.febit.boot.devkit.jooq.meta.JooqCodegen"
 }

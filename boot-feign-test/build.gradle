@@ -1,4 +1,4 @@
-description = 'Febit Feign Test'
+description = 'Febit Boot Feign Test'
 
 dependencies {
   api project(':febit-boot-feign')

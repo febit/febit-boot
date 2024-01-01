@@ -1,3 +1,9 @@
+description = 'Febit Boot jOOQ'
+
+configurations {
+  testCompile.exclude module: 'logback-classic'
+}
+
 dependencies {
   api project(':febit-boot-common')
 
@@ -6,9 +12,5 @@ dependencies {
   compileOnly 'jakarta.xml.bind:jakarta.xml.bind-api'
 
   testRuntimeOnly 'com.h2database:h2'
-}
-
-configurations {
-  testCompile.exclude module: 'logback-classic'
 }
 

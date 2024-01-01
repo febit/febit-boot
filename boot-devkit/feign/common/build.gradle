@@ -1,4 +1,4 @@
-description = 'Febit Feign Client Codegen'
+description = 'Febit feign common utils'
 
 dependencies {
   api 'org.febit:febit-lang'

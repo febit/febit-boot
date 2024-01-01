@@ -1,3 +1,5 @@
+description = 'Febit Boot common utils'
+
 dependencies {
   api 'org.febit:febit-lang'
 

@@ -1,3 +1,5 @@
+description = 'Febit Boot WebMVC Starter'
+
 dependencies {
   api project(':febit-boot')
 

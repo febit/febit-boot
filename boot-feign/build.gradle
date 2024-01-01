@@ -1,4 +1,4 @@
-description = 'Febit Feign'
+description = 'Febit Boot Feign'
 
 codegenModule {
     module 'org.febit.boot.FebitFeign'

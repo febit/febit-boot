@@ -22,7 +22,7 @@ import io.swagger.v3.core.util.PrimitiveType;
 import java.util.Set;
 
 /**
- * Override TypeNameResolver, wrap generic param types with '<...>'
+ * Override TypeNameResolver, wrap generic param types with {@code '<'} and {@code '>'}
  */
 public class GenericTypeNameResolver extends TypeNameResolver {
 

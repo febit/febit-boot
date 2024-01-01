@@ -2,6 +2,8 @@ plugins {
   id 'java-gradle-plugin'
 }
 
+description = 'Febit Boot jOOQ Plugin'
+
 test {
 }
 
@@ -9,6 +11,8 @@ gradlePlugin {
   plugins {
     jooqPlugin {
       id = 'org.febit.boot.jooq'
+      displayName = 'Febit Boot jOOQ Plugin'
+      description = 'jOOQ tasks'
       implementationClass = 'org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin'
     }
   }

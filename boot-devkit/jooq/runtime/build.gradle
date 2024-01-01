@@ -1,3 +1,5 @@
+description = 'Febit Boot jOOQ Runtime'
+
 dependencies {
   api 'commons-io:commons-io'
   api 'org.jooq:jooq-codegen'

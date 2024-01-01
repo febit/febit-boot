@@ -50,7 +50,7 @@ public class I18nUtils {
      *
      * @param code pattern/code
      * @param args arguments
-     * @see LocaleContextHolder#getLocale() to get the @{@link Locale} to use to resove pattern.
+     * @see LocaleContextHolder#getLocale()
      * @see MessageSource#getMessage(String, Object[], String, Locale)
      */
     public static String format(final String code, final Object... args) {
