@@ -34,12 +34,12 @@ import static java.lang.annotation.RetentionPolicy.*;
 public @interface Ids {
 
     /**
-     * size the ids must be higher or equal to.
+     * size the ids must be greater or equal to.
      */
     int min() default 1;
 
     /**
-     * size the ids must be lower or equal to.
+     * size the ids must be less or equal to.
      */
     int max() default 500;
 

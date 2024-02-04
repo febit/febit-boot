@@ -48,9 +48,9 @@ public class FeignCodegenPlugin implements Plugin<Project> {
         var tasks = proj.getTasks();
 
         // Depend on lombok plugin
-        tasks.named(Constants.TASK_GEN_LOMBOK_CONFIG, task -> {
-            task.dependsOn(Constants.TASK_GEN_CLIENT);
-        });
+        tasks.named(Constants.TASK_GEN_LOMBOK_CONFIG, task ->
+                task.dependsOn(Constants.TASK_GEN_CLIENT)
+        );
 
         tasks.named(Constants.TASK_GEN_CLIENT, task -> {
             var sourceProjectCompileTask = extension.getSourceProject().getTasks()

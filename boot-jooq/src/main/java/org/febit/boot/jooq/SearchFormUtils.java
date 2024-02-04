@@ -88,46 +88,33 @@ public class SearchFormUtils {
         }
         var jooqField = entry.getField();
         var ignoreCase = entry.isIgnoreCase();
-        switch (entry.getOperator()) {
-            case KEYWORD:
-                return ignoreCase
-                        ? Conditions.keywordsIgnoreCase(value.toString(), entry.multiFields)
-                        : Conditions.keywords(value.toString(), entry.multiFields);
-            case STARTS_WITH:
-                return ignoreCase
-                        ? jooqField.startsWithIgnoreCase(value)
-                        : jooqField.startsWith(value);
-            case ENDS_WITH:
-                return ignoreCase
-                        ? jooqField.endsWithIgnoreCase(value)
-                        : jooqField.endsWith(value);
-            case CONTAINS:
-                return ignoreCase
-                        ? jooqField.containsIgnoreCase(value)
-                        : jooqField.contains(value);
-            case NOT_CONTAINS:
-                return ignoreCase
-                        ? jooqField.notContainsIgnoreCase(value)
-                        : jooqField.notContains(value);
-            case EQ:
-                return ignoreCase
-                        ? jooqField.equalIgnoreCase(value.toString())
-                        : jooqField.eq(value);
-            case GT:
-                return jooqField.gt(value);
-            case GE:
-                return jooqField.ge(value);
-            case LT:
-                return jooqField.lt(value);
-            case LE:
-                return jooqField.le(value);
-            case IN:
-                return jooqField.in(castToCollection(value));
-            case NOT_IN:
-                return jooqField.notIn(castToCollection(value));
-            default:
-                throw new UnsupportedOperationException("Unsupported action: " + entry.getOperator());
-        }
+        return switch (entry.getOperator()) {
+            case KEYWORD -> ignoreCase
+                    ? Conditions.keywordsIgnoreCase(value.toString(), entry.multiFields)
+                    : Conditions.keywords(value.toString(), entry.multiFields);
+            case STARTS_WITH -> ignoreCase
+                    ? jooqField.startsWithIgnoreCase(value)
+                    : jooqField.startsWith(value);
+            case ENDS_WITH -> ignoreCase
+                    ? jooqField.endsWithIgnoreCase(value)
+                    : jooqField.endsWith(value);
+            case CONTAINS -> ignoreCase
+                    ? jooqField.containsIgnoreCase(value)
+                    : jooqField.contains(value);
+            case NOT_CONTAINS -> ignoreCase
+                    ? jooqField.notContainsIgnoreCase(value)
+                    : jooqField.notContains(value);
+            case EQ -> ignoreCase
+                    ? jooqField.equalIgnoreCase(value.toString())
+                    : jooqField.eq(value);
+            case GT -> jooqField.gt(value);
+            case GE -> jooqField.ge(value);
+            case LT -> jooqField.lt(value);
+            case LE -> jooqField.le(value);
+            case IN -> jooqField.in(castToCollection(value));
+            case NOT_IN -> jooqField.notIn(castToCollection(value));
+            default -> throw new UnsupportedOperationException("Unsupported action: " + entry.getOperator());
+        };
     }
 
     @Nullable

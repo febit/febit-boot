@@ -142,7 +142,7 @@ public class TestApi<T> {
         app.registerBean(apiType, () -> api);
 
         // Done!
-        return (T) api;
+        return api;
     }
 
     private static class ExtraClientConfig {

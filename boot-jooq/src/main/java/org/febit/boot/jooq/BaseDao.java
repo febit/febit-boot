@@ -46,7 +46,6 @@ public abstract class BaseDao<TB extends Table<R>, PO, R extends TableRecord<R>>
     private final Class<PO> poType;
     private final Class<TB> tableType;
 
-    @SuppressWarnings({"unchecked"})
     @SuppressFBWarnings({
             "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"
     })

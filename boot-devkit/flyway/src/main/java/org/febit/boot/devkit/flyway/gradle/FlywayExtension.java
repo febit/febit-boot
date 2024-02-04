@@ -35,7 +35,7 @@ public class FlywayExtension {
 
     /**
      * Location to scan spring-boot <code>application-*.{yml|yaml|properties}</code>.
-     * (default: src/main/resources")
+     * (default: src/main/resources)
      */
     @Getter
     @Setter

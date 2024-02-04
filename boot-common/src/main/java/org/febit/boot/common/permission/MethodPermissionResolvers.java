@@ -29,9 +29,9 @@ public class MethodPermissionResolvers {
     public static <R extends MethodPermissionResolver> List<PermissionItem> resolveItems(
             Iterable<R> resolvers, Method method) {
         return Streams.of(resolvers)
-                .<PermissionItem>mapMulti((resolver, sink) -> {
-                    resolver.collect(method, sink);
-                })
+                .<PermissionItem>mapMulti((resolver, sink) ->
+                        resolver.collect(method, sink)
+                )
                 .distinct()
                 .sorted()
                 .toList();

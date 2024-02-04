@@ -144,11 +144,13 @@ public class ClientCodegen {
         if (JavaUtils.isDeprecated(cls)) {
             out.append("@Deprecated\n");
         }
-        out.append("@lombok.Data\n"
-                + "@lombok.extern.jackson.Jacksonized\n"
-                + "@lombok.NoArgsConstructor\n"
-                + "@lombok.AllArgsConstructor(staticName = \"of\")\n"
-                + "@lombok.Builder(builderClassName = \"Builder\")\n"
+        out.append("""
+                @lombok.Data
+                @lombok.extern.jackson.Jacksonized
+                @lombok.NoArgsConstructor
+                @lombok.AllArgsConstructor(staticName = "of")
+                @lombok.Builder(builderClassName = "Builder")
+                """
         );
         out.appendDeclare("class");
 

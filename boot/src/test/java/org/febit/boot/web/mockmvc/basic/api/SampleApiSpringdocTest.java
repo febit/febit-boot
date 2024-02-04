@@ -96,7 +96,7 @@ class SampleApiSpringdocTest extends BaseMvcTest {
         result.andExpect(j(
                 prefix + PATH_200_JSON_SCHEMA_REF,
                 "#/components/schemas/IResponse<Page<SampleVO>>"
-        ));
+        ))
         ;
     }
 

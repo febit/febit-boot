@@ -105,10 +105,10 @@ class ClientEmitter {
         out.append("@org.springframework.cloud.openfeign.FeignClient(\n")
                 .tab(2).append("configuration = {\n");
 
-        out.foreach(codegen.clientConfigClasses, ",\n", "\n", cls -> {
+        out.foreach(codegen.clientConfigClasses, ",\n", "\n", cls ->
             out.tab(4).appendClass(cls)
-                    .append(".class");
-        });
+                    .append(".class")
+        );
 
         out.tab(2).append("},\n")
                 .tab(2).append("name = ").appendDirectValue(codegen.clientName).append(",\n")
@@ -150,9 +150,9 @@ class ClientEmitter {
         if (req.getMethods().size() != 1) {
             out.append("@RequestMapping(\n");
             out.tab(2).append("method = {\n");
-            out.foreach(req.getMethods(), ",\n", "\n", method -> {
-                out.tab(3).append("RequestMethod.").append(method.name());
-            });
+            out.foreach(req.getMethods(), ",\n", "\n", method ->
+                    out.tab(3).append("RequestMethod.").append(method.name())
+            );
             out.tab(2).append("},\n");
         } else {
             out.append("@")
@@ -171,27 +171,27 @@ class ClientEmitter {
         if (!req.getHeaders().isEmpty()) {
             out.append(",\n");
             out.tab(2).append("headers = {\n");
-            out.foreach(req.getHeaders(), ",\n", "\n", str -> {
-                out.tab(3).appendDirectValue(str);
-            });
+            out.foreach(req.getHeaders(), ",\n", "\n", str ->
+                    out.tab(3).appendDirectValue(str)
+            );
             out.tab(2).append("}");
         }
 
         if (!req.getConsumes().isEmpty()) {
             out.append(",\n");
             out.tab(2).append("consumes = {\n");
-            out.foreach(req.getConsumes(), ",\n", "\n", str -> {
-                out.tab(3).appendDirectValue(str);
-            });
+            out.foreach(req.getConsumes(), ",\n", "\n", str ->
+                    out.tab(3).appendDirectValue(str)
+            );
             out.tab(2).append("}");
         }
 
         if (!req.getProduces().isEmpty()) {
             out.append(",\n");
             out.tab(2).append("produces = {\n");
-            out.foreach(req.getProduces(), ",\n", "\n", str -> {
-                out.tab(3).appendDirectValue(str);
-            });
+            out.foreach(req.getProduces(), ",\n", "\n", str ->
+                    out.tab(3).appendDirectValue(str)
+            );
             out.tab(2).append("}");
         }
 

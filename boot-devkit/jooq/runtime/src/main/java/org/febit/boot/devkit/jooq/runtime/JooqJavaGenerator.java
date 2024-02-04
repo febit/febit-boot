@@ -189,7 +189,7 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
     }
 
     /**
-     * Emit Record#fromPojo(..) method.
+     * Emit Record#fromPojo(PO) method.
      */
     private void emitRecordFromPojoMethod(TableDefinition table, JavaWriter out) {
         var poClassName = getStrategy().getJavaClassName(table, GeneratorStrategy.Mode.POJO);
