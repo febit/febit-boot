@@ -5,12 +5,12 @@ maven-plugin-development = '0.4.2'
 febit-devkit = '1.2.0'
 febit-commons = '3.1.0-SNAPSHOT'
 
-embedded-postgres = '2.0.6'
+embedded-postgres = '2.0.7'
 nimbus-jose-jwt = '9.37.3'
-spring-boot = '3.2.2'
-spring-cloud = '2023.0.0'
-springdoc = '2.3.0'
-swagger3 = '2.2.19'
+spring-boot = '3.2.5'
+spring-cloud = '2023.0.1'
+springdoc = '2.5.0'
+swagger3 = '2.2.21'
 
 
 [libraries]
