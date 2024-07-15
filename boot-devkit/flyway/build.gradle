@@ -28,6 +28,7 @@ dependencies {
 
   api 'org.springframework:spring-beans'
   api 'org.flywaydb:flyway-core'
+  api 'org.flywaydb:flyway-database-postgresql'
 
   testImplementation localGroovy()
   testImplementation gradleApi()
