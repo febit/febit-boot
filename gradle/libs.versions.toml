@@ -1,14 +1,14 @@
 [versions]
 hierynomus-license = '0.16.1'
-maven-plugin-development = '0.4.2'
+maven-plugin-development = '0.4.3'
 
 febit-devkit = '1.3.0'
 febit-commons = '3.1.0'
 
 embedded-postgres = '2.0.7'
 nimbus-jose-jwt = '9.40'
-spring-boot = '3.3.1'
-spring-cloud = '2023.0.2'
+spring-boot = '3.3.2'
+spring-cloud = '2023.0.3'
 springdoc = '2.6.0'
 swagger3 = '2.2.22'
 
