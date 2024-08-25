@@ -15,7 +15,6 @@
  */
 package org.febit.boot.jooq;
 
-import lombok.Data;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.febit.lang.protocol.Sort;
@@ -68,7 +67,7 @@ public class SortUtils {
         return declaredFields(mappingType)
                 .map(SortUtils::resolveEntry)
                 .collect(Collectors.toUnmodifiableMap(
-                        SortEntry::getName,
+                        SortEntry::name,
                         Function.identity()
                 ));
     }
@@ -79,9 +78,9 @@ public class SortUtils {
         return new SortEntry(field.getName(), DSL.field(name, field.getType()));
     }
 
-    @Data
-    public static class SortEntry {
-        private final String name;
-        private final org.jooq.Field<?> field;
+    public record SortEntry(
+            String name,
+            org.jooq.Field<?> field
+    ) {
     }
 }

@@ -16,8 +16,6 @@
 package org.febit.boot.jooq;
 
 import jakarta.annotation.Nullable;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.febit.lang.UncheckedException;
@@ -31,6 +29,7 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +48,13 @@ public class SearchFormUtils {
 
     private static final Map<Class<?>, ColumnEntry<Object>[]> ENTRY_CACHE
             = new ConcurrentReferenceHashMap<>(256);
+
+    public static List<Condition> listAnnotatedConditions(DSLContext dsl, SearchForm form) {
+        var conditions = new ArrayList<Condition>();
+        SearchFormUtils.collectAnnotatedConditions(dsl, form, conditions::add);
+        form.apply(dsl, conditions::add);
+        return conditions;
+    }
 
     public static void collectAnnotatedConditions(DSLContext dsl, SearchForm form, Consumer<Condition> consumer) {
         var configs = ENTRY_CACHE.computeIfAbsent(form.getClass(), SearchFormUtils::resolveEntries);
@@ -82,13 +88,13 @@ public class SearchFormUtils {
         if (value == null) {
             return null;
         }
-        if (entry.isIgnoreEmpty()
+        if (entry.ignoreEmpty()
                 && "".equals(value)) {
             return null;
         }
-        var jooqField = entry.getField();
-        var ignoreCase = entry.isIgnoreCase();
-        return switch (entry.getOperator()) {
+        var jooqField = entry.field();
+        var ignoreCase = entry.ignoreCase();
+        return switch (entry.operator()) {
             case KEYWORD -> ignoreCase
                     ? Conditions.keywordsIgnoreCase(value.toString(), entry.multiFields)
                     : Conditions.keywords(value.toString(), entry.multiFields);
@@ -113,13 +119,12 @@ public class SearchFormUtils {
             case LE -> jooqField.le(value);
             case IN -> jooqField.in(castToCollection(value));
             case NOT_IN -> jooqField.notIn(castToCollection(value));
-            default -> throw new UnsupportedOperationException("Unsupported action: " + entry.getOperator());
+            default -> throw new UnsupportedOperationException("Unsupported action: " + entry.operator());
         };
     }
 
     @Nullable
-    @SuppressWarnings({"unchecked"})
-    public static ColumnEntry<Object> resolveEntry(Field field) {
+    static ColumnEntry<Object> resolveEntry(Field field) {
         var anno = AnnotatedElementUtils.findMergedAnnotation(field, Column.class);
 
         if (anno == null ||
@@ -146,11 +151,12 @@ public class SearchFormUtils {
             return null;
         }
 
-        var fieldType = anno.operator().multiValues()
+        @SuppressWarnings({"unchecked"})
+        var fieldType = (Class<Object>) (anno.operator().multiValues()
                 ? resolveComponentType(field)
-                : field.getType();
+                : field.getType());
 
-        return new ColumnEntry(
+        return new ColumnEntry<>(
                 anno.operator(),
                 anno.ignoreEmpty(),
                 anno.ignoreCase(),
@@ -217,15 +223,14 @@ public class SearchFormUtils {
         }
     }
 
-    @Data
-    @RequiredArgsConstructor(staticName = "of")
-    static class ColumnEntry<T> {
-        private final Column.Operator operator;
-        private final boolean ignoreEmpty;
-        private final boolean ignoreCase;
-        private final org.jooq.Field<T> field;
-        private final List<org.jooq.Field<T>> multiFields;
-        private final Function<T, Object> getter;
+    record ColumnEntry<T>(
+            Column.Operator operator,
+            boolean ignoreEmpty,
+            boolean ignoreCase,
+            org.jooq.Field<T> field,
+            List<org.jooq.Field<T>> multiFields,
+            Function<T, Object> getter
+    ) {
     }
 
 }

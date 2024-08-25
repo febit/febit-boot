@@ -73,7 +73,6 @@ class Utils {
             Collection<P> pos,
             boolean forUpdate
     ) {
-        List<R> result = new ArrayList<>(pos.size());
         DSLContext dsl;
 
         // Record -> POJO mapping
@@ -90,7 +89,7 @@ class Utils {
         }
 
         var idField = table.pkField();
-
+        var result = new ArrayList<R>(pos.size());
         for (P po : pos) {
             R record = dsl.newRecord(table, po);
 

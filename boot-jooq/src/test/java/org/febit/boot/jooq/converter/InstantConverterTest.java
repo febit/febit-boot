@@ -15,39 +15,29 @@
  */
 package org.febit.boot.jooq.converter;
 
-import jakarta.annotation.Nullable;
-import org.jooq.Converter;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 
-public class InstantConverter implements Converter<Timestamp, Instant> {
+import static org.junit.jupiter.api.Assertions.*;
 
-    @Nullable
-    @Override
-    public Instant from(@Nullable Timestamp timestamp) {
-        if (timestamp == null) {
-            return null;
-        }
-        return timestamp.toInstant();
+class InstantConverterTest {
+
+    @Test
+    void test() {
+        var converter = new InstantConverter();
+
+        assertEquals(Timestamp.class, converter.fromType());
+        assertEquals(Instant.class, converter.toType());
+
+        assertNull(converter.from(null));
+        assertNull(converter.to(null));
+
+        var timestamp = Timestamp.from(Instant.now());
+
+        assertEquals(timestamp.toInstant(), converter.from(timestamp));
+        assertEquals(timestamp, converter.to(converter.from(timestamp)));
     }
 
-    @Nullable
-    @Override
-    public Timestamp to(@Nullable Instant instant) {
-        if (instant == null) {
-            return null;
-        }
-        return Timestamp.from(instant);
-    }
-
-    @Override
-    public Class<Timestamp> fromType() {
-        return Timestamp.class;
-    }
-
-    @Override
-    public Class<Instant> toType() {
-        return Instant.class;
-    }
 }
