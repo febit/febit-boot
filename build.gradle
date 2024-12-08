@@ -23,7 +23,6 @@ allprojects {
   version rootProject.version
 
   repositories {
-    maven { url "https://repo.huaweicloud.com/repository/maven" }
     mavenCentral()
     // maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
@@ -95,6 +94,7 @@ configure(subprojects.findAll {
       mavenBom "${libs.spring.boot.deps.get()}"
       mavenBom "${libs.spring.cloud.deps.get()}"
       mavenBom "${libs.febit.commons.deps.get()}"
+      mavenBom "${libs.okhttp.bom.get()}"
     }
     dependencies {
       dependencySet(group: 'org.springdoc', version: "${libs.versions.springdoc.get()}") {
@@ -107,7 +107,6 @@ configure(subprojects.findAll {
       }
       dependency "${libs.embedded.postgres.get()}"
       dependency "${libs.febit.gradle.common.get()}"
-      dependency "${libs.nimbus.jose.jwt.get()}"
       dependency "${libs.swagger.annotations.get()}"
     }
   }

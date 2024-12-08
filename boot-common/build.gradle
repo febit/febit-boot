@@ -10,7 +10,6 @@ dependencies {
   api 'org.springframework:spring-context'
 
   compileOnly 'com.squareup.okhttp3:okhttp'
-  compileOnly 'com.nimbusds:nimbus-jose-jwt'
   compileOnly 'org.springframework.boot:spring-boot'
 }
 

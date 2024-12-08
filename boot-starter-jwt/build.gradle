@@ -1,6 +1,6 @@
 description = 'Febit Boot JWT Starter'
 
 dependencies {
-  api project(':febit-boot-common')
+  api 'org.febit:febit-commons-stuff'
   api 'com.nimbusds:nimbus-jose-jwt'
 }

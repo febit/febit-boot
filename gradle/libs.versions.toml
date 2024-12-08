@@ -3,14 +3,14 @@ hierynomus-license = '0.16.1'
 maven-plugin-development = '0.4.3'
 
 febit-devkit = '1.4.0'
-febit-commons = '3.1.1'
+febit-commons = '3.2.0'
 
-embedded-postgres = '2.0.7'
-nimbus-jose-jwt = '9.40'
-spring-boot = '3.3.3'
-spring-cloud = '2023.0.3'
-springdoc = '2.6.0'
-swagger3 = '2.2.22'
+embedded-postgres = '2.1.0'
+spring-boot = '3.4.0'
+spring-cloud = '2024.0.0'
+springdoc = '2.7.0'
+swagger3 = '2.2.26'
+okhttp = '4.12.0'
 
 
 [libraries]
@@ -18,10 +18,10 @@ febit-commons-bom = { module = 'org.febit:febit-commons-bom', version.ref = 'feb
 febit-commons-deps = { module = 'org.febit:febit-commons-dependencies', version.ref = 'febit-commons' }
 spring-boot-deps = { module = 'org.springframework.boot:spring-boot-dependencies', version.ref = 'spring-boot' }
 spring-cloud-deps = { module = 'org.springframework.cloud:spring-cloud-dependencies', version.ref = 'spring-cloud' }
+okhttp-bom = { module = 'com.squareup.okhttp3:okhttp-bom', version.ref = 'okhttp' }
 
 embedded-postgres = { module = 'io.zonky.test:embedded-postgres', version.ref = 'embedded-postgres' }
 febit-gradle-common = { module = 'org.febit.devkit.gradle:febit-gradle-common', version.ref = 'febit-devkit' }
-nimbus-jose-jwt = { module = 'com.nimbusds:nimbus-jose-jwt', version.ref = 'nimbus-jose-jwt' }
 swagger-annotations = { module = 'io.swagger.core.v3:swagger-annotations', version.ref = 'swagger3' }
 
 maven-core = { module = 'org.apache.maven:maven-core', version = '3.0' }
