@@ -11,7 +11,6 @@ rootProject.name = 'febit-boot-parent'
 boot 'boot-bom'
 boot 'boot-dependencies'
 
-boot 'boot-common'
 boot 'boot'
 
 boot 'boot-jooq'

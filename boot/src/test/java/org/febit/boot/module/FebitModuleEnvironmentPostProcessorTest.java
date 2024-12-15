@@ -16,7 +16,6 @@
 package org.febit.boot.module;
 
 import org.febit.boot.FebitBoot;
-import org.febit.boot.FebitBootCommon;
 import org.febit.boot.common.util.Priority;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
@@ -54,7 +53,7 @@ class FebitModuleEnvironmentPostProcessorTest {
         assertEquals(originalSize + 1, env.getPropertySources().size());
         assertThat(env.getPropertySources().get(SOURCE_NAME))
                 .isNotNull()
-                .returns(FebitBootCommon.groupId(), s -> s.getProperty("app.module.group-id"))
+                .returns(FebitBoot.groupId(), s -> s.getProperty("app.module.group-id"))
         ;
     }
 
@@ -86,16 +85,8 @@ class FebitModuleEnvironmentPostProcessorTest {
         assertThat(FebitModuleEnvironmentPostProcessor.toProps(Set.of(
                 AppMultiAnnotation.class.getAnnotation(FebitModuleEnvironments.List.class).value()
         )))
-                .containsEntry("febit-boot-common.group-id", FebitBootCommon.groupId())
-                .containsEntry("febit-boot-common.artifact-id", FebitBootCommon.artifactId())
-                .containsEntry("febit-boot-common.version", FebitBootCommon.version())
-                .containsEntry("febit-boot-common.commit-id", FebitBootCommon.commitId())
-                .containsEntry("febit-boot-common.short-commit-id", FebitBootCommon.commitId().substring(0, 8))
-                .containsEntry("febit-boot-common.build-time", FebitBootCommon.buildTime().toString())
-                .containsEntry("febit-boot-common.build-time-in-millis",
-                        FebitBootCommon.buildTime().toEpochMilli()
-                )
                 .containsEntry("febit-boot.group-id", FebitBoot.groupId())
+                .containsEntry("febit-boot-alias.group-id", FebitBoot.groupId())
                 .containsEntry("febit-boot.artifact-id", FebitBoot.artifactId())
                 .containsEntry("febit-boot.version", FebitBoot.version())
                 .containsEntry("febit-boot.commit-id", FebitBoot.commitId())
@@ -109,12 +100,12 @@ class FebitModuleEnvironmentPostProcessorTest {
     static class AppNoAnnotation {
     }
 
-    @FebitModuleEnvironments(FebitBootCommon.class)
+    @FebitModuleEnvironments(FebitBoot.class)
     static class AppSingleAnnotation {
     }
 
-    @FebitModuleEnvironments(value = FebitBootCommon.class, prefix = "febit-boot-common")
     @FebitModuleEnvironments(value = FebitBoot.class, prefix = "febit-boot")
+    @FebitModuleEnvironments(value = FebitBoot.class, prefix = "febit-boot-alias")
     static class AppMultiAnnotation {
     }
 }

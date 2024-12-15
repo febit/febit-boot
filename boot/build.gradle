@@ -9,14 +9,20 @@ configurations {
 }
 
 dependencies {
-  api project(':febit-boot-common')
+  api 'org.febit:febit-lang'
+
+  api 'io.swagger.core.v3:swagger-annotations'
+  api 'jakarta.validation:jakarta.validation-api'
+  api 'org.springframework:spring-core'
+  api 'org.springframework:spring-context'
 
   compileOnly project(':febit-boot-jooq')
-
+  compileOnly 'com.squareup.okhttp3:okhttp'
   compileOnly 'jakarta.servlet:jakarta.servlet-api'
 
   compileOnly 'org.springframework:spring-web'
   compileOnly 'org.springframework:spring-webmvc'
+  compileOnly 'org.springframework.boot:spring-boot'
   compileOnly 'org.springdoc:springdoc-openapi-starter-common'
 
   testRuntimeOnly 'com.h2database:h2'

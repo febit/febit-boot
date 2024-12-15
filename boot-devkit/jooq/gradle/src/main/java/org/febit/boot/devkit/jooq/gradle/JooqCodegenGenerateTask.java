@@ -18,7 +18,9 @@ package org.febit.boot.devkit.jooq.gradle;
 import org.febit.boot.devkit.jooq.meta.MetaUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.internal.ProcessOperations;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.process.ExecOperations;
 import org.gradle.process.JavaExecSpec;
 import org.jooq.meta.jaxb.Configuration;
 
@@ -30,12 +32,15 @@ public class JooqCodegenGenerateTask extends DefaultTask {
 
     private final FileCollection classpath;
     private final Configuration conf;
+    private final ExecOperations exec;
 
     @Inject
     public JooqCodegenGenerateTask(
             FileCollection classpath,
+            ExecOperations exec,
             Configuration conf
     ) {
+        this.exec = exec;
         setGroup(MetaUtils.GROUP_NAME);
         setDescription("Generates the jOOQ sources");
         this.classpath = classpath;
@@ -44,7 +49,7 @@ public class JooqCodegenGenerateTask extends DefaultTask {
 
     @TaskAction
     public void generate() {
-        getProject().javaexec(this::configSpec);
+        exec.javaexec(this::configSpec);
     }
 
     private void configSpec(JavaExecSpec spec) {

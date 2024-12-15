@@ -5,7 +5,7 @@ codegenModule {
 }
 
 dependencies {
-  api project(':febit-boot-common')
+  api 'org.febit:febit-lang'
   api 'io.github.openfeign:feign-core'
   api 'org.springframework.cloud:spring-cloud-openfeign-core'
 }
