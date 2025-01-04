@@ -16,7 +16,7 @@ dependencies {
   api 'org.springframework:spring-core'
   api 'org.springframework:spring-context'
 
-  compileOnly project(':febit-boot-jooq')
+  compileOnly 'org.febit:febit-commons-jooq'
   compileOnly 'com.squareup.okhttp3:okhttp'
   compileOnly 'jakarta.servlet:jakarta.servlet-api'
 

@@ -23,7 +23,7 @@ import org.jooq.meta.TableDefinition;
 public class BootImplsResolver implements ImplementsResolver {
 
     private static final String CLS_NAMED = "org.febit.boot.common.model.INamed";
-    private static final String CLS_CHANGE_TRACING = "org.febit.boot.common.model.IChangeTracing";
+    private static final String CLS_AUDITABLE = "org.febit.boot.common.model.IAuditable";
 
     @Override
     public void resolve(Context context) {
@@ -35,7 +35,7 @@ public class BootImplsResolver implements ImplementsResolver {
         }
         var table = (TableDefinition) context.getDef();
         namedModel(table, context);
-        updateTraceModel(table, context);
+        auditableModel(table, context);
     }
 
     private void namedModel(TableDefinition table, Context context) {
@@ -44,13 +44,13 @@ public class BootImplsResolver implements ImplementsResolver {
         }
     }
 
-    private void updateTraceModel(TableDefinition table, Context context) {
+    private void auditableModel(TableDefinition table, Context context) {
         if (ColumnUtils.isInstant(table, "created_at")
                 && ColumnUtils.isInstant(table, "updated_at")
                 && ColumnUtils.isString(table, "created_by")
                 && ColumnUtils.isString(table, "updated_by")
         ) {
-            context.addImpl(CLS_CHANGE_TRACING);
+            context.addImpl(CLS_AUDITABLE);
         }
     }
 

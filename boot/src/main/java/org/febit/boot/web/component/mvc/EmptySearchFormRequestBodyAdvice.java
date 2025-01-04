@@ -15,7 +15,7 @@
  */
 package org.febit.boot.web.component.mvc;
 
-import org.febit.boot.jooq.SearchForm;
+import org.febit.common.jooq.SearchForm;
 import org.springframework.beans.BeanUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;

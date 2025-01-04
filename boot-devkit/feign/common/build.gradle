@@ -5,6 +5,6 @@ dependencies {
   api 'org.febit.devkit.gradle:febit-gradle-common'
 
   api 'org.springframework:spring-context'
-  api 'org.springframework:spring-webmvc'
+  api 'org.springframework:spring-web'
 }
 

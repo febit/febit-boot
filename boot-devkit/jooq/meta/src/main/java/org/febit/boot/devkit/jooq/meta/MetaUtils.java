@@ -17,7 +17,12 @@ package org.febit.boot.devkit.jooq.meta;
 
 import lombok.experimental.UtilityClass;
 import org.apache.commons.io.FileUtils;
-import org.jooq.meta.jaxb.*;
+import org.jooq.meta.jaxb.Configuration;
+import org.jooq.meta.jaxb.Database;
+import org.jooq.meta.jaxb.Generate;
+import org.jooq.meta.jaxb.Generator;
+import org.jooq.meta.jaxb.Strategy;
+import org.jooq.meta.jaxb.Target;
 import org.jooq.util.jaxb.tools.MiniJAXB;
 
 import java.io.File;
@@ -30,7 +35,7 @@ import java.util.function.Supplier;
 @UtilityClass
 public class MetaUtils {
 
-    public static final String JOOQ_PKG = "org.febit.boot.jooq";
+    public static final String JOOQ_PKG = "org.febit.common.jooq";
     public static final String JOOQ_DEVKIT_PKG = "org.febit.boot.devkit.jooq";
     public static final String CORE_PKG = JOOQ_PKG;
     public static final String RUNTIME_PKG = JOOQ_DEVKIT_PKG + ".runtime";

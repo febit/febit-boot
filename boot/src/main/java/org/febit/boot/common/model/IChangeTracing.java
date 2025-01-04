@@ -15,33 +15,9 @@
  */
 package org.febit.boot.common.model;
 
-import org.febit.boot.common.auth.AuthSubject;
-
-import java.time.Instant;
-
-public interface IChangeTracing {
-
-    void setCreatedAt(Instant createdAt);
-
-    void setUpdatedAt(Instant updatedAt);
-
-    void setCreatedBy(String createdBy);
-
-    void setUpdatedBy(String updatedBy);
-
-    default void created(AuthSubject auth) {
-        var code = auth.getCode();
-        var now = Instant.now();
-        setCreatedAt(now);
-        setUpdatedAt(now);
-        setCreatedBy(code);
-        setUpdatedBy(code);
-    }
-
-    default void updated(AuthSubject auth) {
-        var code = auth.getCode();
-        var now = Instant.now();
-        setUpdatedAt(now);
-        setUpdatedBy(code);
-    }
+/**
+ * @deprecated Use {@link IAuditable} instead.
+ */
+@Deprecated(since = "3.4.0")
+public interface IChangeTracing extends IAuditable {
 }

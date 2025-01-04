@@ -1,7 +1,7 @@
 description = 'Febit Boot jOOQ Starter'
 
 dependencies {
-  api project(':febit-boot-jooq')
+  api 'org.febit:febit-commons-jooq'
   api 'jakarta.persistence:jakarta.persistence-api'
   api 'org.springframework.boot:spring-boot-starter-jooq'
 }
