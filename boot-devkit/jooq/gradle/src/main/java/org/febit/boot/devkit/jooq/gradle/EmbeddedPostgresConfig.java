@@ -22,7 +22,7 @@ import java.io.File;
 @Data
 public class EmbeddedPostgresConfig {
 
-    public static final String DEFAULT_VERSION = "16.2.0";
+    public static final String DEFAULT_VERSION = "16.6.0";
 
     /**
      * Version of embedded-postgres-binaries-bom.

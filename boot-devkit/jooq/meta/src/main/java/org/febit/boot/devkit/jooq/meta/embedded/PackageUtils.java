@@ -43,21 +43,21 @@ public class PackageUtils {
                 .replaceAll("[^a-z0-9]+", "");
         return switch (arch) {
             case "x8664",
-                    "amd64",
-                    "ia32e",
-                    "em64t",
-                    "x64" -> Arch.AMD64;
+                 "amd64",
+                 "ia32e",
+                 "em64t",
+                 "x64" -> Arch.AMD64;
             case "arm64",
-                    "arm64v8",
-                    "aarch64" -> Arch.ARM64;
+                 "arm64v8",
+                 "aarch64" -> Arch.ARM64;
             case "x8632",
-                    "x86",
-                    "i386",
-                    "i486",
-                    "i586",
-                    "i686",
-                    "ia32",
-                    "x32" -> Arch.I386;
+                 "x86",
+                 "i386",
+                 "i486",
+                 "i586",
+                 "i686",
+                 "ia32",
+                 "x32" -> Arch.I386;
             default -> throw new IllegalStateException("Unsupported arch: " + arch);
         };
     }
