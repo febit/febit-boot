@@ -15,22 +15,27 @@
  */
 package org.febit.boot.devkit.jooq.gradle;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
+import org.febit.boot.devkit.jooq.gradle.container.DbType;
 
 import java.io.File;
 
 @Getter
 @Setter
-public class EmbeddedPostgresConfig {
+public class ContainerDbConfig {
 
-    public static final String DEFAULT_VERSION = "16.6.0";
+    @Nonnull
+    private DbType type;
 
-    /**
-     * Version of embedded-postgres-binaries-bom.
-     * Ref: <a href="https://central.sonatype.com/artifact/io.zonky.test.postgres/embedded-postgres-binaries-bom/">...</a>
-     */
-    private String version = DEFAULT_VERSION;
+    @Nullable
+    private String dockerBinPath;
+
+    @Nullable
+    private String image;
+
+    @Nullable
     private File workingDir;
-    private File dataDir;
 }

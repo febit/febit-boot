@@ -10,7 +10,7 @@ test {
 gradlePlugin {
   plugins {
     jooqPlugin {
-      id = 'org.febit.common.jooq'
+      id = 'org.febit.boot.jooq'
       displayName = 'Febit Boot jOOQ Plugin'
       description = 'jOOQ tasks'
       implementationClass = 'org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin'
@@ -35,6 +35,8 @@ dependencies {
 
   testImplementation localGroovy()
   testImplementation gradleApi()
+  testRuntimeOnly 'org.postgresql:postgresql'
+  testRuntimeOnly 'com.mysql:mysql-connector-j'
 
   testRuntimeOnly 'com.h2database:h2'
 }

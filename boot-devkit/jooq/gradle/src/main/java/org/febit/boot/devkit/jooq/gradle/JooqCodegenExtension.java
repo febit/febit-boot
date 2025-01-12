@@ -18,6 +18,7 @@ package org.febit.boot.devkit.jooq.gradle;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import lombok.Getter;
+import org.febit.boot.devkit.jooq.gradle.container.ContainerDatabaseCodegenHook;
 import org.febit.boot.devkit.jooq.gradle.embedded.EmbeddedPostgresCodegenHook;
 import org.febit.boot.devkit.jooq.meta.MetaUtils;
 import org.febit.devkit.gradle.util.GradleUtils;
@@ -37,6 +38,8 @@ public class JooqCodegenExtension {
 
     public static final List<String> DEFAULT_MIGRATIONS_DIR = List.of("db/migration");
 
+    private final Project project;
+
     /**
      * Location to scan recursively for migrations.
      * (default: db/migration)
@@ -50,15 +53,17 @@ public class JooqCodegenExtension {
     private final EmbeddedPostgresConfig embeddedPostgres = new EmbeddedPostgresConfig();
 
     @Getter
-    private ICodegenHook hook = ICodegenHook.noop();
+    private final ContainerDbConfig container = new ContainerDbConfig();
 
-    private final Project project;
     @Getter
     private final ForcedTypesHandler forcedTypes;
     @Getter
     private final Generator generator;
     @Getter
     private final Jdbc jdbc;
+
+    @Getter
+    private ICodegenHook hook = ICodegenHook.noop();
 
     @Inject
     public JooqCodegenExtension(Project project) {
@@ -143,6 +148,12 @@ public class JooqCodegenExtension {
     public void embeddedPostgres(@DelegatesTo(EmbeddedPostgresConfig.class) Closure<?> closure) {
         embeddedPostgres();
         GradleUtils.to(closure, this.embeddedPostgres);
+    }
+
+    public void containerDatabase(@DelegatesTo(ContainerDbConfig.class) Closure<?> closure) {
+        this.hook = new ContainerDatabaseCodegenHook();
+        this.jdbc.setUrl(null);
+        GradleUtils.to(closure, this.container);
     }
 
     public void embeddedPostgres() {
