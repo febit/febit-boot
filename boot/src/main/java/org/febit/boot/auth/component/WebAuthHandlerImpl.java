@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.auth;
+package org.febit.boot.auth.component;
 
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.febit.boot.common.auth.AuthSubject;
+import org.febit.boot.auth.AuthSubject;
+import org.febit.boot.auth.web.WebAuthHandler;
+import org.febit.boot.auth.web.WebRequestAuthSubjectResolver;
 import org.febit.boot.common.permission.PermissionItem;
 import org.febit.boot.common.permission.PermissionManager;
 import org.febit.boot.common.permission.PermissionVerifier;
@@ -33,8 +35,8 @@ import org.springframework.web.context.request.WebRequest;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import static org.febit.boot.common.auth.AuthConstants.ATTR_AUTH;
-import static org.febit.boot.common.auth.AuthConstants.ATTR_AUTH_CODE;
+import static org.febit.boot.auth.AuthConstants.ATTR_AUTH;
+import static org.febit.boot.auth.AuthConstants.ATTR_AUTH_ID;
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 
 @Slf4j
@@ -42,12 +44,13 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_RE
 @Order(Priority.HIGH)
 @RequiredArgsConstructor
 @ConditionalOnWebApplication
-public class WebAuthHandler<T extends AuthSubject> {
+public class WebAuthHandlerImpl<T extends AuthSubject> implements WebAuthHandler<T> {
 
     private final PermissionManager permissionManager;
     private final PermissionVerifier<T> permissionVerifier;
     private final WebRequestAuthSubjectResolver<T> authSubjectResolver;
 
+    @Override
     public IResponse<AuthSubject> verify(WebRequest request, Method handler) {
         var resolved = authSubjectResolver.resolveAuth(request);
         store(request, resolved.orElse(null));
@@ -84,11 +87,11 @@ public class WebAuthHandler<T extends AuthSubject> {
     private void store(WebRequest request, @Nullable T auth) {
         if (auth == null) {
             request.removeAttribute(ATTR_AUTH, SCOPE_REQUEST);
-            request.removeAttribute(ATTR_AUTH_CODE, SCOPE_REQUEST);
+            request.removeAttribute(ATTR_AUTH_ID, SCOPE_REQUEST);
             return;
         }
         request.setAttribute(ATTR_AUTH, auth, SCOPE_REQUEST);
-        request.setAttribute(ATTR_AUTH_CODE, auth.getCode(), SCOPE_REQUEST);
+        request.setAttribute(ATTR_AUTH_ID, auth.identifier(), SCOPE_REQUEST);
     }
 
 }

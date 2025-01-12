@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web.util;
+package org.febit.boot.auth.web;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.febit.boot.auth.WebAuthHandler;
-import org.febit.boot.common.auth.AuthSubject;
+import org.febit.boot.auth.AuthSubject;
 import org.febit.lang.protocol.IResponse;
 import org.febit.lang.util.JacksonUtils;
 import org.springframework.http.HttpHeaders;

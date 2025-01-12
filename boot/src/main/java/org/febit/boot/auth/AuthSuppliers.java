@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.auth;
+package org.febit.boot.auth;
 
 import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;

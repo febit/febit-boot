@@ -15,7 +15,7 @@
  */
 package org.febit.boot.common.permission;
 
-import org.febit.boot.common.auth.AuthSubject;
+import org.febit.boot.auth.AuthSubject;
 
 import java.util.Collection;
 

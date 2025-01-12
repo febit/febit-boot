@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.auth;
+package org.febit.boot.auth.web;
 
-import lombok.experimental.UtilityClass;
+import org.febit.boot.auth.AuthSubject;
+import org.springframework.web.context.request.WebRequest;
 
-@UtilityClass
-public class AuthConstants {
+import java.util.Optional;
 
-    public static final String ATTR_AUTH = "__FEBIT_BOOT_AUTH";
-    public static final String ATTR_AUTH_CODE = "__FEBIT_BOOT_AUTH_ID";
+public interface WebRequestAuthSubjectResolver<T extends AuthSubject> {
+
+    Optional<T> resolveAuth(WebRequest request);
 }

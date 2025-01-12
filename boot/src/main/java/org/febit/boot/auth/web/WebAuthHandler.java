@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.auth;
+package org.febit.boot.auth.web;
 
-public interface DelegateAuthSubject<T extends AuthSubject> extends AuthSubject {
+import org.febit.boot.auth.AuthSubject;
+import org.febit.lang.protocol.IResponse;
+import org.springframework.web.context.request.WebRequest;
 
-    T delegated();
+import java.lang.reflect.Method;
 
-    @Override
-    default String getCode() {
-        return delegated().getCode();
-    }
+public interface WebAuthHandler<T extends AuthSubject> {
+
+    IResponse<AuthSubject> verify(WebRequest request, Method handler);
 }

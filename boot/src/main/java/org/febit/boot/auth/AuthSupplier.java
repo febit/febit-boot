@@ -13,7 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@NonNullApi
-package org.febit.boot.common.auth;
+package org.febit.boot.auth;
 
-import org.febit.lang.annotation.NonNullApi;
+import java.util.Optional;
+
+@FunctionalInterface
+public interface AuthSupplier<T extends AuthSubject> {
+
+    Optional<T> get();
+
+    default String getSupplierName() {
+        return getClass().getSimpleName();
+    }
+}

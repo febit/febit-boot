@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web.mockmvc.auth.component;
+package org.febit.boot.auth;
 
-import org.febit.boot.auth.AuthSubject;
+public interface AuthSubject {
 
-public record TestAuthSubject(
-        String identifier,
-        String name
-) implements AuthSubject {
+    String identifier();
 }

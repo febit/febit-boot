@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.auth;
+package org.febit.boot.auth;
 
-public interface AuthSubject {
+public interface DelegateAuthSubject<T extends AuthSubject> extends AuthSubject {
 
-    String getCode();
+    T delegated();
+
+    @Override
+    default String identifier() {
+        return delegated().identifier();
+    }
 }

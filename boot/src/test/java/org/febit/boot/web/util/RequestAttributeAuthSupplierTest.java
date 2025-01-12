@@ -15,7 +15,8 @@
  */
 package org.febit.boot.web.util;
 
-import org.febit.boot.common.auth.AuthConstants;
+import org.febit.boot.auth.AuthConstants;
+import org.febit.boot.auth.web.RequestAttributeAuthSupplier;
 import org.febit.boot.common.util.Errors;
 import org.febit.boot.web.mockmvc.auth.component.TestAuthSubject;
 import org.febit.lang.protocol.BusinessException;
@@ -38,7 +39,7 @@ class RequestAttributeAuthSupplierTest {
         RequestContextHolder.setRequestAttributes(attrs);
         assertTrue(supplier.get().isEmpty());
 
-        var auth = new TestAuthSubject();
+        var auth = new TestAuthSubject(null, null);
         when(attrs.getAttribute(AuthConstants.ATTR_AUTH, RequestAttributes.SCOPE_REQUEST))
                 .thenReturn(auth);
         assertSame(auth, supplier.get().get());

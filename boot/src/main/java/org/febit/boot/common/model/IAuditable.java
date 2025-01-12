@@ -15,7 +15,7 @@
  */
 package org.febit.boot.common.model;
 
-import org.febit.boot.common.auth.AuthSubject;
+import org.febit.boot.auth.AuthSubject;
 
 import java.time.Instant;
 
@@ -30,7 +30,7 @@ public interface IAuditable {
     void setUpdatedBy(String updatedBy);
 
     default void created(AuthSubject auth) {
-        var code = auth.getCode();
+        var code = auth.identifier();
         var now = Instant.now();
         setCreatedAt(now);
         setUpdatedAt(now);
@@ -39,7 +39,7 @@ public interface IAuditable {
     }
 
     default void updated(AuthSubject auth) {
-        var code = auth.getCode();
+        var code = auth.identifier();
         var now = Instant.now();
         setUpdatedAt(now);
         setUpdatedBy(code);

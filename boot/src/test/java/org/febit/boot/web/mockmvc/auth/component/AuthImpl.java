@@ -15,7 +15,7 @@
  */
 package org.febit.boot.web.mockmvc.auth.component;
 
-import org.febit.boot.auth.WebRequestAuthSubjectResolver;
+import org.febit.boot.auth.web.WebRequestAuthSubjectResolver;
 import org.febit.boot.common.permission.PermissionItem;
 import org.febit.boot.common.permission.PermissionVerifier;
 import org.febit.lang.annotation.NonNullApi;
@@ -45,10 +45,10 @@ public class AuthImpl implements PermissionVerifier<TestAuthSubject>, WebRequest
 
     @Override
     public boolean isAllow(TestAuthSubject auth, Collection<PermissionItem> allows) {
-        if (ADMIN.equals(auth.getCode())) {
+        if (ADMIN.equals(auth.identifier())) {
             return true;
         }
-        var permissions = permissionsMap.getOrDefault(auth.getCode(), Set.of());
+        var permissions = permissionsMap.getOrDefault(auth.identifier(), Set.of());
         for (var allow : allows) {
             if (permissions.contains(allow.getCode())) {
                 return true;
@@ -64,8 +64,6 @@ public class AuthImpl implements PermissionVerifier<TestAuthSubject>, WebRequest
     }
 
     private TestAuthSubject parseAuth(String code) {
-        var auth = new TestAuthSubject();
-        auth.setCode(code);
-        return auth;
+        return new TestAuthSubject(code, code);
     }
 }

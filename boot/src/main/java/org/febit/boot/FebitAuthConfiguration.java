@@ -15,7 +15,7 @@
  */
 package org.febit.boot;
 
-import org.febit.boot.auth.WebAuthHandler;
+import org.febit.boot.auth.component.WebAuthHandlerImpl;
 import org.febit.boot.common.permission.AnnotatedMethodPermissionResolver;
 import org.febit.boot.common.util.FebitBootBeanNameGenerator;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(
         nameGenerator = FebitBootBeanNameGenerator.class,
         basePackageClasses = {
-                WebAuthHandler.class
+                WebAuthHandlerImpl.class
         }
 )
 public class FebitAuthConfiguration {

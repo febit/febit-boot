@@ -13,14 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.auth;
+@NonNullApi
+package org.febit.boot.auth.web;
 
-import org.febit.boot.common.auth.AuthSubject;
-import org.springframework.web.context.request.WebRequest;
-
-import java.util.Optional;
-
-public interface WebRequestAuthSubjectResolver<T extends AuthSubject> {
-
-    Optional<T> resolveAuth(WebRequest request);
-}
+import org.febit.lang.annotation.NonNullApi;

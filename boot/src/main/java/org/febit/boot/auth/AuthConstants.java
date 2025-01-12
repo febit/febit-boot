@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.auth;
+package org.febit.boot.auth;
 
-import java.util.Optional;
+import lombok.experimental.UtilityClass;
 
-@FunctionalInterface
-public interface AuthSupplier<T extends AuthSubject> {
+@UtilityClass
+public class AuthConstants {
 
-    Optional<T> get();
-
-    default String getSupplierName() {
-        return getClass().getSimpleName();
-    }
+    public static final String ATTR_AUTH = "__FEBIT_BOOT_AUTH";
+    public static final String ATTR_AUTH_ID = "__FEBIT_BOOT_AUTH_ID";
 }

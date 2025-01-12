@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web.util;
+package org.febit.boot.auth.web;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.febit.boot.common.auth.AuthConstants;
-import org.febit.boot.common.auth.AuthSubject;
-import org.febit.boot.common.auth.AuthSupplier;
+import org.febit.boot.auth.AuthConstants;
+import org.febit.boot.auth.AuthSubject;
+import org.febit.boot.auth.AuthSupplier;
 import org.febit.boot.common.util.Errors;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
