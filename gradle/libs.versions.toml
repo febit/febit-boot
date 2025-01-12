@@ -3,7 +3,7 @@ hierynomus-license = '0.16.1'
 maven-plugin-development = '0.4.3'
 
 febit-devkit = '1.4.0'
-febit-commons = '3.3.0-SNAPSHOT'
+febit-commons = '3.3.0'
 
 embedded-postgres = '2.1.0'
 spring-boot = '3.4.1'

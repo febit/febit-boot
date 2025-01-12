@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'org.febit.boot'
-version '3.4.0-SNAPSHOT'
+version '3.4.0'
 
 description = 'Febit Boot'
 
@@ -24,7 +24,7 @@ allprojects {
 
   repositories {
     mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    // maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
   standardMavenPublish {
