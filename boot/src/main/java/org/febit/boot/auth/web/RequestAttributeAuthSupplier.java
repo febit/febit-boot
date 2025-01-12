@@ -21,7 +21,7 @@ import lombok.val;
 import org.febit.boot.auth.AuthConstants;
 import org.febit.boot.auth.AuthSubject;
 import org.febit.boot.auth.AuthSupplier;
-import org.febit.boot.common.util.Errors;
+import org.febit.boot.util.Errors;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 

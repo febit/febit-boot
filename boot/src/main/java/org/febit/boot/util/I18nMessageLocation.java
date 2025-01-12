@@ -13,18 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.permission;
+package org.febit.boot.util;
 
-import javax.annotation.Nullable;
-import java.lang.reflect.Method;
-import java.util.function.Consumer;
+import java.util.List;
 
-public interface MethodPermissionResolver {
+@FunctionalInterface
+public interface I18nMessageLocation {
 
-    void collect(Method method, Consumer<PermissionItem> consumer);
-
-    @Nullable
-    default Boolean isAnonymous(Method method) {
-        return null;
-    }
+    List<String> locations();
 }

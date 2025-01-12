@@ -15,7 +15,7 @@
  */
 package org.febit.boot;
 
-import org.febit.boot.common.util.FebitBootBeanNameGenerator;
+import org.febit.boot.util.FebitBootBeanNameGenerator;
 import org.febit.boot.web.component.WebComponentsPackage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.ComponentScan;

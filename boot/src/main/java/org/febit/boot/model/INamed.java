@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.util;
+package org.febit.boot.model;
 
-import lombok.experimental.UtilityClass;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/**
- * Priority.
- *
- * @see org.springframework.core.Ordered
- */
-@UtilityClass
-public class Priority {
+import javax.annotation.Nullable;
+import java.util.Objects;
 
-    public static final int NORMAL = 0;
+public interface INamed {
 
-    public static final int LOW = 1024;
-    public static final int LOWER = 65536;
-    public static final int LOWEST = Integer.MAX_VALUE;
+    String getName();
 
-    public static final int HIGH = -LOW;
-    public static final int HIGHER = -LOWER;
-    public static final int HIGHEST = Integer.MIN_VALUE;
+    @JsonIgnore
+    default boolean isNameEquals(@Nullable String name) {
+        return Objects.equals(getName(), name);
+    }
+
+    @JsonIgnore
+    default boolean isNameEquals(@Nullable INamed other) {
+        if (other == null) {
+            return false;
+        }
+        return isNameEquals(other.getName());
+    }
 }

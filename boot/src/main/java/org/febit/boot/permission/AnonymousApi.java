@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.permission;
+package org.febit.boot.permission;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Permission {
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface AnonymousApi {
 
-    String code();
-
-    String module() default "";
-
-    String action() default "";
-
-    String separator() default ":";
+    boolean value() default true;
 }

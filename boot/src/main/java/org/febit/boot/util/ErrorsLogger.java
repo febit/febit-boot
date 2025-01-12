@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.model;
+package org.febit.boot.util;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.experimental.UtilityClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
-import java.util.Objects;
+@UtilityClass
+class ErrorsLogger {
 
-public interface INamed {
+    static final Logger LOGGER = LoggerFactory.getLogger(ErrorsLogger.class);
 
-    String getName();
-
-    @JsonIgnore
-    default boolean isNameEquals(@Nullable String name) {
-        return Objects.equals(getName(), name);
+    static boolean disabled() {
+        return false;
     }
 
-    @JsonIgnore
-    default boolean isNameEquals(@Nullable INamed other) {
-        if (other == null) {
-            return false;
-        }
-        return isNameEquals(other.getName());
+    @SuppressWarnings("unused")
+    static void discard(String msg) {
+        // Nothing to do
+    }
+
+    @SuppressWarnings("unused")
+    static void discard(String msg, Exception ex) {
+        // Nothing to do
     }
 }

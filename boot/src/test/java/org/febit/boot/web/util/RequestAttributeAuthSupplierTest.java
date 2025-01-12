@@ -17,7 +17,7 @@ package org.febit.boot.web.util;
 
 import org.febit.boot.auth.AuthConstants;
 import org.febit.boot.auth.web.RequestAttributeAuthSupplier;
-import org.febit.boot.common.util.Errors;
+import org.febit.boot.util.Errors;
 import org.febit.boot.web.mockmvc.auth.component.TestAuthSubject;
 import org.febit.lang.protocol.BusinessException;
 import org.junit.jupiter.api.Test;

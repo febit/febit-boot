@@ -18,7 +18,7 @@ package org.febit.boot.web.mockmvc.basic.api;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.febit.boot.common.util.Errors;
+import org.febit.boot.util.Errors;
 import org.febit.lang.protocol.IBasicApi;
 import org.febit.lang.protocol.IResponse;
 import org.springframework.http.MediaType;

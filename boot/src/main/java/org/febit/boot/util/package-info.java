@@ -13,13 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.permission;
+@NonNullApi
+package org.febit.boot.util;
 
-import org.febit.boot.auth.AuthSubject;
-
-import java.util.Collection;
-
-public interface PermissionVerifier<T extends AuthSubject> {
-
-    boolean isAllow(T auth, Collection<PermissionItem> permissions);
-}
+import org.febit.lang.annotation.NonNullApi;

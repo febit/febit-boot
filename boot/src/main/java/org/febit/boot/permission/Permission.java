@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.model;
+package org.febit.boot.permission;
 
-import org.febit.boot.common.util.Models;
-import org.febit.lang.annotation.NonNullApi;
+import java.lang.annotation.*;
 
-import java.util.function.Supplier;
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Permission {
 
-@NonNullApi
-public interface IModel<T> {
+    String code();
 
-    default T to(Supplier<T> supplier) {
-        return Models.map(this, supplier.get());
-    }
+    String module() default "";
 
-    default T to(T target) {
-        return Models.map(this, target);
-    }
+    String action() default "";
 
-    default void merge(T source) {
-        Models.map(source, this);
-    }
+    String separator() default ":";
 }

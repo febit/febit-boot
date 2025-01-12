@@ -13,7 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@NonNullApi
-package org.febit.boot.common.util;
+package org.febit.boot.util;
 
-import org.febit.lang.annotation.NonNullApi;
+import lombok.experimental.UtilityClass;
+
+/**
+ * Priority.
+ *
+ * @see org.springframework.core.Ordered
+ */
+@UtilityClass
+public class Priority {
+
+    public static final int NORMAL = 0;
+
+    public static final int LOW = 1024;
+    public static final int LOWER = 65536;
+    public static final int LOWEST = Integer.MAX_VALUE;
+
+    public static final int HIGH = -LOW;
+    public static final int HIGHER = -LOWER;
+    public static final int HIGHEST = Integer.MIN_VALUE;
+}

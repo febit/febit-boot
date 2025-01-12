@@ -15,6 +15,13 @@
  */
 package org.febit.boot.common.permission;
 
+import org.febit.boot.permission.AnnotatedMethodPermissionResolver;
+import org.febit.boot.permission.AnonymousApi;
+import org.febit.boot.permission.MethodPermissionResolver;
+import org.febit.boot.permission.MethodPermissionResolvers;
+import org.febit.boot.permission.Permission;
+import org.febit.boot.permission.PermissionItem;
+import org.febit.boot.permission.ResolvedPermission;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -22,8 +29,8 @@ import java.lang.annotation.*;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.febit.boot.common.permission.ResolvedPermission.ANONYMOUS;
-import static org.febit.boot.common.permission.ResolvedPermission.FORBIDDEN_ABSENT;
+import static org.febit.boot.permission.ResolvedPermission.ANONYMOUS;
+import static org.febit.boot.permission.ResolvedPermission.FORBIDDEN_ABSENT;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MethodPermissionResolversTest {

@@ -17,9 +17,9 @@ package org.febit.boot;
 
 import io.swagger.v3.core.jackson.ModelResolver;
 import io.swagger.v3.core.util.Json;
-import org.febit.boot.common.util.FebitBootBeanNameGenerator;
-import org.febit.boot.common.util.Priority;
 import org.febit.boot.springdoc.GenericTypeNameResolver;
+import org.febit.boot.util.FebitBootBeanNameGenerator;
+import org.febit.boot.util.Priority;
 import org.springdoc.core.configuration.SpringDocConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

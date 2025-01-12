@@ -15,7 +15,7 @@
  */
 package org.febit.boot.web.mockmvc.auth;
 
-import org.febit.boot.common.permission.Permission;
+import org.febit.boot.permission.Permission;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;

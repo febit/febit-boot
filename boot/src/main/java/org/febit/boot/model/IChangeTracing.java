@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.util;
+package org.febit.boot.model;
 
-import java.util.List;
-
-@FunctionalInterface
-public interface I18nMessageLocation {
-
-    List<String> locations();
+/**
+ * @deprecated Use {@link IAuditable} instead.
+ */
+@Deprecated(since = "3.4.0")
+public interface IChangeTracing extends IAuditable {
 }

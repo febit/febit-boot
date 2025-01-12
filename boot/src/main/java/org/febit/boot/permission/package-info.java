@@ -13,28 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.util;
+@NonNullApi
+package org.febit.boot.permission;
 
-import lombok.experimental.UtilityClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-@UtilityClass
-class ErrorsLogger {
-
-    static final Logger LOGGER = LoggerFactory.getLogger(ErrorsLogger.class);
-
-    static boolean disabled() {
-        return false;
-    }
-
-    @SuppressWarnings("unused")
-    static void discard(String msg) {
-        // Nothing to do
-    }
-
-    @SuppressWarnings("unused")
-    static void discard(String msg, Exception ex) {
-        // Nothing to do
-    }
-}
+import org.febit.lang.annotation.NonNullApi;

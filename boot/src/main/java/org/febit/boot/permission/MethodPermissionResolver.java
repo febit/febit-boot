@@ -13,7 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@NonNullApi
-package org.febit.boot.common.permission;
+package org.febit.boot.permission;
 
-import org.febit.lang.annotation.NonNullApi;
+import javax.annotation.Nullable;
+import java.lang.reflect.Method;
+import java.util.function.Consumer;
+
+public interface MethodPermissionResolver {
+
+    void collect(Method method, Consumer<PermissionItem> consumer);
+
+    @Nullable
+    default Boolean isAnonymous(Method method) {
+        return null;
+    }
+}

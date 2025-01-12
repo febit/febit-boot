@@ -22,8 +22,8 @@ import org.jooq.meta.TableDefinition;
 
 public class BootImplsResolver implements ImplementsResolver {
 
-    private static final String CLS_NAMED = "org.febit.boot.common.model.INamed";
-    private static final String CLS_AUDITABLE = "org.febit.boot.common.model.IAuditable";
+    private static final String CLS_NAMED = "org.febit.boot.model.INamed";
+    private static final String CLS_AUDITABLE = "org.febit.boot.model.IAuditable";
 
     @Override
     public void resolve(Context context) {

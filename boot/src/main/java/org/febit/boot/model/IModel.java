@@ -13,11 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.model;
+package org.febit.boot.model;
 
-/**
- * @deprecated Use {@link IAuditable} instead.
- */
-@Deprecated(since = "3.4.0")
-public interface IChangeTracing extends IAuditable {
+import org.febit.boot.util.Models;
+import org.febit.lang.annotation.NonNullApi;
+
+import java.util.function.Supplier;
+
+@NonNullApi
+public interface IModel<T> {
+
+    default T to(Supplier<T> supplier) {
+        return Models.map(this, supplier.get());
+    }
+
+    default T to(T target) {
+        return Models.map(this, target);
+    }
+
+    default void merge(T source) {
+        Models.map(source, this);
+    }
 }

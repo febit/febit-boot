@@ -15,13 +15,14 @@
  */
 package org.febit.boot.common.permission;
 
+import org.febit.boot.permission.ResolvedPermission;
 import org.junit.jupiter.api.Test;
 
-import static org.febit.boot.common.permission.ResolvedPermission.ANONYMOUS;
-import static org.febit.boot.common.permission.ResolvedPermission.FORBIDDEN_ABSENT;
-import static org.febit.boot.common.permission.ResolvedPermission.FORBIDDEN_NOT_IN_CHARGE;
-import static org.febit.boot.common.permission.ResolvedPermission.IGNORED;
-import static org.febit.boot.common.permission.ResolvedPermission.Type;
+import static org.febit.boot.permission.ResolvedPermission.ANONYMOUS;
+import static org.febit.boot.permission.ResolvedPermission.FORBIDDEN_ABSENT;
+import static org.febit.boot.permission.ResolvedPermission.FORBIDDEN_NOT_IN_CHARGE;
+import static org.febit.boot.permission.ResolvedPermission.IGNORED;
+import static org.febit.boot.permission.ResolvedPermission.Type;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ResolvedPermissionTest {

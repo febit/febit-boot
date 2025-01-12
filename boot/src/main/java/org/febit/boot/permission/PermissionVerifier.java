@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.permission;
+package org.febit.boot.permission;
 
-import java.lang.annotation.*;
+import org.febit.boot.auth.AuthSubject;
 
-@Inherited
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
-public @interface AnonymousApi {
+import java.util.Collection;
 
-    boolean value() default true;
+public interface PermissionVerifier<T extends AuthSubject> {
+
+    boolean isAllow(T auth, Collection<PermissionItem> permissions);
 }
