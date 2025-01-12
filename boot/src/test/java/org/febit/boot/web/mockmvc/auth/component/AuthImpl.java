@@ -50,7 +50,7 @@ public class AuthImpl implements PermissionVerifier<TestAuthSubject>, WebRequest
         }
         var permissions = permissionsMap.getOrDefault(auth.identifier(), Set.of());
         for (var allow : allows) {
-            if (permissions.contains(allow.getCode())) {
+            if (permissions.contains(allow.code())) {
                 return true;
             }
         }

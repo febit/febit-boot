@@ -60,7 +60,7 @@ public class PermissionOperationCustomizer implements GlobalOperationCustomizer 
         public static PermissionDocMeta of(ResolvedPermission src) {
             var meta = new PermissionDocMeta();
             meta.setType(src.getType());
-            meta.setItems(Lists.collect(src.getItems(), PermissionItem::getCode));
+            meta.setItems(Lists.collect(src.getItems(), PermissionItem::code));
             return meta;
         }
     }

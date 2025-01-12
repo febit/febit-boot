@@ -67,27 +67,31 @@ class MethodPermissionResolversTest {
         assertTrue(permission.isAllowList());
         assertThat(permission.getItems())
                 .hasSize(1)
-                .contains(PermissionItem.of("api.foo"));
+                .map(PermissionItem::code)
+                .contains("api.foo");
 
         permission = resolve(Handler.class, "foo");
         assertTrue(permission.isAllowList());
         assertThat(permission.getItems())
                 .hasSize(1)
-                .contains(PermissionItem.of("api.foo"));
+                .map(PermissionItem::code)
+                .contains("api.foo");
 
         permission = resolve(Handler.class, "bar");
         assertTrue(permission.isAllowList());
         assertThat(permission.getItems())
                 .hasSize(1)
-                .contains(PermissionItem.of("api:bar"));
+                .map(PermissionItem::code)
+                .contains("api:bar");
 
         permission = resolve(Handler.class, "qux");
         assertTrue(permission.isAllowList());
         assertThat(permission.getItems())
+                .map(PermissionItem::code)
                 .hasSize(3)
-                .contains(PermissionItem.of("api.foo"))
-                .contains(PermissionItem.of("api.baz:qux"))
-                .contains(PermissionItem.of("api:bar"));
+                .contains("api.foo")
+                .contains("api.baz:qux")
+                .contains("api:bar");
     }
 
     @SuppressWarnings({"unused"})
@@ -127,13 +131,13 @@ class MethodPermissionResolversTest {
 
     @interface Permissions {
 
-        @Permission(code = "api.foo")
+        @Permission(resource = "api.foo")
         @Target(ElementType.METHOD)
         @Retention(RetentionPolicy.RUNTIME)
         @interface Foo {
         }
 
-        @Permission(code = "api.baz")
+        @Permission(resource = "api.baz")
         @Target(ElementType.METHOD)
         @Retention(RetentionPolicy.RUNTIME)
         @interface Baz {
@@ -142,7 +146,7 @@ class MethodPermissionResolversTest {
             String value();
         }
 
-        @Permission(module = "api", code = "bar")
+        @Permission(module = "api", resource = "bar")
         @Target(ElementType.METHOD)
         @Retention(RetentionPolicy.RUNTIME)
         @interface Bar {

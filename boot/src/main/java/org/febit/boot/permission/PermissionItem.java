@@ -15,46 +15,48 @@
  */
 package org.febit.boot.permission;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import java.util.Comparator;
 
-@Data
-@RequiredArgsConstructor(
-        staticName = "of"
-)
-public class PermissionItem implements Comparable<PermissionItem> {
+public record PermissionItem(
+        String code,
+        String module,
+        String resource,
+        String action
+) implements Comparable<PermissionItem> {
 
-    private final String code;
+    private static final Comparator<PermissionItem> COMPARATOR
+            = Comparator.comparing(PermissionItem::module)
+            .thenComparing(PermissionItem::resource)
+            .thenComparing(PermissionItem::action);
 
     public static PermissionItem of(Permission permission) {
-
-        var module = permission.module();
-        var action = permission.action();
-        var code = permission.code();
-
-        if (module.isEmpty()
-                && action.isEmpty()
-        ) {
-            return of(code);
-        }
-
+        var module = permission.module().toLowerCase();
+        var resource = permission.resource().toLowerCase();
+        var action = permission.action().toLowerCase();
         var separator = permission.separator();
-        var buf = new StringBuilder();
-        if (!module.isEmpty()) {
-            buf.append(module);
-            buf.append(separator);
-        }
-        buf.append(code);
 
-        if (!action.isEmpty()) {
-            buf.append(separator);
-            buf.append(action);
+        String code;
+        if (module.isEmpty() && action.isEmpty()) {
+            code = resource;
+        } else {
+            var buf = new StringBuilder();
+            if (!module.isEmpty()) {
+                buf.append(module);
+                buf.append(separator);
+            }
+            buf.append(resource);
+            if (!action.isEmpty()) {
+                buf.append(separator);
+                buf.append(action);
+            }
+            code = buf.toString();
         }
-        return of(buf.toString());
+        return new PermissionItem(code, module, resource, action);
     }
 
     @Override
-    public int compareTo(PermissionItem meta) {
-        return this.code.compareTo(meta.code);
+    public int compareTo(PermissionItem other) {
+        return COMPARATOR.compare(this, other);
     }
+
 }

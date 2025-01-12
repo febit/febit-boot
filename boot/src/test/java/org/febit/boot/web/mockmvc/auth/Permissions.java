@@ -22,13 +22,13 @@ import java.lang.annotation.*;
 
 public @interface Permissions {
 
-    @Permission(code = "api.foo")
+    @Permission(resource = "api.foo")
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
     @interface Foo {
     }
 
-    @Permission(code = "api.baz")
+    @Permission(resource = "api.baz")
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
     @interface Baz {
@@ -37,7 +37,7 @@ public @interface Permissions {
         String value();
     }
 
-    @Permission(module = "api", code = "bar")
+    @Permission(module = "api", resource = "bar")
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
     @interface Bar {
