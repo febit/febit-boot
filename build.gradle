@@ -8,9 +8,8 @@ plugins {
   alias libs.plugins.license
 }
 
-group 'org.febit.boot'
-version '3.4.1-SNAPSHOT'
-
+group = 'org.febit.boot'
+version = '3.4.1-SNAPSHOT'
 description = 'Febit Boot'
 
 ext {
@@ -19,12 +18,12 @@ ext {
 allprojects {
   apply plugin: 'com.github.hierynomus.license'
 
-  group rootProject.group
-  version rootProject.version
+  group = rootProject.group
+  version = rootProject.version
 
   repositories {
     mavenCentral()
-    // maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    // maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
   standardMavenPublish {
@@ -43,9 +42,9 @@ allprojects {
     }
     include '**/*.java'
     exclude '**/*Mojo.java'
-    strictCheck false
-    skipExistingHeaders false
-    header rootProject.file('etc/license-header.txt')
+    strictCheck = false
+    skipExistingHeaders = false
+    header = rootProject.file('etc/license-header.txt')
   }
 
   tasks.withType(AbstractPublishToMaven).configureEach {
@@ -74,6 +73,10 @@ configure(subprojects.findAll {
 
   test {
     useJUnitPlatform()
+  }
+
+  licenseMain {
+    mustRunAfter generateModule
   }
 
   dependencies {

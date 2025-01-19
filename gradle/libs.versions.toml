@@ -1,14 +1,14 @@
 [versions]
 hierynomus-license = '0.16.1'
-maven-plugin-development = '0.4.3'
+maven-plugin-development = '1.0.1'
 
-febit-devkit = '1.4.0'
-febit-commons = '3.3.0'
+febit-devkit = '1.4.1'
+febit-commons = '3.3.1'
 
 embedded-postgres = '2.1.0'
 spring-boot = '3.4.1'
 spring-cloud = '2024.0.0'
-springdoc = '2.7.0'
+springdoc = '2.8.3'
 swagger3 = '2.2.27'
 okhttp = '4.12.0'
 
@@ -36,4 +36,4 @@ febit-java = { id = 'org.febit.standard-java', version.ref = 'febit-devkit' }
 febit-maven-publish = { id = 'org.febit.standard-maven-publish', version.ref = 'febit-devkit' }
 
 license = { id = 'com.github.hierynomus.license', version.ref = 'hierynomus-license' }
-maven-plugin-development = { id = 'de.benediktritter.maven-plugin-development', version.ref = 'maven-plugin-development' }
+maven-plugin-development = { id = 'org.gradlex.maven-plugin-development', version.ref = 'maven-plugin-development' }

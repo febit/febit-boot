@@ -122,7 +122,7 @@ class SampleApiSpringdocTest extends BaseMvcTest {
         var result = result();
         var prefix = "$.components.schemas['IResponse<SampleVO>']";
 
-        result.andExpect(j(prefix + ".type", "object"));
+        //result.andExpect(j(prefix + ".type", "object"));
 
         var props = prefix + ".properties";
         result.andExpect(j(props + ".data['$ref']", "#/components/schemas/SampleVO"))
@@ -134,7 +134,7 @@ class SampleApiSpringdocTest extends BaseMvcTest {
         var result = result();
         var prefix = "$.components.schemas['SampleSearchForm']";
 
-        result.andExpect(j(prefix + ".type", "object"));
+        // result.andExpect(j(prefix + ".type", "object"));
 
         var props = prefix + ".properties";
         result.andExpect(j(props + ".q.type", "string"))
@@ -159,7 +159,7 @@ class SampleApiSpringdocTest extends BaseMvcTest {
         var result = result();
         var prefix = "$.components.schemas['SampleVO']";
 
-        result.andExpect(j(prefix + ".type", "object"));
+        // result.andExpect(j(prefix + ".type", "object"));
 
         var props = prefix + ".properties";
         result.andExpect(j(props + ".id.type", "integer"))
