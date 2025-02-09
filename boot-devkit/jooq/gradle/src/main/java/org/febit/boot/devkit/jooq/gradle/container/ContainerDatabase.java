@@ -140,12 +140,15 @@ public class ContainerDatabase {
 
         // Ping database
         var pingFuture = Polling.create(() -> {
-                    if (daemonRef.get().exited()) {
+                    if (!isDaemonRunning()) {
                         throw new IOException("Container exited with code: " + daemonRef.get().exitCode());
                     }
-                    return isReady();
+                    ping();
+                    return true;
                 })
-                .completeIfReturnsTrue()
+                .completeIf((ctx) ->
+                        !ctx.hasError() || !isDaemonRunning()
+                )
                 .initialDelay(Duration.ofMillis(300))
                 .delayInMillis(100)
                 .timeoutInMillis(Millis.SECOND * 30)
@@ -175,15 +178,26 @@ public class ContainerDatabase {
         log.info("Started database, cost {} ms", watch.getTime(TimeUnit.MILLISECONDS));
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private boolean isDaemonRunning() {
+        var daemon = daemonRef.get();
+        return daemon != null && !daemon.exited();
+    }
+
     public boolean isReady() {
+        try {
+            ping();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public void ping() throws SQLException {
         try (var connection = DriverManager.getConnection(jdbcUrl, user, password);
              var statement = connection.createStatement()
         ) {
             statement.execute("SELECT 1");
-            return true;
-        } catch (SQLException e) {
-            log.info("Database not ready: {}", e.getMessage());
-            return false;
         }
     }
 
