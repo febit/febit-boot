@@ -17,6 +17,7 @@ package org.febit.boot.devkit.jooq.runtime.spi;
 
 import jakarta.annotation.Nullable;
 import lombok.Setter;
+import org.febit.boot.devkit.jooq.runtime.JooqGeneratorStrategy;
 import org.febit.boot.devkit.jooq.runtime.util.NamingUtils;
 import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.meta.ColumnDefinition;
@@ -25,18 +26,18 @@ import org.jooq.meta.TableDefinition;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
+@Setter
 @Order(Ordered.LOWEST_PRECEDENCE)
-public class DefaultNaming implements Naming, SpiContext.Aware {
+public class DefaultNaming implements Naming, Aware.Strategy {
 
-    @Setter
-    private SpiContext context;
+    private JooqGeneratorStrategy generatorStrategy;
 
     @Nullable
     @Override
     public String memberField(Definition def, GeneratorStrategy.Mode mode) {
         if (def instanceof ColumnDefinition) {
             return NamingUtils.toLowerCamelCase(
-                    context.resolveOutputName(def)
+                    generatorStrategy.resolveOutputName(def)
             );
         }
         return null;
@@ -47,7 +48,7 @@ public class DefaultNaming implements Naming, SpiContext.Aware {
     public String identifier(Definition def) {
         if (def instanceof TableDefinition
                 || def instanceof ColumnDefinition) {
-            return context.resolveOutputName(def).toUpperCase();
+            return generatorStrategy.resolveOutputName(def).toUpperCase();
         }
         return null;
     }

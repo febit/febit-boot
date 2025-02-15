@@ -16,16 +16,36 @@
 package org.febit.boot.devkit.jooq.runtime.spi;
 
 import org.febit.boot.devkit.jooq.runtime.JooqGeneratorStrategy;
+import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.meta.Definition;
+import org.jooq.meta.TableDefinition;
 
 public interface SpiContext {
-    JooqGeneratorStrategy getStrategy();
 
-    default String resolveOutputName(Definition definition) {
-        return getStrategy().resolveOutputName(definition);
+    interface WithStrategy {
+        JooqGeneratorStrategy strategy();
+
+        /**
+         * @deprecated use {@link #strategy()} instead
+         */
+        @Deprecated(since = "3.4.1")
+        default JooqGeneratorStrategy getStrategy() {
+            return strategy();
+        }
+
+        default String resolveOutputName(Definition definition) {
+            return strategy().resolveOutputName(definition);
+        }
     }
 
-    interface Aware {
-        void setContext(SpiContext context);
+    interface GeneratorMode extends SpiContext {
+        Definition def();
+
+        GeneratorStrategy.Mode mode();
+
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+        default boolean isTableDefinition() {
+            return def() instanceof TableDefinition;
+        }
     }
 }

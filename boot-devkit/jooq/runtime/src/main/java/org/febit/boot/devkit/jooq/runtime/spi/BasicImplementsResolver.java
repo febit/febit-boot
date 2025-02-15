@@ -31,18 +31,18 @@ public class BasicImplementsResolver implements ImplementsResolver {
             return;
         }
 
-        var table = (TableDefinition) context.getDef();
+        var table = (TableDefinition) context.def();
         var pkCol = JooqGeneratorStrategy.getPkColumn(table);
 
         if (pkCol == null) {
             return;
         }
 
-        var pkType = context.getStrategy().resolveColumnType(pkCol);
-        var recordClassName = context.getStrategy()
+        var pkType = context.strategy().resolveColumnType(pkCol);
+        var recordClassName = context.strategy()
                 .getJavaClassName(table, GeneratorStrategy.Mode.RECORD);
 
-        switch (context.getMode()) {
+        switch (context.mode()) {
             case DEFAULT -> context.addImpl(MetaUtils.CORE_PKG
                     + ".ITable<" + recordClassName + ", " + pkType + ">");
             case POJO -> context.addImpl(MetaUtils.CORE_PKG

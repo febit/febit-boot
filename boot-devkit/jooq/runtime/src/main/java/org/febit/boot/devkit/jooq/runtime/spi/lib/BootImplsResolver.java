@@ -30,10 +30,10 @@ public class BootImplsResolver implements ImplementsResolver {
         if (!context.isTableDefinition()) {
             return;
         }
-        if (context.getMode() != GeneratorStrategy.Mode.POJO) {
+        if (context.mode() != GeneratorStrategy.Mode.POJO) {
             return;
         }
-        var table = (TableDefinition) context.getDef();
+        var table = (TableDefinition) context.def();
         namedModel(table, context);
         auditableModel(table, context);
     }

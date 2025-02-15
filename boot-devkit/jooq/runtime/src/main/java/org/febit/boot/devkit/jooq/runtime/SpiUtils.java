@@ -17,8 +17,7 @@ package org.febit.boot.devkit.jooq.runtime;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.febit.boot.devkit.jooq.runtime.spi.SpiContext;
-import org.febit.boot.devkit.jooq.runtime.spi.SpiContextImpl;
+import org.febit.boot.devkit.jooq.runtime.spi.Aware;
 import org.febit.lang.util.Lists;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
@@ -31,10 +30,9 @@ class SpiUtils {
 
     static <T> List<T> load(Class<T> type, JooqGeneratorStrategy strategy) {
         var spies = load(type);
-        var context = SpiContextImpl.of(strategy);
         for (T spi : spies) {
-            if (spi instanceof SpiContext.Aware) {
-                ((SpiContext.Aware) spi).setContext(context);
+            if (spi instanceof Aware.Strategy aware) {
+                aware.setGeneratorStrategy(strategy);
             }
         }
         return spies;

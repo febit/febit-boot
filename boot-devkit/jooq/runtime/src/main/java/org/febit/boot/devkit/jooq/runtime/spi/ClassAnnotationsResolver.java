@@ -15,46 +15,41 @@
  */
 package org.febit.boot.devkit.jooq.runtime.spi;
 
-import org.febit.boot.devkit.jooq.runtime.JooqGeneratorStrategy;
 import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.meta.Definition;
 
 import java.util.function.Consumer;
 
-public interface ImplementsResolver {
+public interface ClassAnnotationsResolver {
 
     void resolve(Context context);
 
-    interface Context extends SpiContext.WithStrategy, SpiContext.GeneratorMode {
+    interface Context extends SpiContext.GeneratorMode {
 
-        void addImpl(String impl);
+        void out(String pattern, String... refs);
 
-        /**
-         * @deprecated use {@link #def()} instead
-         */
-        @Deprecated(since = "3.4.1")
-        default Definition getDef() {
-            return def();
-        }
+        GeneratorStrategy.Mode mode();
 
-        /**
-         * @deprecated use {@link #mode()} instead
-         */
-        @Deprecated(since = "3.4.1")
-        default GeneratorStrategy.Mode getMode() {
-            return mode();
+        default void process(ClassAnnotationsResolver resolver) {
+            resolver.resolve(this);
         }
     }
 
+    record CodePattern(
+            String pattern,
+            String[] refs
+    ) {
+    }
+
     record ContextImpl(
-            JooqGeneratorStrategy strategy,
             Definition def,
             GeneratorStrategy.Mode mode,
-            Consumer<String> sink
+            Consumer<CodePattern> sink
     ) implements Context {
+
         @Override
-        public void addImpl(String impl) {
-            sink.accept(impl);
+        public void out(String impl, String... refs) {
+            sink.accept(new CodePattern(impl, refs));
         }
     }
 }

@@ -16,6 +16,7 @@
 package org.febit.boot.devkit.jooq.runtime;
 
 import org.febit.boot.devkit.jooq.meta.MetaUtils;
+import org.febit.boot.devkit.jooq.runtime.spi.ClassAnnotationsResolver;
 import org.febit.boot.devkit.jooq.runtime.spi.TableFilter;
 import org.febit.lang.util.JacksonUtils;
 import org.jooq.codegen.FebitDevkitJavaGeneratorHack;
@@ -23,15 +24,18 @@ import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.codegen.JavaWriter;
 import org.jooq.meta.ColumnDefinition;
 import org.jooq.meta.Database;
+import org.jooq.meta.Definition;
 import org.jooq.meta.SchemaDefinition;
 import org.jooq.meta.TableDefinition;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"unused"})
 public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
 
     private static final List<TableFilter> TABLE_FILTERS = SpiUtils.load(TableFilter.class);
+    private static final List<ClassAnnotationsResolver> CLASS_ANNOTATIONS_RESOLVERS = SpiUtils.load(ClassAnnotationsResolver.class);
 
     @Override
     protected void initDatabase(Database db) {
@@ -63,6 +67,18 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
         emitTablePkExcludedFieldsMethod(table, out);
         emitTableColumnsClass(table, out);
         super.generateTableClassFooter(table, out);
+    }
+
+    @Override
+    protected void printClassAnnotations(JavaWriter out, Definition definition, GeneratorStrategy.Mode mode) {
+        var ctxt = new ClassAnnotationsResolver.ContextImpl(definition, mode, code -> {
+            var refs = Arrays.stream(code.refs())
+                    .map(out::ref)
+                    .toArray();
+            out.println(code.pattern(), refs);
+        });
+        CLASS_ANNOTATIONS_RESOLVERS.forEach(ctxt::process);
+        super.printClassAnnotations(out, definition, mode);
     }
 
     /**
