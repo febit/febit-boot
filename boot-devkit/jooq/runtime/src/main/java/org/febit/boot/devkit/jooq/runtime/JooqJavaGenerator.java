@@ -27,7 +27,6 @@ import org.jooq.meta.SchemaDefinition;
 import org.jooq.meta.TableDefinition;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused"})
 public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
@@ -97,7 +96,6 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
                 .toList();
 
         out.println();
-        out.ref(Collectors.class);
         out.ref(List.class);
 
         out.println("private final List<TableField<%s, ?>> pkExcludedFields = List.of(", recordClassName);
