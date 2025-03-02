@@ -1,0 +1,4 @@
+spring.datasource:
+  url: jdbc:h2:mem:flyway-test
+  username: flyway
+  password: flyway

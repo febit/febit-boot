@@ -15,28 +15,27 @@
  */
 package org.febit.boot.devkit.jooq.gradle;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import lombok.Getter;
-import lombok.Setter;
-import org.febit.boot.devkit.jooq.gradle.container.DbType;
+import lombok.RequiredArgsConstructor;
+import org.febit.boot.devkit.flyway.gradle.model.JdbcOption;
+import org.febit.lang.UncheckedException;
 
-import java.io.File;
-import java.io.Serializable;
+@RequiredArgsConstructor(staticName = "create")
+public class JdbcConnectionImpl implements JdbcConnection {
 
-@Getter
-@Setter
-public class ContainerDbConfig implements Serializable {
+    private final JdbcOption option;
+    private final AutoCloseable closeable;
 
-    @Nonnull
-    private DbType type;
+    @Override
+    public JdbcOption option() {
+        return option;
+    }
 
-    @Nullable
-    private String dockerBinPath;
-
-    @Nullable
-    private String image;
-
-    @Nullable
-    private File workingDir;
+    @Override
+    public void close() {
+        try {
+            closeable.close();
+        } catch (Exception e) {
+            throw new UncheckedException(e);
+        }
+    }
 }

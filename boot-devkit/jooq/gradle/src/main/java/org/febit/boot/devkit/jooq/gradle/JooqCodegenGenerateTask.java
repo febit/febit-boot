@@ -15,10 +15,29 @@
  */
 package org.febit.boot.devkit.jooq.gradle;
 
+import org.apache.commons.lang3.StringUtils;
+import org.febit.boot.devkit.flyway.gradle.FlywayAction;
+import org.febit.boot.devkit.flyway.gradle.FlywayExecutor;
+import org.febit.boot.devkit.flyway.gradle.model.FlywayOptionImpl;
+import org.febit.boot.devkit.flyway.gradle.model.JdbcOption;
 import org.febit.boot.devkit.jooq.meta.MetaUtils;
+import org.flywaydb.core.api.FlywayException;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.FileCollection;
-import org.gradle.api.internal.ProcessOperations;
+import org.gradle.api.initialization.dsl.ScriptHandler;
+import org.gradle.api.model.ObjectFactory;
+import org.gradle.api.provider.ListProperty;
+import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.CacheableTask;
+import org.gradle.api.tasks.Classpath;
+import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.InputFiles;
+import org.gradle.api.tasks.Internal;
+import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.process.ExecOperations;
 import org.gradle.process.JavaExecSpec;
@@ -28,37 +47,111 @@ import javax.inject.Inject;
 import java.io.File;
 import java.util.List;
 
-public class JooqCodegenGenerateTask extends DefaultTask {
+import static org.febit.devkit.gradle.util.GradleUtils.println;
 
-    private final FileCollection classpath;
-    private final Configuration conf;
-    private final ExecOperations exec;
+@CacheableTask
+public abstract class JooqCodegenGenerateTask extends DefaultTask {
 
     @Inject
-    public JooqCodegenGenerateTask(
-            FileCollection classpath,
-            ExecOperations exec,
-            Configuration conf
-    ) {
-        this.exec = exec;
-        setGroup(MetaUtils.GROUP_NAME);
-        setDescription("Generates the jOOQ sources");
-        this.classpath = classpath;
-        this.conf = conf;
-    }
+    protected abstract ObjectFactory getObjectFactory();
+
+    @Inject
+    public abstract ScriptHandler getScriptHandler();
+
+    @Input
+    protected abstract Property<JdbcProvider<?>> getJdbcProvider();
+
+    @Classpath
+    protected abstract Property<FileCollection> getClasspath();
+
+    @Classpath
+    protected abstract Property<FileCollection> getMigrationsClasspath();
+
+    @Input
+    protected abstract Property<Configuration> getConf();
+
+    @Inject
+    protected abstract ExecOperations getExec();
+
+    @Input
+    protected abstract ListProperty<String> getMigrationsDirs();
+
+    @Optional
+    @InputFiles
+    @PathSensitive(PathSensitivity.RELATIVE)
+    protected abstract Property<FileCollection> getInputDirs();
+
+    @Internal
+    protected abstract DirectoryProperty getWorkDir();
+
+    @OutputDirectory
+    protected abstract DirectoryProperty getGeneratedSourceDir();
 
     @TaskAction
     public void generate() {
-        exec.javaexec(this::configSpec);
+        var objects = getObjectFactory();
+        try (var conn = getJdbcProvider().get().open(objects)) {
+            var jdbc = conn.option();
+
+            applyMigrations(jdbc);
+
+            getExec().javaexec(spec -> {
+                configSpec(spec, jdbc);
+            });
+        }
     }
 
-    private void configSpec(JavaExecSpec spec) {
+    private void applyMigrations(JdbcOption jdbc) {
+        var classloader = getScriptHandler().getClassLoader();
+        var conf = getConf().get();
+        var schema = conf.getGenerator()
+                .getDatabase()
+                .getInputSchema();
+
+        var flywayOption = FlywayOptionImpl.builder()
+                .migrationsDirs(getMigrationsDirs().get())
+                .schemas(StringUtils.isEmpty(schema) ? List.of() : List.of(schema))
+                .build();
+
+        try {
+            FlywayExecutor.builder()
+                    .action(FlywayAction.MIGRATE)
+                    .jdbc(jdbc)
+                    .option(flywayOption)
+                    .extraClasspath(getMigrationsClasspath().get())
+                    .baseClassLoader(classloader)
+                    .exec();
+        } catch (
+                Exception e) {
+            throw new FlywayException("Error occurred while executing task '" + getName() + "'", e);
+        }
+    }
+
+    private void configSpec(JavaExecSpec spec, JdbcOption jdbc) {
+        var sourceDir = getGeneratedSourceDir().get().getAsFile().getAbsolutePath();
+        var classpath = getClasspath().get();
+        var workDir = getWorkDir().get().getAsFile();
+
+        var inputDirs = getInputDirs().getOrNull();
+        if (inputDirs != null) {
+            inputDirs.forEach(dir -> {
+                println("Input dir: " + dir);
+            });
+        }
+
+        var conf = getConf().get();
+        conf.getGenerator().getTarget()
+                .setDirectory(sourceDir);
+        conf.getJdbc()
+                .withUrl(jdbc.url())
+                .withUser(jdbc.user())
+                .withPassword(jdbc.password());
 
         var confFile = new File(getTemporaryDir(), "config.xml");
         MetaUtils.emitConfigSilent(conf, confFile);
 
         spec.setClasspath(classpath);
-        spec.setWorkingDir(getProject().getProjectDir());
+        spec.setWorkingDir(workDir);
         spec.getMainClass().set(MetaUtils.CLASS_MAIN);
         spec.setArgs(List.of(confFile));
     }

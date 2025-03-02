@@ -18,12 +18,16 @@ package org.febit.boot.devkit.jooq.gradle;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import lombok.Getter;
-import org.febit.boot.devkit.jooq.gradle.container.ContainerDatabaseCodegenHook;
-import org.febit.boot.devkit.jooq.gradle.embedded.EmbeddedPostgresCodegenHook;
+import org.febit.boot.devkit.jooq.gradle.container.ContainerDatabaseJdbcProvider;
+import org.febit.boot.devkit.jooq.gradle.embedded.EmbeddedPostgresJdbcProvider;
 import org.febit.boot.devkit.jooq.meta.MetaUtils;
 import org.febit.devkit.gradle.util.GradleUtils;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.gradle.api.Project;
+import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.provider.ListProperty;
+import org.gradle.api.provider.Property;
+import org.gradle.api.provider.Provider;
 import org.jooq.meta.jaxb.Configuration;
 import org.jooq.meta.jaxb.Generate;
 import org.jooq.meta.jaxb.Generator;
@@ -36,8 +40,10 @@ import java.util.List;
 
 public class JooqCodegenExtension {
 
-    public static final List<String> DEFAULT_MIGRATIONS_DIR = List.of("db/migration");
+    static final String DIR_GENERATED_SRC = "generated/sources/" + MetaUtils.CODEGEN_JOOQ_FOLDER;
+    private static final List<String> DEFAULT_MIGRATIONS_DIR = List.of("db/migration");
 
+    @Getter
     private final Project project;
 
     /**
@@ -47,48 +53,71 @@ public class JooqCodegenExtension {
      * @see FluentConfiguration#locations(String...)
      */
     @Getter
-    private final List<String> migrationsDirs = new ArrayList<>();
+    private final ListProperty<String> migrationsDirs;
 
     @Getter
     private final EmbeddedPostgresConfig embeddedPostgres = new EmbeddedPostgresConfig();
 
     @Getter
-    private final ContainerDbConfig container = new ContainerDbConfig();
+    private final Property<ContainerDbConfig> container;
 
     @Getter
-    private final ForcedTypesHandler forcedTypes;
-    @Getter
-    private final Generator generator;
-    @Getter
-    private final Jdbc jdbc;
+    private final DirectoryProperty generatedSourceDir;
 
     @Getter
-    private ICodegenHook hook = ICodegenHook.noop();
+    private final Property<Generator> generator;
+
+    @Getter
+    private final Property<Jdbc> jdbc;
+
+    @Getter
+    private final Property<Configuration> jooqConfig;
+
+    @Getter
+    @SuppressWarnings("rawtypes")
+    private final Property<JdbcProvider<?>> jdbcProvider;
 
     @Inject
     public JooqCodegenExtension(Project project) {
         this.project = project;
-        this.jdbc = new Jdbc();
-        this.forcedTypes = new ForcedTypesHandler();
-        this.generator = MetaUtils.createAndInitGenerator();
+        var objects = project.getObjects();
 
-        this.generator.getDatabase()
-                .withForcedTypes(this.forcedTypes);
-        this.generator.getTarget()
-                .withDirectory(JooqCodegenPlugin.DIR_GENERATED_SRC);
-    }
+        this.migrationsDirs = objects.listProperty(String.class);
+        migrationsDirs.addAll(DEFAULT_MIGRATIONS_DIR);
 
-    public Configuration getJooqConfig() {
+        var buildDir = project.getLayout().getBuildDirectory();
+        this.generatedSourceDir = objects.directoryProperty()
+                .convention(buildDir.dir(DIR_GENERATED_SRC));
+
         var conf = new Configuration();
-        conf.setJdbc(this.jdbc);
-        conf.setGenerator(this.generator);
-        return conf;
+        conf.setJdbc(new Jdbc());
+        conf.setGenerator(MetaUtils.createAndInitGenerator());
+        conf.getGenerator().getDatabase()
+                .withForcedTypes(new ArrayList<>());
+        conf.getGenerator().getTarget()
+                .withDirectory(DIR_GENERATED_SRC);
+
+        this.jooqConfig = objects.property(Configuration.class)
+                .convention(conf);
+
+        this.jdbc = objects.property(Jdbc.class)
+                .convention(this.jooqConfig.map(Configuration::getJdbc));
+        this.generator = objects.property(Generator.class)
+                .convention(this.jooqConfig.map(Configuration::getGenerator));
+
+        @SuppressWarnings("unchecked")
+        var cls = (Class<JdbcProvider<?>>) ((Class<?>) JdbcProvider.class);
+        this.jdbcProvider = objects.property(cls)
+                .convention(new PresetJdbcProvider(this.jdbc));
+
+        this.container = objects.property(ContainerDbConfig.class)
+                .convention(new ContainerDbConfig());
     }
 
-    public String getTargetDir() {
-        return this.generator
-                .getTarget()
-                .getDirectory();
+    public Provider<String> getTargetDir() {
+        return this.generator.map(g ->
+                g.getTarget().getDirectory()
+        );
     }
 
     /**
@@ -96,7 +125,6 @@ public class JooqCodegenExtension {
      * (default: db/migration)
      *
      * @see #migrationsDir(String...)
-     * @see FluentConfiguration#locations(String...)
      */
     public void migrationsDir(String dir) {
         this.migrationsDirs.add(dir);
@@ -107,42 +135,44 @@ public class JooqCodegenExtension {
      * (default: db/migration)
      *
      * @see #migrationsDir(String)
-     * @see FluentConfiguration#locations(String...)
      */
     public void migrationsDir(String... dirs) {
-        this.migrationsDirs.addAll(List.of(dirs));
+        this.migrationsDirs.addAll(dirs);
     }
 
     public void forcedTypes(@DelegatesTo(ForcedTypesHandler.class) Closure<?> closure) {
-        GradleUtils.to(closure, this.forcedTypes);
+        var types = new ForcedTypesHandler();
+        GradleUtils.to(closure, types);
+        this.generator.get().getDatabase()
+                .getForcedTypes().addAll(types);
     }
 
     public void setSchema(String schema) {
-        this.generator.getDatabase()
+        this.generator.get().getDatabase()
                 .setInputSchema(schema);
     }
 
     public void setIncludeSchema(String schema) {
         SchemaMappingType type = new SchemaMappingType();
         type.setInputSchema(schema);
-        this.generator.getDatabase().getSchemata().add(type);
+        this.generator.get().getDatabase().getSchemata().add(type);
     }
 
     public void setExcludes(String excludes) {
-        this.generator.getDatabase().setExcludes(excludes);
+        this.generator.get().getDatabase().setExcludes(excludes);
     }
 
     public void setTargetPackage(String name) {
-        this.generator.getTarget().setPackageName(name);
+        this.generator.get().getTarget().setPackageName(name);
     }
 
     public void setGenerate(@DelegatesTo(Generate.class) Closure<?> closure) {
-        GradleUtils.to(closure, this.generator.getGenerate());
+        GradleUtils.to(closure, this.generator.get().getGenerate());
     }
 
     public void presetJdbc(@DelegatesTo(Jdbc.class) Closure<?> closure) {
-        this.hook = ICodegenHook.noop();
-        GradleUtils.to(closure, this.jdbc);
+        this.jdbcProvider.convention(new PresetJdbcProvider(this.jdbc));
+        GradleUtils.to(closure, this.jdbc.get());
     }
 
     public void embeddedPostgres(@DelegatesTo(EmbeddedPostgresConfig.class) Closure<?> closure) {
@@ -151,15 +181,19 @@ public class JooqCodegenExtension {
     }
 
     public void containerDatabase(@DelegatesTo(ContainerDbConfig.class) Closure<?> closure) {
-        this.hook = new ContainerDatabaseCodegenHook();
-        this.jdbc.setUrl(null);
-        GradleUtils.to(closure, this.container);
+        var conf = this.container.get();
+        var provider = ContainerDatabaseJdbcProvider.builder()
+                .conf(conf)
+                .generator(this.generator.get())
+                .buildDir(project.getLayout().getBuildDirectory().getAsFile().get())
+                .build();
+        this.jdbcProvider.convention(provider);
+        GradleUtils.to(closure, conf);
     }
 
     public void embeddedPostgres() {
-        EmbeddedPostgresCodegenHook.prepare(project);
-        this.hook = new EmbeddedPostgresCodegenHook();
-        this.jdbc.setUrl(null);
+        EmbeddedPostgresJdbcProvider.prepare(project);
+        this.jdbcProvider.convention(EmbeddedPostgresJdbcProvider.create(this));
     }
 
 }

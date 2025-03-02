@@ -1,0 +1,16 @@
+spring.datasource:
+  username: devkit
+spring:
+  datasource:
+    password: boot&devkit
+
+spring.flyway:
+  table: flyway_schema_history_v1
+  tablespace: flyway_history_schema
+  encoding: gbk
+  locations:
+    - classpath:db/migration
+    - classpath:db/migration2
+  schemas:
+    - devkit
+    - boot

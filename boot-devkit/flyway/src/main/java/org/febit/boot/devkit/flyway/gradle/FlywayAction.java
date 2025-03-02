@@ -15,44 +15,41 @@
  */
 package org.febit.boot.devkit.flyway.gradle;
 
-import lombok.experimental.UtilityClass;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.internal.info.MigrationInfoDumper;
 
-import java.util.function.Consumer;
+import java.io.Serializable;
 
 import static org.febit.devkit.gradle.util.GradleUtils.println;
 
-@UtilityClass
-public class FlywayActions {
+@Getter
+@Accessors(fluent = true)
+@RequiredArgsConstructor
+public enum FlywayAction {
 
-    public static Consumer<Flyway> info() {
-        return FlywayActions::info;
+    INFO("info", FlywayAction::info),
+    UNDO("undo", Flyway::undo),
+    CLEAN("clean", Flyway::clean),
+    REPAIR("repair", Flyway::repair),
+    MIGRATE("migrate", Flyway::migrate),
+    BASELINE("baseline", Flyway::baseline),
+    VALIDATE("validate", Flyway::validate),
+    ;
+
+    private final String title;
+    private final ActionFunction function;
+
+    public void apply(Flyway flyway) {
+        function.apply(flyway);
     }
 
-    public static Consumer<Flyway> undo() {
-        return Flyway::undo;
-    }
-
-    public static Consumer<Flyway> clean() {
-        return Flyway::clean;
-    }
-
-    public static Consumer<Flyway> repair() {
-        return Flyway::repair;
-    }
-
-    public static Consumer<Flyway> migrate() {
-        return Flyway::migrate;
-    }
-
-    public static Consumer<Flyway> baseline() {
-        return Flyway::baseline;
-    }
-
-    public static Consumer<Flyway> validate() {
-        return Flyway::validate;
+    @FunctionalInterface
+    public interface ActionFunction extends Serializable {
+        void apply(Flyway flyway);
     }
 
     private static void info(Flyway flyway) {

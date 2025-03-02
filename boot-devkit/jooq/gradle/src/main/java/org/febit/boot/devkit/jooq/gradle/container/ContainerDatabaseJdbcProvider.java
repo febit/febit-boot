@@ -15,62 +15,88 @@
  */
 package org.febit.boot.devkit.jooq.gradle.container;
 
-import org.febit.boot.devkit.jooq.gradle.ICodegenHook;
+import lombok.Getter;
+import org.febit.boot.devkit.flyway.gradle.model.JdbcOption;
+import org.febit.boot.devkit.flyway.gradle.model.JdbcOptionImpl;
+import org.febit.boot.devkit.jooq.gradle.ContainerDbConfig;
+import org.febit.boot.devkit.jooq.gradle.JdbcProvider;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin;
-import org.febit.boot.devkit.jooq.gradle.JooqCodegenPrepareTask;
 import org.gradle.api.Project;
+import org.jooq.meta.jaxb.Generator;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class ContainerDatabaseCodegenHook implements ICodegenHook {
+@lombok.Builder(
+        builderClassName = "Builder"
+)
+public class ContainerDatabaseJdbcProvider
+        implements JdbcProvider<ContainerDatabaseJdbcProvider.Params>, Serializable {
 
     private static final String WORK_DIR = "codegen-docker-db";
     private static final String USER = "codegen";
     private static final String PASSWORD = "codegen";
 
+    private final AtomicReference<JdbcOption> jdbcRef = new AtomicReference<>();
+    private final AtomicReference<ContainerDatabase> dbRef = new AtomicReference<>();
+
+    @Getter
+    private final ContainerDbConfig conf;
+    @Getter
+    private final Generator generator;
+    @Getter
+    private final File buildDir;
+
+    public interface Params {
+    }
+
     @Override
     public void afterEvaluate(Project project) {
         var extension = project.getExtensions()
                 .getByType(JooqCodegenExtension.class);
-        var conf = extension.getContainer();
+        var conf = extension.getContainer().get();
         Objects.requireNonNull(conf.getType(), "Docker database type is required");
 
         var deps = project.getDependencies();
         deps.add(JooqCodegenPlugin.RUNTIME_NAME, conf.getType().getDriverArtifact());
     }
 
-    private File resolveWorkDir(Project project, JooqCodegenExtension extension) {
-        var conf = extension.getContainer();
+    private File resolveWorkDir() {
+        var conf = getConf();
         var workDir = conf.getWorkingDir();
         if (workDir != null) {
             return workDir;
         }
-        var buildDir = project.getLayout()
-                .getBuildDirectory()
-                .getAsFile()
-                .get();
         return new File(buildDir, WORK_DIR);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void beforePrepareTask(JooqCodegenPrepareTask task) {
-        var extension = task.codegenExtension();
-        var conf = extension.getContainer();
-        var project = task.getProject();
+    public synchronized JdbcOption prepare(Params params) {
+        var jdbc = this.jdbcRef.get();
+        if (jdbc != null) {
+            return jdbc;
+        }
+        jdbc = doPrepare(params);
+        this.jdbcRef.set(jdbc);
+        return jdbc;
+    }
 
-        var workDir = resolveWorkDir(project, extension);
+    private JdbcOption doPrepare(Params params) {
+        var conf = getConf();
+        var workDir = resolveWorkDir();
 
+        @SuppressWarnings("DataFlowIssue")
         var db = ContainerDatabase.builder()
                 .type(conf.getType())
                 .image(conf.getImage())
                 .dockerBinPath(conf.getDockerBinPath())
                 .workingDir(workDir)
-                .database(extension.getGenerator()
+                .database(getGenerator()
                         .getDatabase()
                         .getInputSchema()
                 )
@@ -83,15 +109,22 @@ public class ContainerDatabaseCodegenHook implements ICodegenHook {
         } catch (IOException e) {
             throw new UncheckedIOException("Cannot start database with container", e);
         }
-        project.getGradle().buildFinished(result -> {
-            db.close();
-        });
 
-        extension.getJooqConfig().getJdbc()
-                .withUrl(db.getJdbcUrl())
-                .withUser(USER)
-                .withPassword(PASSWORD)
-        ;
+        return JdbcOptionImpl.builder()
+                .url(db.getJdbcUrl())
+                .user(USER)
+                .password(PASSWORD)
+                .build();
+    }
+
+    @Override
+    public synchronized void close() {
+        var db = dbRef.get();
+        if (db == null) {
+            return;
+        }
+        db.close();
+        dbRef.set(null);
     }
 
 }

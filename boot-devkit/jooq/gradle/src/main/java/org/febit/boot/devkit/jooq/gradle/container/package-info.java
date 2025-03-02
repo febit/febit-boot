@@ -13,30 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.devkit.jooq.gradle;
+@NonNullApi
+package org.febit.boot.devkit.jooq.gradle.container;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import lombok.Getter;
-import lombok.Setter;
-import org.febit.boot.devkit.jooq.gradle.container.DbType;
-
-import java.io.File;
-import java.io.Serializable;
-
-@Getter
-@Setter
-public class ContainerDbConfig implements Serializable {
-
-    @Nonnull
-    private DbType type;
-
-    @Nullable
-    private String dockerBinPath;
-
-    @Nullable
-    private String image;
-
-    @Nullable
-    private File workingDir;
-}
+import org.febit.lang.annotation.NonNullApi;

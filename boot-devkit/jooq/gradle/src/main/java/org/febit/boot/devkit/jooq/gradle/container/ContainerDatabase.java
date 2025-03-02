@@ -146,9 +146,7 @@ public class ContainerDatabase {
                     ping();
                     return true;
                 })
-                .completeIf((ctx) ->
-                        !ctx.hasError() || !isDaemonRunning()
-                )
+                .completeIf(this::pingCompleteIf)
                 .initialDelay(Duration.ofMillis(300))
                 .delayInMillis(100)
                 .timeoutInMillis(Millis.SECOND * 30)
@@ -176,6 +174,23 @@ public class ContainerDatabase {
             throw new IOException("Database not ready: " + (ping.isTimeout() ? "Timeout" : "Unknown"));
         }
         log.info("Started database, cost {} ms", watch.getTime(TimeUnit.MILLISECONDS));
+    }
+
+    private boolean pingCompleteIf(Polling.Context<Boolean> ctx) {
+        if (!isDaemonRunning()) {
+            return true;
+        }
+        if (!ctx.hasError()) {
+            return true;
+        }
+
+        var ex = ctx.lastError();
+        if (ex instanceof SQLException sqlEx) {
+            if (sqlEx.getMessage().startsWith("No suitable driver found for jdbc:")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

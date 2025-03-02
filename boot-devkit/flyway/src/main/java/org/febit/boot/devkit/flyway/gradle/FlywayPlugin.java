@@ -15,16 +15,22 @@
  */
 package org.febit.boot.devkit.flyway.gradle;
 
+import org.febit.boot.devkit.flyway.gradle.model.FlywayOptionImpl;
+import org.febit.boot.devkit.flyway.gradle.model.JdbcOptionImpl;
 import org.febit.devkit.gradle.util.GradleUtils;
-import org.flywaydb.core.Flyway;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaBasePlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.function.Consumer;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Properties;
 
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.removeStart;
+import static org.apache.commons.lang3.StringUtils.substringAfterLast;
+import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
 import static org.febit.boot.devkit.flyway.gradle.FlywayExtension.TASK_PREFIX;
 
 public class FlywayPlugin implements Plugin<Project> {
@@ -45,8 +51,7 @@ public class FlywayPlugin implements Plugin<Project> {
         var extension = project.getExtensions()
                 .getByType(FlywayExtension.class);
 
-        var baseDir = new File(project.getProjectDir(), extension.getApplicationPropsDir());
-
+        var baseDir = extension.getApplicationPropsDir().get().getAsFile();
         GradleUtils.println("Scan profiles from dir " + baseDir);
         var files = baseDir.listFiles(f ->
                 f.getName().matches("application-.*\\.(yml|yaml|properties)")
@@ -61,60 +66,117 @@ public class FlywayPlugin implements Plugin<Project> {
                     substringBeforeLast(f.getName(), "."),
                     "application-"
             );
-            addTask(profile, f, "info", FlywayActions.info());
-            addTask(profile, f, "undo", FlywayActions.undo());
-            addTask(profile, f, "clean", FlywayActions.clean());
-            addTask(profile, f, "repair", FlywayActions.repair());
-            addTask(profile, f, "migrate", FlywayActions.migrate());
-            addTask(profile, f, "baseline", FlywayActions.baseline());
-            addTask(profile, f, "validate", FlywayActions.validate());
+
+            for (var action : FlywayAction.values()) {
+                addTask(profile, f, action);
+            }
         }
     }
 
-    private void addTask(String profile, File profileFile, String actionName, Consumer<Flyway> action) {
+    private void addTask(String profile, File profileFile, FlywayAction action) {
         var extension = project.getExtensions().getByType(FlywayExtension.class);
-        var name = TASK_PREFIX + actionName + "-" + profile;
+        var name = TASK_PREFIX + action.title() + "-" + profile;
         if (extension.isTaskExcluded(name)) {
             return;
         }
 
-        var task = project.getTasks()
-                .create(name, FlywayTask.class, action);
-        task.setMigrationsDirs(extension.getMigrationsDirs());
-        task.setDescription("Flyway " + actionName + ", profile: " + profile);
-        task.doFirst(t -> beforeRun(task, profileFile));
+        project.getTasks().register(name, FlywayTask.class,
+                task -> config(task, action, profile, profileFile)
+        );
     }
 
-    private void beforeRun(FlywayTask task, File profile) {
-        var ext = substringAfterLast(profile.getName(), ".");
-        var sources = new String[]{
-                new File(profile.getParentFile(), "application." + ext).getAbsolutePath(),
-                profile.getAbsolutePath()
-        };
-        var props = switch (ext) {
-            case "properties" -> SpringPropsLoader.properties(sources);
-            case "yml", "yaml" -> SpringPropsLoader.yaml(sources);
-            default -> throw new IllegalArgumentException("Unsupported profile format '"
-                    + ext + "': " + profile.getName());
-        };
+    private void config(FlywayTask task, FlywayAction action, String profile, File profileFile) {
+        var extension = project.getExtensions().getByType(FlywayExtension.class);
 
-        task.setUrl(props.getProperty("spring.datasource.url"));
-        task.setUser(props.getProperty("spring.datasource.username"));
-        task.setPassword(props.getProperty("spring.datasource.password"));
+        task.setDescription("Flyway " + action.title() + ", profile: " + profile);
+        task.getAction().convention(action);
 
-        task.setEncoding(props.getProperty("spring.flyway.encoding"));
-        task.setTable(props.getProperty("spring.flyway.table"));
-        task.setTablespace(props.getProperty("spring.flyway.tablespace"));
+        var main = GradleUtils.mainSourceSet(project);
+        task.getExtraClasspath().convention(
+                main.getResources().getSourceDirectories());
 
-        var schemas = SpringPropsLoader.resolveList(props, "spring.flyway.schemas", 100);
-        if (!schemas.isEmpty()) {
-            task.setSchemas(schemas);
-        }
+        var propsRef = project.getObjects()
+                .property(File.class)
+                .convention(profileFile)
+                .map(Props::of);
 
-        var locations = SpringPropsLoader.resolveList(props, "spring.flyway.locations", 100);
-        if (!locations.isEmpty()) {
-            task.setMigrationsDirs(locations);
-        }
+        task.getJdbc().convention(project.provider(() -> {
+            var props = propsRef.get();
+            return JdbcOptionImpl.builder()
+                    .url(props.property(
+                            "spring.flyway.url",
+                            "spring.datasource.url"
+                    ))
+                    .user(props.property(
+                            "spring.flyway.username",
+                            "spring.datasource.username"
+                    ))
+                    .password(props.property(
+                            "spring.flyway.password",
+                            "spring.datasource.password"
+                    ))
+                    .build();
+        }));
+
+        task.getOption().convention(project.provider(() -> {
+            var props = propsRef.get();
+            return FlywayOptionImpl.builder()
+                    .encoding(props.property("spring.flyway.encoding"))
+                    .table(props.property("spring.flyway.table"))
+                    .tablespace(props.property("spring.flyway.tablespace"))
+                    .schemas(props.listProperty("spring.flyway.schemas", 100))
+                    .migrationsDirs(extension.getMigrationsDirs().get())
+                    .migrationsDirs(props.listProperty("spring.flyway.locations", 100))
+                    .build();
+        }));
+
     }
 
+    private record Props(
+            File profile,
+            Properties properties
+    ) implements Serializable {
+
+        @Nullable
+        public String property(String key) {
+            return properties.getProperty(key);
+        }
+
+        @Nullable
+        public String property(String key, String... orKeys) {
+            var value = property(key);
+            if (value != null) {
+                return value;
+            }
+            for (var k : orKeys) {
+                value = property(k);
+                if (value != null) {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+        public List<String> listProperty(String key, int max) {
+            return SpringPropsLoader.resolveList(properties, key, max);
+        }
+
+        public static Props of(File profile) {
+            return new Props(profile, load(profile));
+        }
+
+        private static Properties load(File profile) {
+            var ext = substringAfterLast(profile.getName(), ".");
+            var sources = new String[]{
+                    new File(profile.getParentFile(), "application." + ext).getAbsolutePath(),
+                    profile.getAbsolutePath()
+            };
+            return switch (ext) {
+                case "properties" -> SpringPropsLoader.properties(sources);
+                case "yml", "yaml" -> SpringPropsLoader.yaml(sources);
+                default -> throw new IllegalArgumentException("Unsupported profile format '"
+                        + ext + "': " + profile.getName());
+            };
+        }
+    }
 }

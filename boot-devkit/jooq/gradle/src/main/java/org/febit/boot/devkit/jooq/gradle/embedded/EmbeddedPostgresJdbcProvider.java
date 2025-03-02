@@ -19,13 +19,15 @@ import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
 import io.zonky.test.db.postgres.embedded.PgBinaryResolver;
 import io.zonky.test.db.postgres.util.ArchUtils;
 import io.zonky.test.db.postgres.util.LinuxUtils;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.febit.boot.devkit.jooq.gradle.ICodegenHook;
+import org.febit.boot.devkit.flyway.gradle.model.JdbcOption;
+import org.febit.boot.devkit.flyway.gradle.model.JdbcOptionImpl;
+import org.febit.boot.devkit.jooq.gradle.JdbcProvider;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin;
-import org.febit.boot.devkit.jooq.gradle.JooqCodegenPrepareTask;
 import org.febit.boot.devkit.jooq.meta.JooqCodegen;
 import org.febit.boot.devkit.jooq.meta.embedded.PackageUtils;
 import org.febit.lang.util.Lists;
@@ -40,18 +42,24 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.febit.devkit.gradle.util.GradleUtils.println;
 
-public class EmbeddedPostgresCodegenHook implements ICodegenHook {
+@RequiredArgsConstructor(staticName = "create")
+public class EmbeddedPostgresJdbcProvider implements JdbcProvider<Object> {
 
     static final String RUNTIME_NAME_PG = JooqCodegenPlugin.RUNTIME_NAME + "EmbeddedPostgres";
     private static final String WORK_DIR = "codegen-embedded-pg";
     private static final String DATA_DIR = "data";
     private static final String POSTGRES = "postgres";
+
+    private final JooqCodegenExtension extension;
+
+    private final AtomicReference<JdbcOption> jdbc = new AtomicReference<>();
+    private final AtomicReference<EmbeddedPostgres> dbRef = new AtomicReference<>();
 
     public static void prepare(Project project) {
         var configs = project.getConfigurations();
@@ -83,15 +91,6 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
         println("Using embedded postgres: {0}, version: {1}", artifact, conf.getVersion());
     }
 
-    @Override
-    public List<Object> getOutputs(JooqCodegenPrepareTask task) {
-        var extension = task.codegenExtension();
-        var project = task.getProject();
-        return List.of(
-                resolveDataDir(project, extension)
-        );
-    }
-
     private File resolveDataDir(Project project, JooqCodegenExtension extension) {
         var conf = extension.getEmbeddedPostgres();
         var dataDir = conf.getDataDir();
@@ -115,10 +114,32 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void beforePrepareTask(JooqCodegenPrepareTask task) {
-        var extension = task.codegenExtension();
-        var project = task.getProject();
+    public synchronized JdbcOption prepare(Object params) {
+        var jdbc = this.jdbc.get();
+        if (jdbc != null) {
+            return jdbc;
+        }
+        jdbc = doPrepare(extension);
+        this.jdbc.set(jdbc);
+        return jdbc;
+    }
+
+    @Override
+    public synchronized void close() {
+        var db = dbRef.get();
+        if (db == null) {
+            return;
+        }
+        try {
+            db.close();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        dbRef.set(null);
+    }
+
+    private JdbcOption doPrepare(JooqCodegenExtension extension) {
+        var project = extension.getProject();
 
         var workDir = resolveWorkDir(project, extension);
         var dataDir = resolveDataDir(project, extension);
@@ -127,7 +148,6 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
         try (var classLoader = new URLClassLoader(resolveUrls(
                 project.getConfigurations().getByName(RUNTIME_NAME_PG)
         ))) {
-            //noinspection resource
             postgres = EmbeddedPostgres.builder()
                     .setOverrideWorkingDirectory(workDir)
                     .setDataDirectory(dataDir)
@@ -139,17 +159,13 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
             throw new UncheckedIOException(e);
         }
 
-        project.getGradle().buildFinished(result -> {
-            try {
-                postgres.close();
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        });
-
-        extension.getJooqConfig().getJdbc()
-                .withUrl(String.format("jdbc:postgresql://localhost:%s/", postgres.getPort()))
-                .withUser(POSTGRES);
+        this.dbRef.set(postgres);
+        var url = String.format("jdbc:postgresql://localhost:%s/", postgres.getPort());
+        return JdbcOptionImpl.builder()
+                .url(url)
+                .user(POSTGRES)
+                .password(POSTGRES)
+                .build();
     }
 
     private static URL[] resolveUrls(Configuration runtime) {
@@ -191,6 +207,7 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
             throw new IllegalStateException("Missing embedded postgres binaries");
         }
 
+        @Nullable
         private Resource findResource(String path) throws IOException {
             var urls = Lists.collect(classLoader.getResources(path));
             if (urls.size() == 1) {
@@ -202,7 +219,8 @@ public class EmbeddedPostgresCodegenHook implements ICodegenHook {
             return null;
         }
 
-        private static String normalize(String input) {
+        @Nullable
+        private static String normalize(@Nullable String input) {
             if (StringUtils.isBlank(input)) {
                 return input;
             }

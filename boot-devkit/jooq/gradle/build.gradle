@@ -18,6 +18,10 @@ gradlePlugin {
   }
 }
 
+test {
+  test.systemProperty 'APP_SPRING_BOOT_VERSION', libs.versions.spring.boot.get()
+}
+
 dependencies {
 
   compileOnly localGroovy()
@@ -38,5 +42,7 @@ dependencies {
   testImplementation localGroovy()
   testImplementation gradleApi()
 
+  testRuntimeOnly libs.spring.boot.deps
   testRuntimeOnly 'com.h2database:h2'
+  testRuntimeOnly project(':febit-boot-devkit-jooq-runtime')
 }

@@ -75,7 +75,7 @@ public class ForcedTypes {
             case LIST:
             case MAP:
             default:
-                throw new IllegalArgumentException("Not support json type: " + schema.toJavaTypeString());
+                throw new IllegalArgumentException("Not support raw type: " + schema.toJavaTypeString());
         }
     }
 
@@ -215,25 +215,24 @@ public class ForcedTypes {
 
     public interface TypePatterns {
         String ANY = ".*";
-        String BOOLEAN = "boolean";
+        String BOOLEAN = "(?i:(boolean))";
 
-        String DATETIME = "datetime";
-        String TIMESTAMP = "timestamp";
-        String DATETIME_OR_TIMESTAMP = DATETIME + "|" + TIMESTAMP;
+        String DATETIME = "(?i:(datetime))";
+        String TIMESTAMP = "(?i:(timestamp))";
+        String DATETIME_OR_TIMESTAMP = "(?i:("
+                + "datetime|timestamp"
+                + "))";
 
-        String TIMESTAMP_TZ = "("
+        String TIMESTAMP_TZ = "^(?i:("
                 + "timestamptz|timestamp_tz"
                 + "|(timestamp(\\s|_)?with(\\s|_)?time(\\s|_)?zone)"
-                + ")([(].*)?";
+                + "))$";
 
-        String STRING = "("
-                + "char|varchar|character"
-                + "|varchar_ignorecase"
-                + "|character varying"
-                + "|text|string|clob"
-                + ")([(].*)?";
-        String JSONB = "jsonb";
-        String JSON = "json";
+        String STRING = "^(?i:("
+                + "(long|n|var)*(string|text|clob|character|char)(.*)"
+                + "))$";
+        String JSONB = "(?i:(jsonb))";
+        String JSON = "(?i:(json))";
     }
 
     @FunctionalInterface

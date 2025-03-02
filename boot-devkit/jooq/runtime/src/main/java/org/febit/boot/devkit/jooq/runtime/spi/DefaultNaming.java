@@ -35,9 +35,9 @@ public class DefaultNaming implements Naming, Aware.Strategy {
     @Nullable
     @Override
     public String memberField(Definition def, GeneratorStrategy.Mode mode) {
-        if (def instanceof ColumnDefinition) {
+        if (def instanceof ColumnDefinition col) {
             return NamingUtils.toLowerCamelCase(
-                    generatorStrategy.resolveOutputName(def)
+                    generatorStrategy.resolveOutputName(col)
             );
         }
         return null;

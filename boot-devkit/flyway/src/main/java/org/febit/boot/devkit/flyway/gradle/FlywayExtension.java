@@ -15,13 +15,13 @@
  */
 package org.febit.boot.devkit.flyway.gradle;
 
-import jakarta.annotation.Nonnull;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
+import org.gradle.api.Project;
+import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.provider.ListProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -38,12 +38,10 @@ public class FlywayExtension {
      * (default: src/main/resources)
      */
     @Getter
-    @Setter
-    @Nonnull
-    private String applicationPropsDir = DEFAULT_PROPS_DIR;
+    private final DirectoryProperty applicationPropsDir;
 
     @Getter
-    private final List<Pattern> excludeTasks = new ArrayList<>();
+    private final ListProperty<Pattern> excludeTasks;
 
     /**
      * Location to scan recursively for migrations.
@@ -52,7 +50,17 @@ public class FlywayExtension {
      * @see FluentConfiguration#locations(String...)
      */
     @Getter
-    private final List<String> migrationsDirs = new ArrayList<>();
+    private final ListProperty<String> migrationsDirs;
+
+    public FlywayExtension(Project project) {
+        var objects = project.getObjects();
+        var projectDir = project.getLayout().getProjectDirectory();
+
+        this.migrationsDirs = objects.listProperty(String.class);
+        this.excludeTasks = objects.listProperty(Pattern.class);
+        this.applicationPropsDir = objects.directoryProperty()
+                .convention(projectDir.dir(DEFAULT_PROPS_DIR));
+    }
 
     public void excludeTask(Pattern exclude) {
         excludeTasks.add(exclude);
@@ -85,7 +93,7 @@ public class FlywayExtension {
     }
 
     boolean isTaskExcluded(String name) {
-        for (Pattern exclude : excludeTasks) {
+        for (Pattern exclude : excludeTasks.get()) {
             if (exclude.matcher(name).matches()) {
                 return true;
             }

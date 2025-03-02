@@ -15,6 +15,7 @@
  */
 package org.febit.boot.devkit.jooq.gradle;
 
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,6 +32,8 @@ public class EmbeddedPostgresConfig {
      * Ref: <a href="https://central.sonatype.com/artifact/io.zonky.test.postgres/embedded-postgres-binaries-bom/">...</a>
      */
     private String version = DEFAULT_VERSION;
+    @Nullable
     private File workingDir;
+    @Nullable
     private File dataDir;
 }

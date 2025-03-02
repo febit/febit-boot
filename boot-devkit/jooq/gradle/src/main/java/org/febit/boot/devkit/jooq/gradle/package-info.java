@@ -13,27 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@NonNullApi
 package org.febit.boot.devkit.jooq.gradle;
 
-import org.gradle.api.Project;
-
-import java.util.List;
-
-public interface ICodegenHook {
-
-    static ICodegenHook noop() {
-        return new ICodegenHook() {
-        };
-    }
-
-    default void afterEvaluate(Project project) {
-    }
-
-    default List<Object> getOutputs(JooqCodegenPrepareTask task) {
-        return List.of();
-    }
-
-    default void beforePrepareTask(JooqCodegenPrepareTask task) {
-    }
-
-}
+import org.febit.lang.annotation.NonNullApi;

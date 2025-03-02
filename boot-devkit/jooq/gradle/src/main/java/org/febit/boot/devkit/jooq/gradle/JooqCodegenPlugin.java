@@ -30,19 +30,16 @@ import org.gradle.api.tasks.SourceSetContainer;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class JooqCodegenPlugin implements Plugin<Project> {
+public abstract class JooqCodegenPlugin implements Plugin<Project> {
 
     public static final AtomicBoolean INTERNAL_TESTING_MODE = new AtomicBoolean(false);
 
     public static final String RUNTIME_NAME = MetaUtils.CODEGEN_JOOQ;
     public static final String EXTENSION_NAME = MetaUtils.CODEGEN_JOOQ;
-    public static final String TASK_NAME_PREPARE = MetaUtils.CODEGEN_JOOQ + "Prepare";
     public static final String TASK_NAME_GENERATE_JOOQ = "generateJooq";
 
-    static final String DIR_GENERATED_SRC = "build/generated/sources/" + MetaUtils.CODEGEN_JOOQ_FOLDER;
-
-    private static final String DIR_CODEGEN_SRC_JAVA = "src/" + MetaUtils.CODEGEN_JOOQ_FOLDER + "/java";
-    private static final String DIR_CODEGEN_SRC_RESOURCES = "src/" + MetaUtils.CODEGEN_JOOQ_FOLDER + "/resources";
+    public static final String DIR_CODEGEN_SRC_JAVA = "src/" + MetaUtils.CODEGEN_JOOQ_FOLDER + "/java";
+    public static final String DIR_CODEGEN_SRC_RESOURCES = "src/" + MetaUtils.CODEGEN_JOOQ_FOLDER + "/resources";
 
     @Override
     public void apply(Project project) {
@@ -56,8 +53,6 @@ public class JooqCodegenPlugin implements Plugin<Project> {
                 .setDescription("Classpath for jOOQ generator, add your JDBC drivers or extension libs here.");
 
         var sourceSets = GradleUtils.sourceSets(project);
-        var mainSourceSet = GradleUtils.mainSourceSet(project);
-        mainSourceSet.getJava().srcDir(extension.getTargetDir());
 
         var deps = project.getDependencies();
 
@@ -67,26 +62,29 @@ public class JooqCodegenPlugin implements Plugin<Project> {
             );
         }
 
+        var main = GradleUtils.mainSourceSet(project);
         var tasks = project.getTasks();
         var sourceSet = createSourceSet(sourceSets, project);
         sourceSet.setCompileClasspath(runtime);
 
-        var prepareTask = tasks.create(
-                TASK_NAME_PREPARE,
-                JooqCodegenPrepareTask.class,
-                runtime
-        );
+        tasks.register(TASK_NAME_GENERATE_JOOQ, JooqCodegenGenerateTask.class, task -> {
+            task.setGroup(MetaUtils.GROUP_NAME);
+            task.setDescription("Generates the jOOQ sources");
 
-        var generateTask = tasks.create(TASK_NAME_GENERATE_JOOQ, JooqCodegenGenerateTask.class,
-                runtime.plus(sourceSet.getOutput()),
-                extension.getJooqConfig()
-        );
+            task.getWorkDir().convention(project.getLayout().getProjectDirectory());
+            task.getClasspath().convention(runtime.plus(sourceSet.getOutput()));
+            task.getMigrationsClasspath().convention(main.getResources().getSourceDirectories());
 
-        generateTask.dependsOn(
-                sourceSet.getCompileJavaTaskName(),
-                sourceSet.getProcessResourcesTaskName(),
-                prepareTask
-        );
+            task.getConf().convention(extension.getJooqConfig());
+            task.getMigrationsDirs().convention(extension.getMigrationsDirs());
+            task.getGeneratedSourceDir().convention(extension.getGeneratedSourceDir());
+            task.getJdbcProvider().convention(extension.getJdbcProvider());
+
+            task.dependsOn(
+                    sourceSet.getCompileJavaTaskName(),
+                    sourceSet.getProcessResourcesTaskName()
+            );
+        });
 
         project.afterEvaluate(proj ->
                 tasks.named(sourceSet.getProcessResourcesTaskName(), Copy.class,
@@ -101,17 +99,13 @@ public class JooqCodegenPlugin implements Plugin<Project> {
         var extension = project.getExtensions()
                 .getByType(JooqCodegenExtension.class);
 
+        var mainSourceSet = GradleUtils.mainSourceSet(project);
+        mainSourceSet.getJava().srcDir(extension.getGeneratedSourceDir());
+
         var tasks = project.getTasks();
-        var cachingChecker = CachingChecker.create(project);
-
-        tasks.getByName(TASK_NAME_GENERATE_JOOQ)
-                .doLast(task -> cachingChecker.update());
-
-        if (cachingChecker.hasUpdated()) {
-            tasks.getByName(GradleUtils.mainSourceSet(project).getCompileJavaTaskName())
-                    .dependsOn(TASK_NAME_GENERATE_JOOQ);
-        }
-        extension.getHook().afterEvaluate(project);
+        tasks.getByName(GradleUtils.mainSourceSet(project).getCompileJavaTaskName())
+                .dependsOn(TASK_NAME_GENERATE_JOOQ);
+        extension.getJdbcProvider().get().afterEvaluate(project);
     }
 
     private SourceSet createSourceSet(SourceSetContainer sourceSets, Project project) {
@@ -125,5 +119,4 @@ public class JooqCodegenPlugin implements Plugin<Project> {
         sourceSet.getResources().srcDir(resourcesSrc);
         return sourceSet;
     }
-
 }
