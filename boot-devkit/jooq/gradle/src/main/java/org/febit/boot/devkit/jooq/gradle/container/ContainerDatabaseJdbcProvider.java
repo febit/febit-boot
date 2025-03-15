@@ -38,12 +38,11 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ContainerDatabaseJdbcProvider
         implements JdbcProvider<ContainerDatabaseJdbcProvider.Params>, Serializable {
 
-    private static final String WORK_DIR = "codegen-docker-db";
+    private static final String WORK_DIR = "jooq-codegen/container-db";
     private static final String USER = "codegen";
     private static final String PASSWORD = "codegen";
 
-    private final AtomicReference<JdbcOption> jdbcRef = new AtomicReference<>();
-    private final AtomicReference<ContainerDatabase> dbRef = new AtomicReference<>();
+    private final AtomicReference<StartedInstance> startedRef = new AtomicReference<>();
 
     @Getter
     private final ContainerDbConfig conf;
@@ -51,9 +50,6 @@ public class ContainerDatabaseJdbcProvider
     private final Generator generator;
     @Getter
     private final File buildDir;
-
-    public interface Params {
-    }
 
     @Override
     public void afterEvaluate(Project project) {
@@ -77,16 +73,16 @@ public class ContainerDatabaseJdbcProvider
 
     @Override
     public synchronized JdbcOption prepare(Params params) {
-        var jdbc = this.jdbcRef.get();
-        if (jdbc != null) {
-            return jdbc;
+        var started = this.startedRef.get();
+        if (started != null) {
+            return started.option();
         }
-        jdbc = doPrepare(params);
-        this.jdbcRef.set(jdbc);
-        return jdbc;
+        started = doPrepare(params);
+        this.startedRef.set(started);
+        return started.option();
     }
 
-    private JdbcOption doPrepare(Params params) {
+    private StartedInstance doPrepare(Params params) {
         var conf = getConf();
         var workDir = resolveWorkDir();
 
@@ -110,21 +106,35 @@ public class ContainerDatabaseJdbcProvider
             throw new UncheckedIOException("Cannot start database with container", e);
         }
 
-        return JdbcOptionImpl.builder()
+        var option = JdbcOptionImpl.builder()
                 .url(db.getJdbcUrl())
                 .user(USER)
                 .password(PASSWORD)
                 .build();
+
+        return new StartedInstance(option, db);
     }
 
     @Override
     public synchronized void close() {
-        var db = dbRef.get();
-        if (db == null) {
+        var started = startedRef.get();
+        if (started == null) {
             return;
         }
-        db.close();
-        dbRef.set(null);
+        started.close();
+        startedRef.set(null);
+    }
+
+    public interface Params {
+    }
+
+    private record StartedInstance(
+            JdbcOption option,
+            ContainerDatabase db
+    ) {
+        void close() {
+            db.close();
+        }
     }
 
 }

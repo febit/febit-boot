@@ -129,7 +129,7 @@ public class ContainerDatabase {
         var watch = StopWatch.createStarted();
 
         // Pull image
-        var pull = runCommand("pull");
+        var pull = runCommand("pull", "--policy", "missing");
         // XXX: timeout?
         pull.waitFor();
         log.info("Pulled database image, cost {} ms", watch.getTime(TimeUnit.MILLISECONDS));
