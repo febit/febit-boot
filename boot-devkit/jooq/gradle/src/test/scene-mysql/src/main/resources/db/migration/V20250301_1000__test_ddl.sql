@@ -1,6 +1,7 @@
 CREATE TABLE `foo`
 (
   `id`                     INT AUTO_INCREMENT PRIMARY KEY,
+  `enabled` TINYINT(1) NULL,
   `name`                   VARCHAR(128)                             NOT NULL,
   `status`                 VARCHAR(32)                              NOT NULL,
   `description`            VARCHAR(255)                             NULL,

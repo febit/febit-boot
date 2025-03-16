@@ -17,11 +17,10 @@ package org.febit.boot.devkit.jooq.gradle;
 
 import org.febit.boot.devkit.flyway.gradle.model.JdbcOption;
 import org.febit.boot.devkit.flyway.gradle.model.JdbcOptionImpl;
-import org.gradle.api.provider.Provider;
 import org.jooq.meta.jaxb.Jdbc;
 
 public record PresetJdbcProvider(
-        Provider<Jdbc> jdbc
+        Jdbc jdbc
 ) implements JdbcProvider<PresetJdbcProvider.Params> {
 
     public interface Params {
@@ -29,7 +28,7 @@ public record PresetJdbcProvider(
 
     @Override
     public JdbcOption prepare(Params params) {
-        var resolved = jdbc.get();
+        var resolved = jdbc;
         return JdbcOptionImpl.builder()
                 .url(resolved.getUrl())
                 .user(resolved.getUser())

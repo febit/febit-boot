@@ -57,6 +57,7 @@ public class PluginTestScene {
 
     static final Map<Object, Object> SCHEMA_FOO = Map.of(
             "status", "enum:" + PKG + ".model.FooStatus",
+            "enabled", "boolean",
             "json", "json:" + PKG + ".model.JsonBean",
             "json_varchar", "json:" + PKG + ".model.JsonBean",
             "json_text", "json:" + PKG + ".model.JsonBean",
@@ -96,7 +97,7 @@ public class PluginTestScene {
     public void presetJdbc(Consumer<Jdbc> customizer) {
         var jdbc = extension().getJdbc();
         extension().getJdbcProvider()
-                .convention(new PresetJdbcProvider(jdbc));
+                .convention(new PresetJdbcProvider(jdbc.get()));
         customizer.accept(jdbc.get());
     }
 

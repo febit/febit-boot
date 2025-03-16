@@ -118,7 +118,7 @@ public class ForcedTypes {
     public static void toBoolean(Sink sink, String expr) {
         sink.accept(next()
                 .expr(expr)
-                .name(TypePatterns.BOOLEAN)
+                .name("boolean")
                 .type(TypePatterns.ANY)
         );
     }
@@ -215,10 +215,8 @@ public class ForcedTypes {
 
     public interface TypePatterns {
         String ANY = ".*";
-        String BOOLEAN = "(?i:(boolean))";
+        String BOOLEAN = "boolean";
 
-        String DATETIME = "(?i:(datetime))";
-        String TIMESTAMP = "(?i:(timestamp))";
         String DATETIME_OR_TIMESTAMP = "(?i:("
                 + "datetime|timestamp"
                 + "))";

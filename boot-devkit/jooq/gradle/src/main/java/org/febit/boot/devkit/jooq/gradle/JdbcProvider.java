@@ -20,9 +20,10 @@ import org.febit.lang.util.TypeParameters;
 import org.gradle.api.Project;
 import org.gradle.api.model.ObjectFactory;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public interface JdbcProvider<P> extends AutoCloseable {
+public interface JdbcProvider<P> extends AutoCloseable, Serializable {
 
     default void afterEvaluate(Project project) {
     }

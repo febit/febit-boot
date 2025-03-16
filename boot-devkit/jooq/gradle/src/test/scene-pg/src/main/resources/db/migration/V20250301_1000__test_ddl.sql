@@ -1,6 +1,7 @@
 CREATE TABLE "foo"
 (
   "id"                     BIGSERIAL,
+  "enabled" BOOLEAN NULL,
   "name"                   VARCHAR(128)                             NOT NULL,
   "status"                 VARCHAR(32)                              NOT NULL,
   "description"            VARCHAR(255)                             NULL,

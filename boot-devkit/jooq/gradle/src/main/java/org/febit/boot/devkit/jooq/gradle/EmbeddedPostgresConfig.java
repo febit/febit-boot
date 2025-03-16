@@ -20,10 +20,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.io.Serializable;
 
 @Getter
 @Setter
-public class EmbeddedPostgresConfig {
+public class EmbeddedPostgresConfig implements Serializable {
 
     public static final String DEFAULT_VERSION = "16.6.0";
 

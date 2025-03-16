@@ -74,7 +74,6 @@ public class JooqCodegenExtension {
     private final Property<Configuration> jooqConfig;
 
     @Getter
-    @SuppressWarnings("rawtypes")
     private final Property<JdbcProvider<?>> jdbcProvider;
 
     @Inject
@@ -108,7 +107,7 @@ public class JooqCodegenExtension {
         @SuppressWarnings("unchecked")
         var cls = (Class<JdbcProvider<?>>) ((Class<?>) JdbcProvider.class);
         this.jdbcProvider = objects.property(cls)
-                .convention(new PresetJdbcProvider(this.jdbc));
+                .convention(new PresetJdbcProvider(conf.getJdbc()));
 
         this.container = objects.property(ContainerDbConfig.class)
                 .convention(new ContainerDbConfig());
@@ -171,7 +170,7 @@ public class JooqCodegenExtension {
     }
 
     public void presetJdbc(@DelegatesTo(Jdbc.class) Closure<?> closure) {
-        this.jdbcProvider.convention(new PresetJdbcProvider(this.jdbc));
+        this.jdbcProvider.convention(new PresetJdbcProvider(this.jdbc.get()));
         GradleUtils.to(closure, this.jdbc.get());
     }
 
@@ -193,7 +192,12 @@ public class JooqCodegenExtension {
 
     public void embeddedPostgres() {
         EmbeddedPostgresJdbcProvider.prepare(project);
-        this.jdbcProvider.convention(EmbeddedPostgresJdbcProvider.create(this));
+        var conf = this.embeddedPostgres;
+        var provider = EmbeddedPostgresJdbcProvider.builder()
+                .conf(conf)
+                .buildDir(project.getLayout().getBuildDirectory().getAsFile().get())
+                .build();
+        this.jdbcProvider.convention(provider);
     }
 
 }

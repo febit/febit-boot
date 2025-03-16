@@ -20,11 +20,13 @@ import io.zonky.test.db.postgres.embedded.PgBinaryResolver;
 import io.zonky.test.db.postgres.util.ArchUtils;
 import io.zonky.test.db.postgres.util.LinuxUtils;
 import jakarta.annotation.Nullable;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.devkit.flyway.gradle.model.JdbcOption;
 import org.febit.boot.devkit.flyway.gradle.model.JdbcOptionImpl;
+import org.febit.boot.devkit.jooq.gradle.EmbeddedPostgresConfig;
 import org.febit.boot.devkit.jooq.gradle.JdbcProvider;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin;
@@ -34,6 +36,7 @@ import org.febit.lang.util.Lists;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,18 +51,22 @@ import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.febit.devkit.gradle.util.GradleUtils.println;
 
-@RequiredArgsConstructor(staticName = "create")
-public class EmbeddedPostgresJdbcProvider implements JdbcProvider<Object> {
+@lombok.Builder(
+        builderClassName = "Builder"
+)
+public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgresJdbcProvider.Params> {
 
     static final String RUNTIME_NAME_PG = JooqCodegenPlugin.RUNTIME_NAME + "EmbeddedPostgres";
     private static final String WORK_DIR = "codegen-embedded-pg";
     private static final String DATA_DIR = "data";
     private static final String POSTGRES = "postgres";
 
-    private final JooqCodegenExtension extension;
+    @Getter
+    private final EmbeddedPostgresConfig conf;
+    @Getter
+    private final File buildDir;
 
-    private final AtomicReference<JdbcOption> jdbc = new AtomicReference<>();
-    private final AtomicReference<EmbeddedPostgres> dbRef = new AtomicReference<>();
+    private final AtomicReference<StartedInstance> startedRef = new AtomicReference<>();
 
     public static void prepare(Project project) {
         var configs = project.getConfigurations();
@@ -76,7 +83,6 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<Object> {
         var extension = project.getExtensions()
                 .getByType(JooqCodegenExtension.class);
         var conf = extension.getEmbeddedPostgres();
-
         var deps = project.getDependencies();
 
         if (!JooqCodegenPlugin.INTERNAL_TESTING_MODE.get()) {
@@ -91,58 +97,49 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<Object> {
         println("Using embedded postgres: {0}, version: {1}", artifact, conf.getVersion());
     }
 
-    private File resolveDataDir(Project project, JooqCodegenExtension extension) {
-        var conf = extension.getEmbeddedPostgres();
-        var dataDir = conf.getDataDir();
-        if (dataDir != null) {
-            return dataDir;
-        }
-        var buildDir = project.getLayout().getBuildDirectory().getAsFile().get();
-        return new File(buildDir, WORK_DIR + "/" + DATA_DIR);
-    }
-
-    private File resolveWorkDir(Project project, JooqCodegenExtension extension) {
-        var conf = extension.getEmbeddedPostgres();
+    private File resolveWorkDir() {
+        var conf = getConf();
         var workDir = conf.getWorkingDir();
         if (workDir != null) {
             return workDir;
         }
-        var buildDir = project.getRootProject()
-                .getLayout().getBuildDirectory()
-                .getAsFile().get();
         return new File(buildDir, WORK_DIR);
     }
 
-    @Override
-    public synchronized JdbcOption prepare(Object params) {
-        var jdbc = this.jdbc.get();
-        if (jdbc != null) {
-            return jdbc;
+    private File resolveDataDir() {
+        var conf = getConf();
+        var dataDir = conf.getDataDir();
+        if (dataDir != null) {
+            return dataDir;
         }
-        jdbc = doPrepare(extension);
-        this.jdbc.set(jdbc);
-        return jdbc;
+        return new File(buildDir, WORK_DIR + "/" + DATA_DIR);
+    }
+
+    @Override
+    public synchronized JdbcOption prepare(Params params) {
+        var started = this.startedRef.get();
+        if (started != null) {
+            return started.option();
+        }
+        started = doPrepare(params);
+        this.startedRef.set(started);
+        return started.option();
     }
 
     @Override
     public synchronized void close() {
-        var db = dbRef.get();
-        if (db == null) {
+        var started = startedRef.get();
+        if (started == null) {
             return;
         }
-        try {
-            db.close();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-        dbRef.set(null);
+        started.close();
+        startedRef.set(null);
     }
 
-    private JdbcOption doPrepare(JooqCodegenExtension extension) {
-        var project = extension.getProject();
-
-        var workDir = resolveWorkDir(project, extension);
-        var dataDir = resolveDataDir(project, extension);
+    private StartedInstance doPrepare(Params params) {
+        var workDir = resolveWorkDir();
+        var dataDir = resolveDataDir();
+        var project = params.getProject();
 
         final EmbeddedPostgres postgres;
         try (var classLoader = new URLClassLoader(resolveUrls(
@@ -159,13 +156,14 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<Object> {
             throw new UncheckedIOException(e);
         }
 
-        this.dbRef.set(postgres);
         var url = String.format("jdbc:postgresql://localhost:%s/", postgres.getPort());
-        return JdbcOptionImpl.builder()
+        var option = JdbcOptionImpl.builder()
                 .url(url)
                 .user(POSTGRES)
                 .password(POSTGRES)
                 .build();
+
+        return new StartedInstance(option, postgres);
     }
 
     private static URL[] resolveUrls(Configuration runtime) {
@@ -178,6 +176,25 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<Object> {
                     }
                 })
                 .toArray(URL[]::new);
+    }
+
+    public interface Params {
+
+        @Inject
+        Project getProject();
+    }
+
+    private record StartedInstance(
+            JdbcOption option,
+            EmbeddedPostgres db
+    ) {
+        void close() {
+            try {
+                db.close();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
     }
 
     @RequiredArgsConstructor(staticName = "create")

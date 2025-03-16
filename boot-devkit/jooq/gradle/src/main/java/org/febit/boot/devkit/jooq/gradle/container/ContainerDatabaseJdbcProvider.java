@@ -27,7 +27,6 @@ import org.jooq.meta.jaxb.Generator;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
@@ -36,7 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
         builderClassName = "Builder"
 )
 public class ContainerDatabaseJdbcProvider
-        implements JdbcProvider<ContainerDatabaseJdbcProvider.Params>, Serializable {
+        implements JdbcProvider<ContainerDatabaseJdbcProvider.Params> {
 
     private static final String WORK_DIR = "jooq-codegen/container-db";
     private static final String USER = "codegen";
