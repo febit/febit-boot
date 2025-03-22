@@ -36,13 +36,10 @@ dependencies {
   implementation('io.zonky.test:embedded-postgres') {
     exclude group: 'io.zonky.test.postgres'
   }
-  implementation 'org.postgresql:postgresql'
-  implementation 'com.mysql:mysql-connector-j'
 
   testImplementation localGroovy()
   testImplementation gradleApi()
 
   testRuntimeOnly libs.spring.boot.deps
-  testRuntimeOnly 'com.h2database:h2'
   testRuntimeOnly project(':febit-boot-devkit-jooq-runtime')
 }

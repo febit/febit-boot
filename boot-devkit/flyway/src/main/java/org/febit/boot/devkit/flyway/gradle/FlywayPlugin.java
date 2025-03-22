@@ -31,9 +31,13 @@ import java.util.Properties;
 import static org.apache.commons.lang3.StringUtils.removeStart;
 import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
-import static org.febit.boot.devkit.flyway.gradle.FlywayExtension.TASK_PREFIX;
 
 public class FlywayPlugin implements Plugin<Project> {
+
+    static final String EXTENSION = "febitFlyway";
+    static final String RUNTIME = EXTENSION;
+    static final String GROUP = "Febit Flyway";
+    static final String TASK_PREFIX = "febit-flyway-";
 
     private Project project;
 
@@ -42,9 +46,12 @@ public class FlywayPlugin implements Plugin<Project> {
         this.project = project;
         project.getPlugins().apply(JavaBasePlugin.class);
         project.getExtensions().create(
-                FlywayExtension.EXTENSION_NAME, FlywayExtension.class
+                EXTENSION, FlywayExtension.class
         );
         project.afterEvaluate(p -> afterEvaluate());
+        project.getConfigurations()
+                .create(RUNTIME)
+                .setDescription("Classpath for Flyway, add your JDBC drivers or extension libs here.");
     }
 
     private void afterEvaluate() {
@@ -92,8 +99,10 @@ public class FlywayPlugin implements Plugin<Project> {
         task.getAction().convention(action);
 
         var main = GradleUtils.mainSourceSet(project);
-        task.getExtraClasspath().convention(
-                main.getResources().getSourceDirectories());
+
+        var extraClasspath = project.getConfigurations().getByName(RUNTIME)
+                .plus(main.getResources().getSourceDirectories());
+        task.getExtraClasspath().convention(extraClasspath);
 
         var propsRef = project.getObjects()
                 .property(File.class)

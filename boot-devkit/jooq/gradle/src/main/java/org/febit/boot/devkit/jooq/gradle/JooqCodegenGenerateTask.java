@@ -113,12 +113,16 @@ public abstract class JooqCodegenGenerateTask extends DefaultTask {
                 .schemas(StringUtils.isEmpty(schema) ? List.of() : List.of(schema))
                 .build();
 
+        var extraClasspath = getMigrationsClasspath().get().plus(
+                getClasspath().get()
+        );
+
         try {
             FlywayExecutor.builder()
                     .action(FlywayAction.MIGRATE)
                     .jdbc(jdbc)
                     .option(flywayOption)
-                    .extraClasspath(getMigrationsClasspath().get())
+                    .extraClasspath(extraClasspath)
                     .baseClassLoader(classloader)
                     .exec();
         } catch (

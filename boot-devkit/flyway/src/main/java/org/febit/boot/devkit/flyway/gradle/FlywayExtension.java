@@ -28,9 +28,6 @@ import java.util.regex.Pattern;
 @Slf4j
 public class FlywayExtension {
 
-    static final String EXTENSION_NAME = "febitFlyway";
-    static final String GROUP = "Febit Flyway";
-    static final String TASK_PREFIX = "febit-flyway-";
     private static final String DEFAULT_PROPS_DIR = "src/main/resources";
 
     /**

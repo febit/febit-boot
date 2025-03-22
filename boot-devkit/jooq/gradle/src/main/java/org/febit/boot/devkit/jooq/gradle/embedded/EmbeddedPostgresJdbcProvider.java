@@ -30,11 +30,11 @@ import org.febit.boot.devkit.jooq.gradle.EmbeddedPostgresConfig;
 import org.febit.boot.devkit.jooq.gradle.JdbcProvider;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin;
+import org.febit.boot.devkit.jooq.gradle.Utils;
 import org.febit.boot.devkit.jooq.meta.JooqCodegen;
 import org.febit.boot.devkit.jooq.meta.embedded.PackageUtils;
 import org.febit.lang.util.Lists;
 import org.gradle.api.Project;
-import org.gradle.api.artifacts.Configuration;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -42,9 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.String.format;
@@ -56,7 +54,7 @@ import static org.febit.devkit.gradle.util.GradleUtils.println;
 )
 public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgresJdbcProvider.Params> {
 
-    static final String RUNTIME_NAME_PG = JooqCodegenPlugin.RUNTIME_NAME + "EmbeddedPostgres";
+    static final String RUNTIME_NAME_PG = JooqCodegenPlugin.RUNTIME + "EmbeddedPostgres";
     private static final String WORK_DIR = "codegen-embedded-pg";
     private static final String DATA_DIR = "data";
     private static final String POSTGRES = "postgres";
@@ -89,7 +87,7 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgr
             var bom = "org.febit.boot:febit-boot-bom:" + JooqCodegen.version();
             deps.add(RUNTIME_NAME_PG, deps.platform(bom));
         }
-        deps.add(JooqCodegenPlugin.RUNTIME_NAME, "org.postgresql:postgresql");
+        deps.add(JooqCodegenPlugin.RUNTIME, "org.postgresql:postgresql");
         deps.add(RUNTIME_NAME_PG, deps.platform(
                 "io.zonky.test.postgres:embedded-postgres-binaries-bom:" + conf.getVersion()
         ));
@@ -142,9 +140,9 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgr
         var project = params.getProject();
 
         final EmbeddedPostgres postgres;
-        try (var classLoader = new URLClassLoader(resolveUrls(
+        try (var classLoader = Utils.toClassLoader(
                 project.getConfigurations().getByName(RUNTIME_NAME_PG)
-        ))) {
+        )) {
             postgres = EmbeddedPostgres.builder()
                     .setOverrideWorkingDirectory(workDir)
                     .setDataDirectory(dataDir)
@@ -166,17 +164,6 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgr
         return new StartedInstance(option, postgres);
     }
 
-    private static URL[] resolveUrls(Configuration runtime) {
-        return runtime.resolve().stream()
-                .map(file -> {
-                    try {
-                        return file.toURI().toURL();
-                    } catch (MalformedURLException e) {
-                        throw new UncheckedIOException(e);
-                    }
-                })
-                .toArray(URL[]::new);
-    }
 
     public interface Params {
 

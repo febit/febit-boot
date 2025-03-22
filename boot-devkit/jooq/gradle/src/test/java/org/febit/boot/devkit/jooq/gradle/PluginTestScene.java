@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension.DIR_GENERATED_SRC;
-import static org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin.TASK_NAME_GENERATE_JOOQ;
+import static org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin.TASK_GENERATE_JOOQ;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Getter
@@ -125,7 +125,7 @@ public class PluginTestScene {
 
         project.evaluate();
         var codegenTask = assertDoesNotThrow(() ->
-                (JooqCodegenGenerateTask) tasks().getByName(TASK_NAME_GENERATE_JOOQ)
+                (JooqCodegenGenerateTask) tasks().getByName(TASK_GENERATE_JOOQ)
         );
 
         assertTrue(isFileExists("src/codegen-jooq/java"));
@@ -172,7 +172,6 @@ public class PluginTestScene {
 
     private static void initPlugin(ProjectInternal project) {
         var repos = project.getRepositories();
-
         // TODO remote repos
         repos.mavenCentral();
 
@@ -190,14 +189,14 @@ public class PluginTestScene {
 
         var deps = project.getDependencies();
 
-        deps.add(JooqCodegenPlugin.RUNTIME_NAME, deps.enforcedPlatform(
+        deps.add(JooqCodegenPlugin.RUNTIME, deps.enforcedPlatform(
                 "org.springframework.boot:spring-boot-dependencies:" + springBootVersion
         ));
 
-        deps.add(JooqCodegenPlugin.RUNTIME_NAME, "org.slf4j:slf4j-simple");
-        deps.add(JooqCodegenPlugin.RUNTIME_NAME, "com.h2database:h2");
-        deps.add(JooqCodegenPlugin.RUNTIME_NAME, "org.postgresql:postgresql");
-        deps.add(JooqCodegenPlugin.RUNTIME_NAME, "com.mysql:mysql-connector-j");
+        deps.add(JooqCodegenPlugin.RUNTIME, "org.slf4j:slf4j-simple");
+        deps.add(JooqCodegenPlugin.RUNTIME, "com.h2database:h2");
+        deps.add(JooqCodegenPlugin.RUNTIME, "org.postgresql:postgresql");
+        deps.add(JooqCodegenPlugin.RUNTIME, "com.mysql:mysql-connector-j");
 
         // Note: add classpath of this test
         var runtime = project.files(ArraysUtils.collect(
@@ -205,7 +204,7 @@ public class PluginTestScene {
                 Object[]::new,
                 File::new
         ));
-        deps.add(JooqCodegenPlugin.RUNTIME_NAME, runtime);
+        deps.add(JooqCodegenPlugin.RUNTIME, runtime);
         deps.add(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME, runtime);
     }
 }

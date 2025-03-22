@@ -30,18 +30,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.febit.devkit.gradle.util.FileExtraUtils;
 import org.febit.devkit.gradle.util.FolderUtils;
+import org.febit.lang.Lazy;
+import org.febit.lang.UncheckedException;
 import org.febit.lang.util.Millis;
 import org.febit.lang.util.Polling;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.sql.DriverManager;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Driver;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -102,6 +106,7 @@ public class ContainerDatabase {
 
     private final String dockerBinPath;
     private final DbType type;
+    private final ClassLoader classLoader;
     private final File workingDir;
     private final int port;
     private final Map<String, String> env;
@@ -112,6 +117,7 @@ public class ContainerDatabase {
     private final String password;
 
     private final AtomicReference<CommandContext> daemonRef = new AtomicReference<>();
+    private final Lazy<Driver> driver = Lazy.of(this::loadDriver);
 
     public synchronized void start() throws IOException {
         if (daemonRef.get() != null) {
@@ -185,10 +191,8 @@ public class ContainerDatabase {
         }
 
         var ex = ctx.lastError();
-        if (ex instanceof SQLException sqlEx) {
-            if (sqlEx.getMessage().startsWith("No suitable driver found for jdbc:")) {
-                return true;
-            }
+        if (!(ex instanceof SQLException)) {
+            return true;
         }
         return false;
     }
@@ -208,9 +212,26 @@ public class ContainerDatabase {
         }
     }
 
+    private Driver loadDriver() {
+        try {
+            return (Driver) Class.forName(type.getDriverClassName(), true, classLoader)
+                    .getDeclaredConstructor()
+                    .newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException
+                 | InvocationTargetException | InstantiationException
+                 | IllegalAccessException e) {
+            throw new UncheckedException("Can't create driver: " + type.getDriverClassName(), e);
+        }
+    }
+
     public void ping() throws SQLException {
-        try (var connection = DriverManager.getConnection(jdbcUrl, user, password);
-             var statement = connection.createStatement()
+        var props = new Properties();
+        props.put("user", user);
+        props.put("password", password);
+
+        try (
+                var connection = driver.get().connect(jdbcUrl, props);
+                var statement = connection.createStatement()
         ) {
             statement.execute("SELECT 1");
         }
@@ -275,6 +296,7 @@ public class ContainerDatabase {
             int port,
             @Nonnull String user,
             @Nonnull String password,
+            @Nonnull ClassLoader classLoader,
             @Nullable String dockerBinPath,
             @Nullable String database,
             @Nullable String image
@@ -314,6 +336,7 @@ public class ContainerDatabase {
         return new ContainerDatabase(
                 dockerBinPath,
                 type,
+                classLoader,
                 workingDir,
                 port,
                 env,

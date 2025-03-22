@@ -19,6 +19,10 @@ gradlePlugin {
   }
 }
 
+test {
+  test.systemProperty 'APP_SPRING_BOOT_VERSION', libs.versions.spring.boot.get()
+}
+
 dependencies {
   compileOnly localGroovy()
   compileOnly gradleApi()
@@ -31,10 +35,6 @@ dependencies {
   api 'org.flywaydb:flyway-database-postgresql'
   api 'org.flywaydb:flyway-mysql'
 
-  implementation 'org.postgresql:postgresql'
-  implementation 'com.mysql:mysql-connector-j'
-
   testImplementation localGroovy()
   testImplementation gradleApi()
-  testRuntimeOnly 'com.h2database:h2'
 }

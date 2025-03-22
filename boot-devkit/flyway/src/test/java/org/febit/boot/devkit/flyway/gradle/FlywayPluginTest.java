@@ -16,6 +16,7 @@
 package org.febit.boot.devkit.flyway.gradle;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.gradle.api.internal.project.ProjectInternal;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -27,7 +28,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.febit.boot.devkit.flyway.gradle.FlywayExtension.TASK_PREFIX;
+import static org.febit.boot.devkit.flyway.gradle.FlywayPlugin.RUNTIME;
+import static org.febit.boot.devkit.flyway.gradle.FlywayPlugin.TASK_PREFIX;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FlywayPluginTest {
@@ -51,6 +53,23 @@ class FlywayPluginTest {
         var extension = project.getExtensions().getByType(FlywayExtension.class);
         extension.getApplicationPropsDir().set(project.getLayout().getProjectDirectory());
         extension.excludeTask(".*-excluded");
+
+        var springBootVersion = System.getProperty("APP_SPRING_BOOT_VERSION");
+        if (StringUtils.isEmpty(springBootVersion)) {
+            throw new IllegalStateException("Please set system property: APP_SPRING_BOOT_VERSION for plugin testing");
+        }
+
+        var repos = project.getRepositories();
+        // TODO remote repos
+        repos.mavenCentral();
+        var deps = project.getDependencies();
+        deps.add(RUNTIME, deps.enforcedPlatform(
+                "org.springframework.boot:spring-boot-dependencies:" + springBootVersion
+        ));
+        deps.add(RUNTIME, "org.slf4j:slf4j-simple");
+        deps.add(RUNTIME, "com.h2database:h2");
+        deps.add(RUNTIME, "org.postgresql:postgresql");
+        deps.add(RUNTIME, "com.mysql:mysql-connector-j");
 
         assertFalse(evaluated.get());
         project.evaluate();

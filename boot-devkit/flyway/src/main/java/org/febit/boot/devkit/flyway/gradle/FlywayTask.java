@@ -57,7 +57,7 @@ public abstract class FlywayTask extends DefaultTask {
 
     @Inject
     public FlywayTask() {
-        setGroup(FlywayExtension.GROUP);
+        setGroup(FlywayPlugin.GROUP);
     }
 
     @TaskAction

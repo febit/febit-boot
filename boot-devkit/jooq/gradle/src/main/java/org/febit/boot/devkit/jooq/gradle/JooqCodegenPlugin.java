@@ -34,9 +34,9 @@ public abstract class JooqCodegenPlugin implements Plugin<Project> {
 
     public static final AtomicBoolean INTERNAL_TESTING_MODE = new AtomicBoolean(false);
 
-    public static final String RUNTIME_NAME = MetaUtils.CODEGEN_JOOQ;
-    public static final String EXTENSION_NAME = MetaUtils.CODEGEN_JOOQ;
-    public static final String TASK_NAME_GENERATE_JOOQ = "generateJooq";
+    public static final String RUNTIME = MetaUtils.CODEGEN_JOOQ;
+    public static final String EXTENSION = MetaUtils.CODEGEN_JOOQ;
+    public static final String TASK_GENERATE_JOOQ = "generateJooq";
 
     public static final String DIR_CODEGEN_SRC_JAVA = "src/" + MetaUtils.CODEGEN_JOOQ_FOLDER + "/java";
     public static final String DIR_CODEGEN_SRC_RESOURCES = "src/" + MetaUtils.CODEGEN_JOOQ_FOLDER + "/resources";
@@ -46,10 +46,10 @@ public abstract class JooqCodegenPlugin implements Plugin<Project> {
         project.getPlugins().apply(JavaBasePlugin.class);
 
         var extension = project.getExtensions()
-                .create(EXTENSION_NAME, JooqCodegenExtension.class, project);
+                .create(EXTENSION, JooqCodegenExtension.class, project);
 
         var runtime = project.getConfigurations()
-                .create(RUNTIME_NAME)
+                .create(RUNTIME)
                 .setDescription("Classpath for jOOQ generator, add your JDBC drivers or extension libs here.");
 
         var sourceSets = GradleUtils.sourceSets(project);
@@ -57,7 +57,7 @@ public abstract class JooqCodegenPlugin implements Plugin<Project> {
         var deps = project.getDependencies();
 
         if (!INTERNAL_TESTING_MODE.get()) {
-            deps.add(RUNTIME_NAME,
+            deps.add(RUNTIME,
                     "org.febit.boot:febit-boot-devkit-jooq-runtime:" + JooqCodegen.version()
             );
         }
@@ -67,13 +67,16 @@ public abstract class JooqCodegenPlugin implements Plugin<Project> {
         var sourceSet = createSourceSet(sourceSets, project);
         sourceSet.setCompileClasspath(runtime);
 
-        tasks.register(TASK_NAME_GENERATE_JOOQ, JooqCodegenGenerateTask.class, task -> {
+        tasks.register(TASK_GENERATE_JOOQ, JooqCodegenGenerateTask.class, task -> {
             task.setGroup(MetaUtils.GROUP_NAME);
             task.setDescription("Generates the jOOQ sources");
 
+            var classpath = runtime.plus(sourceSet.getOutput());
+            var migrationsClasspath = main.getResources().getSourceDirectories();
+
             task.getWorkDir().convention(project.getLayout().getProjectDirectory());
-            task.getClasspath().convention(runtime.plus(sourceSet.getOutput()));
-            task.getMigrationsClasspath().convention(main.getResources().getSourceDirectories());
+            task.getClasspath().convention(classpath);
+            task.getMigrationsClasspath().convention(migrationsClasspath);
 
             task.getConf().convention(extension.getJooqConfig());
             task.getMigrationsDirs().convention(extension.getMigrationsDirs());
@@ -104,7 +107,7 @@ public abstract class JooqCodegenPlugin implements Plugin<Project> {
 
         var tasks = project.getTasks();
         tasks.getByName(GradleUtils.mainSourceSet(project).getCompileJavaTaskName())
-                .dependsOn(TASK_NAME_GENERATE_JOOQ);
+                .dependsOn(TASK_GENERATE_JOOQ);
         extension.getJdbcProvider().get().afterEvaluate(project);
     }
 

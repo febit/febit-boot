@@ -25,23 +25,27 @@ public enum DbType {
             "postgres:16.6",
             "postgres",
             "org.postgresql:postgresql",
-            "postgresql"
+            "postgresql",
+            "org.postgresql.Driver"
     ),
     MARIADB(
             "mariadb:10.11",
             "mysql",
             "com.mysql:mysql-connector-j",
-            "mysql"
+            "mysql",
+            "com.mysql.cj.jdbc.Driver"
     ),
     MYSQL(
             "mysql:8.0",
             "mysql",
             "com.mysql:mysql-connector-j",
-            "mysql"
+            "mysql",
+            "com.mysql.cj.jdbc.Driver"
     );
 
     private final String image;
     private final String profile;
     private final String driverArtifact;
     private final String jdbcPrefix;
+    private final String driverClassName;
 }

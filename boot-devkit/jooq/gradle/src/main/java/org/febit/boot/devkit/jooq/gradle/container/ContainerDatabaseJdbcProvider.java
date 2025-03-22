@@ -22,9 +22,11 @@ import org.febit.boot.devkit.jooq.gradle.ContainerDbConfig;
 import org.febit.boot.devkit.jooq.gradle.JdbcProvider;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin;
+import org.febit.boot.devkit.jooq.gradle.Utils;
 import org.gradle.api.Project;
 import org.jooq.meta.jaxb.Generator;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -58,7 +60,7 @@ public class ContainerDatabaseJdbcProvider
         Objects.requireNonNull(conf.getType(), "Docker database type is required");
 
         var deps = project.getDependencies();
-        deps.add(JooqCodegenPlugin.RUNTIME_NAME, conf.getType().getDriverArtifact());
+        deps.add(JooqCodegenPlugin.RUNTIME, conf.getType().getDriverArtifact());
     }
 
     private File resolveWorkDir() {
@@ -85,9 +87,16 @@ public class ContainerDatabaseJdbcProvider
         var conf = getConf();
         var workDir = resolveWorkDir();
 
+        var project = params.getProject();
+
+        var classLoader = Utils.toClassLoader(
+                project.getConfigurations().getByName(JooqCodegenPlugin.RUNTIME)
+        );
+
         @SuppressWarnings("DataFlowIssue")
         var db = ContainerDatabase.builder()
                 .type(conf.getType())
+                .classLoader(classLoader)
                 .image(conf.getImage())
                 .dockerBinPath(conf.getDockerBinPath())
                 .workingDir(workDir)
@@ -125,6 +134,9 @@ public class ContainerDatabaseJdbcProvider
     }
 
     public interface Params {
+
+        @Inject
+        Project getProject();
     }
 
     private record StartedInstance(
