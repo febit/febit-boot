@@ -2,13 +2,13 @@
 hierynomus-license = '0.16.1'
 maven-plugin-development = '1.0.1'
 
-febit-devkit = '1.4.1'
-febit-commons = '3.3.1'
+febit-devkit = '1.4.2'
+febit-commons = '3.3.2-SNAPSHOT'
 
 embedded-postgres = '2.1.0'
-spring-boot = '3.4.3'
-spring-cloud = '2024.0.0'
-springdoc = '2.8.5'
+spring-boot = '3.4.4'
+spring-cloud = '2024.0.1'
+springdoc = '2.8.6'
 swagger3 = '2.2.28'
 okhttp = '4.12.0'
 

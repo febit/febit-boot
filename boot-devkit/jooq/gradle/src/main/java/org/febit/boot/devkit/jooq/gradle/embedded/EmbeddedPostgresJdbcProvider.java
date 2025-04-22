@@ -22,6 +22,7 @@ import io.zonky.test.db.postgres.util.LinuxUtils;
 import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.devkit.flyway.gradle.model.JdbcOption;
@@ -30,9 +31,9 @@ import org.febit.boot.devkit.jooq.gradle.EmbeddedPostgresConfig;
 import org.febit.boot.devkit.jooq.gradle.JdbcProvider;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin;
-import org.febit.boot.devkit.jooq.gradle.Utils;
 import org.febit.boot.devkit.jooq.meta.JooqCodegen;
 import org.febit.boot.devkit.jooq.meta.embedded.PackageUtils;
+import org.febit.devkit.gradle.util.GradleUtils;
 import org.febit.lang.util.Lists;
 import org.gradle.api.Project;
 
@@ -47,8 +48,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
-import static org.febit.devkit.gradle.util.GradleUtils.println;
 
+@Slf4j
 @lombok.Builder(
         builderClassName = "Builder"
 )
@@ -92,7 +93,7 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgr
                 "io.zonky.test.postgres:embedded-postgres-binaries-bom:" + conf.getVersion()
         ));
         deps.add(RUNTIME_NAME_PG, artifact);
-        println("Using embedded postgres: {0}, version: {1}", artifact, conf.getVersion());
+        log.info("Using embedded postgres: {}, version: {}", artifact, conf.getVersion());
     }
 
     private File resolveWorkDir() {
@@ -140,7 +141,7 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgr
         var project = params.getProject();
 
         final EmbeddedPostgres postgres;
-        try (var classLoader = Utils.toClassLoader(
+        try (var classLoader = GradleUtils.toClassLoader(
                 project.getConfigurations().getByName(RUNTIME_NAME_PG)
         )) {
             postgres = EmbeddedPostgres.builder()
@@ -198,14 +199,14 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgr
             if (dist != null) {
                 var resource = findResource(format("postgres-%s-%s-%s.txz", system, arch, dist));
                 if (resource != null) {
-                    println("Distribution specific postgres binaries found: {0}", resource.getFilename());
+                    log.info("Distribution specific postgres binaries found: {}", resource.getFilename());
                     return resource.openInputStream();
                 }
             }
 
             var resource = findResource(format("postgres-%s-%s.txz", system, arch));
             if (resource != null) {
-                println("System specific postgres binaries found: {0}", resource.getFilename());
+                log.info("System specific postgres binaries found: {}", resource.getFilename());
                 return resource.openInputStream();
             }
             throw new IllegalStateException("Missing embedded postgres binaries");

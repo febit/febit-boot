@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.febit.devkit.gradle.util.FileExtraUtils;
 import org.febit.devkit.gradle.util.FolderUtils;
+import org.febit.devkit.gradle.util.SocketPorts;
 import org.febit.lang.Lazy;
 import org.febit.lang.UncheckedException;
 import org.febit.lang.util.Millis;
@@ -53,7 +54,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.exec.ExecuteWatchdog.INFINITE_TIMEOUT_DURATION;
-import static org.febit.devkit.gradle.util.GradleUtils.println;
 
 @Slf4j
 @Getter
@@ -200,7 +200,7 @@ public class ContainerDatabase {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean isDaemonRunning() {
         var daemon = daemonRef.get();
-        return daemon != null && !daemon.exited();
+        return daemon != null && !daemon.isExited();
     }
 
     public boolean isReady() {
@@ -244,7 +244,9 @@ public class ContainerDatabase {
             cmd.addArgument(arg);
         }
 
-        println("Run: {0}", StringUtils.join(cmd.toStrings(), ' '));
+        if (log.isInfoEnabled()) {
+            log.info("Run: {}", StringUtils.join(cmd.toStrings(), ' '));
+        }
 
         var executor = DefaultExecutor.builder()
                 .setWorkingDirectory(workingDir)
@@ -274,7 +276,7 @@ public class ContainerDatabase {
             }
         }
 
-        public boolean exited() {
+        public boolean isExited() {
             return handler.hasResult();
         }
 
@@ -282,7 +284,7 @@ public class ContainerDatabase {
             return handler.getExitValue();
         }
 
-        public void close() {
+        public void destroy() {
             watchdog.destroyProcess();
         }
     }

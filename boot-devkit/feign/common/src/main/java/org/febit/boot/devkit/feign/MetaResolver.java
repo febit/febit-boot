@@ -17,6 +17,7 @@ package org.febit.boot.devkit.feign;
 
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.febit.boot.devkit.feign.meta.ApiDef;
 import org.febit.boot.devkit.feign.meta.ApiParameterDef;
 import org.febit.boot.devkit.feign.meta.ClientDef;
@@ -48,6 +49,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @RequiredArgsConstructor(staticName = "create")
 public class MetaResolver {
 
@@ -97,7 +99,7 @@ public class MetaResolver {
         var mappingAnno = AnnotatedElementUtils.findMergedAnnotation(
                 type, RequestMapping.class);
         if (mappingAnno == null) {
-            // GradleUtils.println("Not found RequestMapping for: {0}", type);
+            log.debug("RequestMapping not found on type: {}", type);
             return null;
         }
 

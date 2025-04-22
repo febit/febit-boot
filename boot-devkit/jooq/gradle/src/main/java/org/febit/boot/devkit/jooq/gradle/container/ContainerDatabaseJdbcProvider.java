@@ -22,7 +22,7 @@ import org.febit.boot.devkit.jooq.gradle.ContainerDbConfig;
 import org.febit.boot.devkit.jooq.gradle.JdbcProvider;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenExtension;
 import org.febit.boot.devkit.jooq.gradle.JooqCodegenPlugin;
-import org.febit.boot.devkit.jooq.gradle.Utils;
+import org.febit.devkit.gradle.util.GradleUtils;
 import org.gradle.api.Project;
 import org.jooq.meta.jaxb.Generator;
 
@@ -89,7 +89,7 @@ public class ContainerDatabaseJdbcProvider
 
         var project = params.getProject();
 
-        var classLoader = Utils.toClassLoader(
+        var classLoader = GradleUtils.toClassLoader(
                 project.getConfigurations().getByName(JooqCodegenPlugin.RUNTIME)
         );
 

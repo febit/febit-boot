@@ -15,6 +15,7 @@
  */
 package org.febit.boot.devkit.jooq.gradle;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.devkit.flyway.gradle.FlywayAction;
 import org.febit.boot.devkit.flyway.gradle.FlywayExecutor;
@@ -47,8 +48,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.util.List;
 
-import static org.febit.devkit.gradle.util.GradleUtils.println;
-
+@Slf4j
 @CacheableTask
 public abstract class JooqCodegenGenerateTask extends DefaultTask {
 
@@ -138,8 +138,9 @@ public abstract class JooqCodegenGenerateTask extends DefaultTask {
 
         var inputDirs = getInputDirs().getOrNull();
         if (inputDirs != null) {
+            log.debug("Input directories:");
             inputDirs.forEach(dir -> {
-                println("Input dir: " + dir);
+                log.debug(" - {}", dir);
             });
         }
 

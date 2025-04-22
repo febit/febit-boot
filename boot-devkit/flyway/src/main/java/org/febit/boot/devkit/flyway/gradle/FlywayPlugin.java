@@ -15,6 +15,7 @@
  */
 package org.febit.boot.devkit.flyway.gradle;
 
+import lombok.extern.slf4j.Slf4j;
 import org.febit.boot.devkit.flyway.gradle.model.FlywayOptionImpl;
 import org.febit.boot.devkit.flyway.gradle.model.JdbcOptionImpl;
 import org.febit.devkit.gradle.util.GradleUtils;
@@ -32,6 +33,7 @@ import static org.apache.commons.lang3.StringUtils.removeStart;
 import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
 
+@Slf4j
 public class FlywayPlugin implements Plugin<Project> {
 
     static final String EXTENSION = "febitFlyway";
@@ -59,7 +61,7 @@ public class FlywayPlugin implements Plugin<Project> {
                 .getByType(FlywayExtension.class);
 
         var baseDir = extension.getApplicationPropsDir().get().getAsFile();
-        GradleUtils.println("Scan profiles from dir " + baseDir);
+        log.info("Scan profiles in dir: {}", baseDir.getAbsolutePath());
         var files = baseDir.listFiles(f ->
                 f.getName().matches("application-.*\\.(yml|yaml|properties)")
         );

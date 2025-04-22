@@ -15,6 +15,7 @@
  */
 package org.febit.boot.devkit.feign.gradle;
 
+import lombok.extern.slf4j.Slf4j;
 import org.febit.boot.devkit.feign.ClientCodegen;
 import org.febit.boot.devkit.feign.MetaResolver;
 import org.febit.boot.devkit.feign.util.ClassNamings;
@@ -27,6 +28,7 @@ import org.gradle.internal.classpath.DefaultClassPath;
 import javax.inject.Inject;
 import java.net.URLClassLoader;
 
+@Slf4j
 @NonNullApi
 public class FeignCodegenExtensionTask extends DefaultTask {
 
@@ -45,7 +47,7 @@ public class FeignCodegenExtensionTask extends DefaultTask {
         var beans = metaResolver.scanBeans(extension.getScanPackages());
         var clients = metaResolver.resolveClients(beans.values());
 
-        GradleUtils.println("Found [{0}] clients", clients.size());
+        log.info("Found [{}] clients", clients.size());
 
         var codegen = ClientCodegen.builder()
                 .beans(beans)
