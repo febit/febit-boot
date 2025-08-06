@@ -63,11 +63,10 @@ public class ContainerDatabaseJdbcProvider
         deps.add(JooqCodegenPlugin.RUNTIME, conf.getType().getDriverArtifact());
     }
 
-    private File resolveWorkDir() {
-        var conf = getConf();
-        var workDir = conf.getWorkingDir();
-        if (workDir != null) {
-            return workDir;
+    private File resolveWorkingDir() {
+        var dir = getConf().getWorkingDir();
+        if (dir != null) {
+            return dir;
         }
         return new File(buildDir, WORK_DIR);
     }
@@ -85,7 +84,7 @@ public class ContainerDatabaseJdbcProvider
 
     private StartedInstance doPrepare(Params params) {
         var conf = getConf();
-        var workDir = resolveWorkDir();
+        var workDir = resolveWorkingDir();
 
         var project = params.getProject();
 
@@ -93,7 +92,6 @@ public class ContainerDatabaseJdbcProvider
                 project.getConfigurations().getByName(JooqCodegenPlugin.RUNTIME)
         );
 
-        @SuppressWarnings("DataFlowIssue")
         var db = ContainerDatabase.builder()
                 .type(conf.getType())
                 .classLoader(classLoader)

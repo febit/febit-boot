@@ -33,6 +33,7 @@ dependencies {
 
   implementation 'commons-codec:commons-codec'
   implementation 'org.apache.commons:commons-exec'
+  implementation 'org.febit:febit-commons-stuff'
   implementation('io.zonky.test:embedded-postgres') {
     exclude group: 'io.zonky.test.postgres'
   }
@@ -40,6 +41,8 @@ dependencies {
   testImplementation localGroovy()
   testImplementation gradleApi()
 
+  testRuntimeOnly 'org.postgresql:postgresql'
+  testRuntimeOnly 'com.mysql:mysql-connector-j'
   testRuntimeOnly libs.spring.boot.deps
   testRuntimeOnly project(':febit-boot-devkit-jooq-runtime')
 }

@@ -35,6 +35,7 @@ class ContainerDatabaseIT {
                 // .type(DbType.POSTGRES)
                 .type(DbType.MYSQL)
                 .workingDir(workingDir)
+                .classLoader(this.getClass().getClassLoader())
                 .database("test")
                 .user("user")
                 .password("pass")

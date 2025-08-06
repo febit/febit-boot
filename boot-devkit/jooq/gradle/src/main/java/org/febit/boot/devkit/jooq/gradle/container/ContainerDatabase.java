@@ -15,19 +15,15 @@
  */
 package org.febit.boot.devkit.jooq.gradle.container;
 
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecuteResultHandler;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.ExecuteWatchdog;
-import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.febit.common.exec.ExecUtils;
 import org.febit.devkit.gradle.util.FileExtraUtils;
 import org.febit.devkit.gradle.util.FolderUtils;
 import org.febit.devkit.gradle.util.SocketPorts;
@@ -49,11 +45,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-
-import static org.apache.commons.exec.ExecuteWatchdog.INFINITE_TIMEOUT_DURATION;
 
 @Slf4j
 @Getter
@@ -116,8 +111,16 @@ public class ContainerDatabase {
     private final String user;
     private final String password;
 
-    private final AtomicReference<CommandContext> daemonRef = new AtomicReference<>();
+    private final AtomicReference<Future<Integer>> daemonRef = new AtomicReference<>();
     private final Lazy<Driver> driver = Lazy.of(this::loadDriver);
+
+    public IOException handleException(ExecutionException e) {
+        var cause = e.getCause();
+        if (cause instanceof IOException) {
+            return (IOException) cause;
+        }
+        return new IOException("Unexpected error", cause);
+    }
 
     public synchronized void start() throws IOException {
         if (daemonRef.get() != null) {
@@ -135,19 +138,25 @@ public class ContainerDatabase {
         var watch = StopWatch.createStarted();
 
         // Pull image
-        var pull = runCommand("pull", "--policy", "missing");
+        var pull = exec("pull", "--policy", "missing");
         // XXX: timeout?
-        pull.waitFor();
+        try {
+            pull.get();
+        } catch (ExecutionException e) {
+            throw handleException(e);
+        } catch (InterruptedException e) {
+            throw new IOException("Pull database image: Interrupted", e);
+        }
         log.info("Pulled database image, cost {} ms", watch.getTime(TimeUnit.MILLISECONDS));
 
         // Start container
         watch.reset();
-        daemonRef.set(runCommand("up", "--remove-orphans"));
+        daemonRef.set(exec("up", "--remove-orphans"));
 
         // Ping database
         var pingFuture = Polling.create(() -> {
                     if (!isDaemonRunning()) {
-                        throw new IOException("Container exited with code: " + daemonRef.get().exitCode());
+                        throw new IOException("Container exited with code: " + daemonRef.get().get());
                     }
                     ping();
                     return true;
@@ -191,6 +200,9 @@ public class ContainerDatabase {
         }
 
         var ex = ctx.lastError();
+        if (ex instanceof ExecutionException) {
+            ex = ex.getCause();
+        }
         if (!(ex instanceof SQLException)) {
             return true;
         }
@@ -200,7 +212,7 @@ public class ContainerDatabase {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean isDaemonRunning() {
         var daemon = daemonRef.get();
-        return daemon != null && !daemon.isExited();
+        return daemon != null && !daemon.isDone();
     }
 
     public boolean isReady() {
@@ -237,68 +249,34 @@ public class ContainerDatabase {
         }
     }
 
-    private CommandContext runCommand(String... args) throws IOException {
+    private Future<Integer> exec(String... args) throws IOException {
         var cmd = new CommandLine(dockerBinPath);
         baseArgs.forEach(cmd::addArgument);
         for (var arg : args) {
             cmd.addArgument(arg);
         }
-
         if (log.isInfoEnabled()) {
             log.info("Run: {}", StringUtils.join(cmd.toStrings(), ' '));
         }
-
-        var executor = DefaultExecutor.builder()
-                .setWorkingDirectory(workingDir)
-                .setExecuteStreamHandler(new PumpStreamHandler())
-                .get();
-        var watchdog = ExecuteWatchdog.builder()
-                .setTimeout(INFINITE_TIMEOUT_DURATION)
-                .get();
-        var handler = new DefaultExecuteResultHandler();
-
-        executor.setWatchdog(watchdog);
-        executor.execute(cmd, handler);
-        return new CommandContext(cmd, executor, handler, watchdog);
-    }
-
-    record CommandContext(
-            CommandLine command,
-            DefaultExecutor executor,
-            DefaultExecuteResultHandler handler,
-            ExecuteWatchdog watchdog
-    ) {
-        public void waitFor() {
-            try {
-                handler.waitFor();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        public boolean isExited() {
-            return handler.hasResult();
-        }
-
-        private int exitCode() {
-            return handler.getExitValue();
-        }
-
-        public void destroy() {
-            watchdog.destroyProcess();
-        }
+        var launcher = ExecUtils.launcher()
+                .command(cmd)
+                .workingDir(workingDir.toPath())
+                .stderr(System.err)
+                .stdout(System.out);
+        return launcher.start();
     }
 
     @lombok.Builder(
             builderClassName = "Builder"
     )
+    @SuppressWarnings("NullableProblems")
     private static ContainerDatabase create(
-            @Nonnull DbType type,
-            @Nonnull File workingDir,
+            @lombok.NonNull DbType type,
+            @lombok.NonNull File workingDir,
+            @lombok.NonNull String user,
+            @lombok.NonNull String password,
+            @lombok.NonNull ClassLoader classLoader,
             int port,
-            @Nonnull String user,
-            @Nonnull String password,
-            @Nonnull ClassLoader classLoader,
             @Nullable String dockerBinPath,
             @Nullable String database,
             @Nullable String image
@@ -355,11 +333,13 @@ public class ContainerDatabase {
             return;
         }
         try {
-            runCommand("down").waitFor();
+            exec("down").get();
+            daemon.get();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        daemon.waitFor();
         daemonRef.set(null);
     }
 }
