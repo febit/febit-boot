@@ -6,10 +6,10 @@ febit-devkit = '1.4.2'
 febit-commons = '3.3.3'
 
 embedded-postgres = '2.1.0'
-spring-boot = '3.4.8'
-spring-cloud = '2024.0.1'
+spring-boot = '3.5.4'
+spring-cloud = '2025.0.0'
 springdoc = '2.8.9'
-swagger3 = '2.2.34'
+swagger3 = '2.2.35'
 okhttp = '4.12.0'
 
 [libraries]

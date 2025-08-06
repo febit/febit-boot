@@ -22,14 +22,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum DbType {
     POSTGRES(
-            "postgres:16.6",
+            "postgres:17.5",
             "postgres",
             "org.postgresql:postgresql",
             "postgresql",
             "org.postgresql.Driver"
     ),
     MARIADB(
-            "mariadb:10.11",
+            "mariadb:11.8",
             "mysql",
             "com.mysql:mysql-connector-j",
             "mysql",
