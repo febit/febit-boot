@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum DbType {
     POSTGRES(
-            "postgres:17.5",
+            "postgres:18.1-alpine",
             "postgres",
             "org.postgresql:postgresql",
             "postgresql",
@@ -36,7 +36,7 @@ public enum DbType {
             "com.mysql.cj.jdbc.Driver"
     ),
     MYSQL(
-            "mysql:8.0",
+            "mysql:8.4",
             "mysql",
             "com.mysql:mysql-connector-j",
             "mysql",

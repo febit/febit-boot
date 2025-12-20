@@ -182,9 +182,9 @@ class SampleApiSpringdocTest extends BaseMvcTest {
                         "SESSION", "REQUEST"
                 )))
         ;
-        result.andExpect(j(props + ".category.type", "string"))
+        result.andExpect(j(props + ".category.type", "integer"))
                 .andExpect(jsonList(props + ".category.enum", List.of(
-                        "500", "600"
+                        500, 600
                 )))
         ;
     }

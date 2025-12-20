@@ -17,7 +17,7 @@ package org.febit.boot.auth.component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.febit.boot.permission.MethodPermissionResolver;
 import org.febit.boot.permission.MethodPermissionResolvers;
 import org.febit.boot.permission.PermissionItem;
@@ -147,7 +147,7 @@ public class WebMvcPermissionManager implements SmartLifecycle, PermissionManage
 
     private boolean isIgnored(HandlerMethod handlerMethod) {
         var className = handlerMethod.getMethod().getDeclaringClass().getName();
-        return StringUtils.startsWithAny(className, IGNORED_PACKAGES);
+        return Strings.CS.startsWithAny(className, IGNORED_PACKAGES);
     }
 
 }

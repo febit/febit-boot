@@ -16,6 +16,7 @@
 package org.febit.boot.devkit.feign.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.febit.devkit.gradle.util.JavaUtils;
 import org.febit.lang.Tuple2;
 
@@ -87,7 +88,7 @@ public class ClassNamingImpl implements ClassNaming {
             if (!name.endsWith(pair.v1())) {
                 continue;
             }
-            name = StringUtils.removeEnd(name, pair.v1())
+            name = Strings.CS.removeEnd(name, pair.v1())
                     + pair.v2();
         }
 
@@ -105,7 +106,7 @@ public class ClassNamingImpl implements ClassNaming {
                 continue;
             }
             pkg = pair.v2()
-                    + StringUtils.removeStart(pkg, pair.v1());
+                    + Strings.CS.removeStart(pkg, pair.v1());
         }
         return pkg;
     }

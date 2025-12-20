@@ -17,6 +17,7 @@ package org.febit.boot.devkit.feign;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.febit.boot.devkit.feign.meta.ApiDef;
 import org.febit.boot.devkit.feign.meta.ApiParameterDef;
 import org.febit.boot.devkit.feign.meta.ClientDef;
@@ -57,7 +58,7 @@ class ClientEmitter {
         var path = client.getRequest().getPrimaryPath();
         // NOTE: Path-Variables are not support in client-level settings.
         this.clientPath = StringUtils.substringBefore(path, "/{");
-        this.apiPathPrefix = StringUtils.removeEnd(
+        this.apiPathPrefix = Strings.CS.removeEnd(
                 path.substring(this.clientPath.length()),
                 "/"
         );
@@ -162,7 +163,7 @@ class ClientEmitter {
 
         String path = req.getPrimaryPath();
         if (!path.isEmpty()) {
-            path = StringUtils.prependIfMissing(path, "/");
+            path = Strings.CS.prependIfMissing(path, "/");
         }
 
         out.tab(2).append("path = ")

@@ -15,7 +15,7 @@
  */
 package org.febit.boot.util;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.AnnotationBeanNameGenerator;
 import org.springframework.util.Assert;
@@ -32,6 +32,6 @@ public class FebitBootBeanNameGenerator extends AnnotationBeanNameGenerator {
         if (!beanClassName.startsWith(PREFIX)) {
             return beanClassName;
         }
-        return PREFIX_REPLACE + StringUtils.removeStart(beanClassName, PREFIX);
+        return PREFIX_REPLACE + Strings.CS.removeStart(beanClassName, PREFIX);
     }
 }

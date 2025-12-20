@@ -16,6 +16,7 @@
 package org.febit.boot.devkit.flyway.gradle;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.Strings;
 import org.febit.boot.devkit.flyway.gradle.model.FlywayOptionImpl;
 import org.febit.boot.devkit.flyway.gradle.model.JdbcOptionImpl;
 import org.febit.devkit.gradle.util.GradleUtils;
@@ -29,7 +30,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Properties;
 
-import static org.apache.commons.lang3.StringUtils.removeStart;
 import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
 
@@ -71,7 +71,7 @@ public class FlywayPlugin implements Plugin<Project> {
         }
 
         for (var f : files) {
-            var profile = removeStart(
+            var profile = Strings.CS.removeStart(
                     substringBeforeLast(f.getName(), "."),
                     "application-"
             );
