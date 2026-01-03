@@ -29,6 +29,7 @@ public class ColumnUtils {
     public static final String TYPE_LONG = "Long";
     public static final String TYPE_INSTANT = "Instant";
     public static final String TYPE_STRING = "String";
+    public static final String TYPE_UUID = "java.util.UUID";
 
     public static boolean check(TableDefinition table, String name, Predicate<ColumnDefinition> predicate) {
         var column = table.getColumn(name, true);
@@ -88,6 +89,7 @@ public class ColumnUtils {
                     "character",
                     "character varying",
                     "varchar_ignorecase" -> TYPE_STRING;
+            case "uuid" -> TYPE_UUID;
             default -> type.getType();
         };
     }
