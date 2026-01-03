@@ -58,6 +58,7 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
     protected void generatePojoClassFooter(TableDefinition table, JavaWriter out) {
         emitPojoIdMethod(table, out);
         emitPojoToRecordMethod(table, out);
+        emitPojoMergeFromRecord(table, out);
         super.generatePojoClassFooter(table, out);
     }
 
@@ -179,7 +180,32 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
             out.println("@Override");
         }
         out.println("public %s toRecord() {", recordClassName);
-        out.println("return %s.fromPojo(this);", recordClassName);
+        out.println("return new %s(this);", recordClassName);
+        out.println("}");
+    }
+
+    /**
+     * Emit Pojo#merge(Record) method.
+     */
+    private void emitPojoMergeFromRecord(
+            TableDefinition table,
+            JavaWriter out
+    ) {
+        var recordClassName = getStrategy().getJavaClassName(table, GeneratorStrategy.Mode.RECORD);
+
+        out.println();
+        out.println("public void merge(%s record) {", recordClassName);
+        out.println("if (record == null) {");
+        out.println("return;");
+        out.println("}");
+
+        for (var column : table.getColumns()) {
+            out.println("%s(record.%s());",
+                    getStrategy().getJavaSetterName(column, GeneratorStrategy.Mode.POJO),
+                    getStrategy().getJavaGetterName(column, GeneratorStrategy.Mode.RECORD)
+            );
+        }
+
         out.println("}");
     }
 
