@@ -15,7 +15,6 @@
  */
 package org.febit.boot.devkit.flyway.gradle;
 
-import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -27,6 +26,7 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.flywaydb.core.internal.jdbc.DriverDataSource;
 import org.gradle.api.file.FileCollection;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -72,7 +72,7 @@ public class FlywayExecutor {
         }
 
         var conf = confBuilder.build();
-        if (Boolean.TRUE.equals(printConf)) {
+        if (printConf) {
             printConf(conf);
         }
 

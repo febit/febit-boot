@@ -139,9 +139,7 @@ public abstract class JooqCodegenGenerateTask extends DefaultTask {
         var inputDirs = getInputDirs().getOrNull();
         if (inputDirs != null) {
             log.debug("Input directories:");
-            inputDirs.forEach(dir -> {
-                log.debug(" - {}", dir);
-            });
+            inputDirs.forEach(dir -> log.debug(" - {}", dir));
         }
 
         var conf = getConf().get();

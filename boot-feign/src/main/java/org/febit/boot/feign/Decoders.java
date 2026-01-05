@@ -15,7 +15,6 @@
  */
 package org.febit.boot.feign;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.codec.Decoder;
 import feign.optionals.OptionalDecoder;
 import lombok.experimental.UtilityClass;
@@ -24,6 +23,7 @@ import org.febit.boot.feign.codec.ResponseStatusDecoder;
 import org.febit.boot.feign.codec.StandardErrorDecoder;
 import org.febit.lang.util.JacksonUtils;
 import org.febit.lang.util.JacksonWrapper;
+import tools.jackson.databind.ObjectMapper;
 
 @UtilityClass
 public class Decoders {

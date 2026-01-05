@@ -31,4 +31,5 @@ dependencies {
   testImplementation 'org.springframework:spring-webmvc'
   testImplementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 }

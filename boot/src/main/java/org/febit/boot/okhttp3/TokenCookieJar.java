@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,7 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class TokenCookieJar implements CookieJar {
 
     private final String key;
-    private final AtomicReference<Cookie> cookieRef = new AtomicReference<>();
+    private final AtomicReference<@Nullable Cookie> cookieRef = new AtomicReference<>();
 
     @Override
     public void saveFromResponse(HttpUrl httpUrl, List<Cookie> cookies) {

@@ -15,7 +15,6 @@
  */
 package org.febit.boot.devkit.jooq.gradle.container;
 
-import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,7 @@ import org.febit.lang.Lazy;
 import org.febit.lang.UncheckedException;
 import org.febit.lang.util.Millis;
 import org.febit.lang.util.Polling;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,13 +111,13 @@ public class ContainerDatabase {
     private final String user;
     private final String password;
 
-    private final AtomicReference<Future<Integer>> daemonRef = new AtomicReference<>();
+    private final AtomicReference<@Nullable Future<Integer>> daemonRef = new AtomicReference<>();
     private final Lazy<Driver> driver = Lazy.of(this::loadDriver);
 
     public IOException handleException(ExecutionException e) {
         var cause = e.getCause();
-        if (cause instanceof IOException) {
-            return (IOException) cause;
+        if (cause instanceof IOException ex) {
+            return ex;
         }
         return new IOException("Unexpected error", cause);
     }

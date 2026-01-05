@@ -17,8 +17,8 @@ package org.febit.boot.module;
 
 import org.febit.boot.util.Priority;
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.EnvironmentPostProcessor;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.env.ConfigurableEnvironment;

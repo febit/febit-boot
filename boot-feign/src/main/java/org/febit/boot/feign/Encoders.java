@@ -15,7 +15,6 @@
  */
 package org.febit.boot.feign;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.QueryMapEncoder;
 import feign.codec.Encoder;
 import lombok.experimental.UtilityClass;
@@ -23,12 +22,13 @@ import org.febit.boot.feign.codec.JacksonEncoder;
 import org.febit.boot.feign.codec.JacksonQueryMapEncoder;
 import org.febit.lang.util.JacksonUtils;
 import org.febit.lang.util.JacksonWrapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @UtilityClass
 public class Encoders {
 
     public static Encoder chain(
-            ObjectMapper objectMapper,
+            JsonMapper objectMapper,
             Chain... chains
     ) {
         var encoder = jackson(objectMapper);
@@ -38,7 +38,7 @@ public class Encoders {
         return encoder;
     }
 
-    public static Encoder jackson(ObjectMapper objectMapper) {
+    public static Encoder jackson(JsonMapper objectMapper) {
         return jackson(JacksonUtils.wrap(objectMapper));
     }
 

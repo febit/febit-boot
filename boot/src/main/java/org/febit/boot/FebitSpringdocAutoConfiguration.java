@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.springdoc.core.utils.Constants.SPRINGDOC_ENABLED;
 
@@ -49,10 +49,10 @@ public class FebitSpringdocAutoConfiguration {
     @Bean
     @Order(Priority.HIGHEST)
     public ModelResolver springdocModelResolver(
-            Jackson2ObjectMapperBuilder builder
+            JsonMapper.Builder builder
     ) {
         var mapper = Json.mapper();
-        builder.configure(mapper);
+        // FIXME: !!!!
         return new ModelResolver(mapper, GenericTypeNameResolver.INSTANCE);
     }
 }

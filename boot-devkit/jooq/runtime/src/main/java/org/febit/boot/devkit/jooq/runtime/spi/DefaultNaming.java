@@ -15,7 +15,6 @@
  */
 package org.febit.boot.devkit.jooq.runtime.spi;
 
-import jakarta.annotation.Nullable;
 import lombok.Setter;
 import org.febit.boot.devkit.jooq.runtime.JooqGeneratorStrategy;
 import org.febit.boot.devkit.jooq.runtime.util.NamingUtils;
@@ -23,6 +22,7 @@ import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.meta.ColumnDefinition;
 import org.jooq.meta.Definition;
 import org.jooq.meta.TableDefinition;
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 

@@ -15,8 +15,8 @@
  */
 package org.febit.boot.devkit.jooq.runtime.spi;
 
-import jakarta.annotation.Nullable;
 import org.jooq.meta.Definition;
+import org.jspecify.annotations.Nullable;
 
 public interface OutputNameResolver {
 

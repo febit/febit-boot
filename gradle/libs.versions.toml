@@ -2,15 +2,15 @@
 hierynomus-license = '0.16.1'
 maven-plugin-development = '1.0.3'
 
-febit-commons = '3.4.0'
+febit-commons = '4.0.0-SNAPSHOT'
 febit-devkit = '1.5.0'
 
 embedded-postgres = '2.2.0'
-spring-boot = '3.5.9'
-spring-cloud = '2025.0.1'
-springdoc = '2.8.15'
-swagger3 = '2.2.41'
-okhttp = '4.12.0'
+spring-boot = '4.0.2'
+spring-cloud = '2025.1.0'
+springdoc = '3.0.1'
+swagger3 = '2.2.42'
+okhttp = '5.3.2'
 
 [libraries]
 febit-commons-bom = { module = 'org.febit:febit-commons-bom', version.ref = 'febit-commons' }

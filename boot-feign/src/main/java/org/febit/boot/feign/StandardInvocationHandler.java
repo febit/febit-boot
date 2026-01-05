@@ -18,11 +18,11 @@ package org.febit.boot.feign;
 import feign.InvocationHandlerFactory;
 import feign.Target;
 import feign.codec.Decoder;
-import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -48,7 +48,7 @@ public class StandardInvocationHandler implements InvocationHandler {
 
     @Nullable
     @Override
-    public Object invoke(Object proxy, Method method, @Nullable Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, @Nullable Object @Nullable [] args) throws Throwable {
         return switch (method.getName()) {
             case "equals" -> invokeEquals(args);
             case "hashCode" -> hashCode();
@@ -58,7 +58,7 @@ public class StandardInvocationHandler implements InvocationHandler {
     }
 
     @Nullable
-    protected Object invoke(Method method, @Nullable Object[] args) throws Throwable {
+    protected Object invoke(Method method, @Nullable Object @Nullable [] args) throws Throwable {
         var handler = this.dispatch.get(method);
         try {
             FeignApiArgs.HOLDER.set(args != null ? args : ArrayUtils.EMPTY_OBJECT_ARRAY);
@@ -71,7 +71,7 @@ public class StandardInvocationHandler implements InvocationHandler {
         }
     }
 
-    private boolean invokeEquals(@Nullable Object[] args) {
+    private boolean invokeEquals(@Nullable Object @Nullable [] args) {
         if (args == null || args.length == 0 || args[0] == null) {
             return false;
         }
@@ -79,7 +79,7 @@ public class StandardInvocationHandler implements InvocationHandler {
     }
 
     @Nullable
-    protected Object handleGenericException(Method method, @Nullable Object[] args, Exception ex) throws Exception {
+    protected Object handleGenericException(Method method, @Nullable Object @Nullable [] args, Exception ex) throws Exception {
         if (ex instanceof ResponseErrorException) {
             return handleResponseErrorException(method, args, (ResponseErrorException) ex);
         }
@@ -87,7 +87,7 @@ public class StandardInvocationHandler implements InvocationHandler {
     }
 
     @Nullable
-    protected Object handleResponseErrorException(Method method, @Nullable Object[] args, ResponseErrorException ex)
+    protected Object handleResponseErrorException(Method method, @Nullable Object @Nullable [] args, ResponseErrorException ex)
             throws Exception {
         var type = method.getGenericReturnType();
         if (type == void.class) {

@@ -17,11 +17,12 @@ package org.febit.boot.auth.web;
 
 import org.febit.boot.auth.AuthSubject;
 import org.febit.lang.protocol.IResponse;
+import org.jspecify.annotations.Nullable;
 import org.springframework.web.context.request.WebRequest;
 
 import java.lang.reflect.Method;
 
 public interface WebAuthHandler<T extends AuthSubject> {
 
-    IResponse<AuthSubject> verify(WebRequest request, Method handler);
+    IResponse<@Nullable T> verify(WebRequest request, Method handler);
 }

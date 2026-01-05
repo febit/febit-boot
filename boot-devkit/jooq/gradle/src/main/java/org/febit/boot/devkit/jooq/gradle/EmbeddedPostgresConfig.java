@@ -15,9 +15,9 @@
  */
 package org.febit.boot.devkit.jooq.gradle;
 
-import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.Serializable;

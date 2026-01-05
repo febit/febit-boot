@@ -16,10 +16,10 @@
 package org.febit.boot.feign;
 
 import feign.Response;
-import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -29,8 +29,7 @@ import java.nio.charset.StandardCharsets;
 @UtilityClass
 public class FeignUtils {
 
-    @Nullable
-    public static byte[] read(Response resp) throws IOException {
+    public static byte @Nullable [] read(Response resp) throws IOException {
         if (resp.body() == null) {
             return null;
         }

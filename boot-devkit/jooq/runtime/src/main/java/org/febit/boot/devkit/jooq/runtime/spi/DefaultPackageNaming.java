@@ -15,10 +15,10 @@
  */
 package org.febit.boot.devkit.jooq.runtime.spi;
 
-import jakarta.annotation.Nullable;
 import org.jooq.codegen.GeneratorStrategy;
 import org.jooq.meta.Definition;
 import org.jooq.meta.TableDefinition;
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 

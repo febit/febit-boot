@@ -15,10 +15,10 @@
  */
 package org.jooq.codegen;
 
-import org.febit.lang.annotation.NonNullApi;
 import org.jooq.meta.Database;
+import org.jspecify.annotations.NullMarked;
 
-@NonNullApi
+@NullMarked
 public abstract class FebitDevkitJavaGeneratorHack extends JavaGenerator {
 
     @Override

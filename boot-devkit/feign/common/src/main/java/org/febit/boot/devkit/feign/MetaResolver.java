@@ -15,7 +15,6 @@
  */
 package org.febit.boot.devkit.feign;
 
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.febit.boot.devkit.feign.meta.ApiDef;
@@ -29,6 +28,7 @@ import org.febit.lang.protocol.IPageResponse;
 import org.febit.lang.protocol.IResponse;
 import org.febit.lang.protocol.Page;
 import org.febit.lang.util.Maps;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.SimpleBeanDefinitionRegistry;
@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -85,7 +84,7 @@ public class MetaResolver {
                 .filter(this::isController)
                 .map(this::resolveClient)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Nullable
@@ -168,7 +167,7 @@ public class MetaResolver {
         return Stream.of(method.getParameters())
                 .map(ApiParameterDef::of)
                 .filter(this::isParameterInclude)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private boolean isParameterInclude(ApiParameterDef parameter) {

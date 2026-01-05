@@ -27,7 +27,6 @@ import feign.codec.Decoder;
 import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
 import feign.okhttp.OkHttpClient;
-import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +34,7 @@ import lombok.Singular;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.context.named.NamedContextFactory;
 import org.springframework.cloud.openfeign.FeignBuilderCustomizer;
@@ -108,7 +108,7 @@ public class TestApi<T> {
             @Singular List<Consumer<StaticApplicationContext>> contextCustomizers,
             @Singular List<FeignBuilderCustomizer> feignBuilderCustomizers,
             @Nullable Supplier<Client> clientSupplier,
-            @Nullable Logger.Level loggerLevel
+            Logger.@Nullable Level loggerLevel
     ) {
         var app = new StaticApplicationContext();
 

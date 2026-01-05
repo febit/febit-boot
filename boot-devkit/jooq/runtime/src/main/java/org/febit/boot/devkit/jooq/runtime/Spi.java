@@ -15,8 +15,8 @@
  */
 package org.febit.boot.devkit.jooq.runtime;
 
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Function;
@@ -34,12 +34,15 @@ class Spi<S> {
     }
 
     @Nullable
-    public <T> T compute(Function<S, T> computer) {
+    public <T extends @Nullable Object> T compute(Function<S, @Nullable T> computer) {
         return compute(computer, () -> null);
     }
 
     @Nullable
-    public <T> T compute(Function<S, T> computer, Supplier<T> defaultSupplier) {
+    public <T extends @Nullable Object> T compute(
+            Function<S, @Nullable T> computer,
+            Supplier<@Nullable T> defaultSupplier
+    ) {
         for (var f : spies) {
             var result = computer.apply(f);
             if (result != null) {

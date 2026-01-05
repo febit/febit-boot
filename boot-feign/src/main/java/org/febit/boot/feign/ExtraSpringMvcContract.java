@@ -16,9 +16,9 @@
 package org.febit.boot.feign;
 
 import feign.MethodMetadata;
-import jakarta.annotation.Nullable;
 import lombok.Singular;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 import org.springframework.cloud.openfeign.AnnotatedParameterProcessor;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.core.convert.ConversionService;
@@ -50,7 +50,7 @@ public class ExtraSpringMvcContract extends SpringMvcContract {
                 conversionService != null ? conversionService
                         : new DefaultConversionService()
         );
-        this.decodeSplash = decodeSplash != null && decodeSplash;
+        this.decodeSplash = Boolean.TRUE.equals(decodeSplash);
         this.ignoreParameterTypes = ignoreParameterTypes;
     }
 

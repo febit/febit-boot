@@ -15,10 +15,10 @@
  */
 package org.febit.boot.devkit.jooq.meta;
 
-import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 import org.febit.lang.modeler.Schema;
 import org.jooq.meta.jaxb.ForcedType;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.function.Consumer;
@@ -48,70 +48,35 @@ public class ForcedTypes {
 
     public static void to(Sink sink, String expr, Schema schema) {
         switch (schema.type()) {
-            case BOOLEAN:
-                toBoolean(sink, expr);
-                break;
-            case INSTANT:
-                timeToInstant(sink, expr);
-                break;
-            case ENUM:
-                toEnum(sink, expr, schema.valueType().toJavaTypeString());
-                break;
-            case JSON:
-                jsonTo(sink, expr, schema.valueType());
-                break;
-            case RAW:
-            case STRING:
-            case BYTES:
-            case INT:
-            case LONG:
-            case FLOAT:
-            case DOUBLE:
-            case DATE:
-            case TIME:
-            case DATETIME:
-            case DATETIME_ZONED:
-            case ARRAY:
-            case LIST:
-            case MAP:
-            default:
-                throw new IllegalArgumentException("Not support raw type: " + schema.toJavaTypeString());
+            case BOOLEAN -> toBoolean(sink, expr);
+            case INSTANT -> timeToInstant(sink, expr);
+            case ENUM -> toEnum(sink, expr, schema.valueType().toJavaTypeString());
+            case JSON -> jsonTo(sink, expr, schema.valueType());
+            case OPTIONAL, RAW, STRING, BYTES,
+                 SHORT, INT, LONG, FLOAT, DOUBLE,
+                 DATE, TIME, DATETIME, DATETIME_ZONED,
+                 STRUCT, ARRAY, LIST, MAP ->
+                    throw new IllegalArgumentException("Not support type: " + schema.toJavaTypeString());
+            default -> throw new IllegalArgumentException("Unknown type: " + schema.type());
         }
     }
 
     public static void jsonTo(Sink sink, String expr, Schema type) {
         switch (type.type()) {
-            case RAW:
-            case ENUM:
-            case STRING:
-            case BYTES:
-            case BOOLEAN:
-            case INT:
-            case LONG:
-            case FLOAT:
-            case DOUBLE:
-            case INSTANT:
-            case DATE:
-            case TIME:
-            case DATETIME:
-            case DATETIME_ZONED:
-                jsonToBean(sink, expr, type.toJavaTypeString());
-                break;
-            case ARRAY:
-                jsonToBeanArray(sink, expr, type.valueType().toJavaTypeString());
-                break;
-            case LIST:
-                jsonToBeanList(sink, expr, type.valueType().toJavaTypeString());
-                break;
-            case MAP:
-                jsonToBeanMap(sink, expr,
-                        type.keyType().toJavaTypeString(),
-                        type.valueType().toJavaTypeString()
-                );
-                break;
-            case JSON:
-            default:
-                throw new IllegalArgumentException("Not support json type: " + type.toJavaTypeString());
+            case RAW, ENUM, STRING,
+                 BYTES, BOOLEAN,
+                 INT, LONG, FLOAT, DOUBLE,
+                 INSTANT, DATE, TIME, DATETIME,
+                 DATETIME_ZONED -> jsonToBean(sink, expr, type.toJavaTypeString());
+            case ARRAY -> jsonToBeanArray(sink, expr, type.valueType().toJavaTypeString());
+            case LIST -> jsonToBeanList(sink, expr, type.valueType().toJavaTypeString());
+            case MAP -> jsonToBeanMap(sink, expr,
+                    type.keyType().toJavaTypeString(),
+                    type.valueType().toJavaTypeString()
+            );
+            case SHORT, OPTIONAL, STRUCT, JSON ->
+                    throw new IllegalArgumentException("Not support type: " + type.type());
+            default -> throw new IllegalArgumentException("Unknown type: " + type.type());
         }
     }
 

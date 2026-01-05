@@ -18,12 +18,12 @@ package org.febit.boot.feign.codec;
 import feign.RequestTemplate;
 import feign.codec.EncodeException;
 import feign.codec.Encoder;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.febit.lang.util.JacksonWrapper;
+import org.jspecify.annotations.Nullable;
+import tools.jackson.core.JacksonException;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 
@@ -41,7 +41,7 @@ public class JacksonEncoder implements Encoder {
         var out = new ByteArrayOutputStream();
         try {
             this.jackson.writeTo(out, body);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new EncodeException("IOException: " + e.getMessage(), e);
         }
         template.body(out.toByteArray(), StandardCharsets.UTF_8);

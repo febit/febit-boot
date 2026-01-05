@@ -20,17 +20,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.febit.lang.protocol.IResponse;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnClass(Jackson2ObjectMapperBuilder.class)
-public class JacksonCustomizer implements Jackson2ObjectMapperBuilderCustomizer {
+@ConditionalOnClass({
+        JsonMapper.class,
+        JsonMapperBuilderCustomizer.class,
+})
+public class JacksonCustomizer implements JsonMapperBuilderCustomizer {
 
     @Override
-    public void customize(Jackson2ObjectMapperBuilder builder) {
-        builder.mixIn(IResponse.class, ResponseMixin.class);
+    public void customize(JsonMapper.Builder builder) {
+        builder.addMixIn(IResponse.class, ResponseMixin.class);
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

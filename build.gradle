@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'org.febit.boot'
-version = '3.5.1'
+version = '4.0.0-SNAPSHOT'
 description = 'Febit Boot'
 
 ext {
@@ -150,8 +150,8 @@ def customPom(MavenPom pom) {
     }
     developers {
       developer {
-        id = 'zqq'
-        name = 'Zhu Qingqing'
+        id = 'kurt'
+        name = 'Kurt Zhu'
         email = 'zqq@febit.org'
         timezone = '+8'
       }

@@ -19,11 +19,11 @@ import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
 import io.zonky.test.db.postgres.embedded.PgBinaryResolver;
 import io.zonky.test.db.postgres.util.ArchUtils;
 import io.zonky.test.db.postgres.util.LinuxUtils;
-import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.devkit.flyway.gradle.model.JdbcOption;
 import org.febit.boot.devkit.flyway.gradle.model.JdbcOptionImpl;
@@ -36,13 +36,13 @@ import org.febit.boot.devkit.jooq.meta.embedded.PackageUtils;
 import org.febit.devkit.gradle.util.GradleUtils;
 import org.febit.lang.util.Lists;
 import org.gradle.api.Project;
+import org.jspecify.annotations.Nullable;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -65,7 +65,7 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgr
     @Getter
     private final File buildDir;
 
-    private final AtomicReference<StartedInstance> startedRef = new AtomicReference<>();
+    private final AtomicReference<@Nullable StartedInstance> startedRef = new AtomicReference<>();
 
     public static void prepare(Project project) {
         var configs = project.getConfigurations();
@@ -81,7 +81,7 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgr
         var artifact = PackageUtils.Postgres.artifact();
         var extension = project.getExtensions()
                 .getByType(JooqCodegenExtension.class);
-        var conf = extension.getEmbeddedPostgres();
+        var postgres = extension.getEmbeddedPostgres();
         var deps = project.getDependencies();
 
         if (!JooqCodegenPlugin.INTERNAL_TESTING_MODE.get()) {
@@ -90,10 +90,10 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgr
         }
         deps.add(JooqCodegenPlugin.RUNTIME, "org.postgresql:postgresql");
         deps.add(RUNTIME_NAME_PG, deps.platform(
-                "io.zonky.test.postgres:embedded-postgres-binaries-bom:" + conf.getVersion()
+                "io.zonky.test.postgres:embedded-postgres-binaries-bom:" + postgres.getVersion()
         ));
         deps.add(RUNTIME_NAME_PG, artifact);
-        log.info("Using embedded postgres: {}, version: {}", artifact, conf.getVersion());
+        log.info("Using embedded postgres: {}, version: {}", artifact, postgres.getVersion());
     }
 
     private File resolveWorkDir() {
@@ -242,14 +242,11 @@ public class EmbeddedPostgresJdbcProvider implements JdbcProvider<EmbeddedPostgr
             }
 
             public InputStream openInputStream() throws IOException {
-                var con = this.url.openConnection();
+                var conn = this.url.openConnection();
                 try {
-                    return con.getInputStream();
+                    return conn.getInputStream();
                 } catch (IOException ex) {
-                    // Close the HTTP connection (if applicable).
-                    if (con instanceof HttpURLConnection) {
-                        ((HttpURLConnection) con).disconnect();
-                    }
+                    IOUtils.close(conn);
                     throw ex;
                 }
             }

@@ -15,7 +15,6 @@
  */
 package org.febit.boot.auth.component;
 
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.febit.boot.auth.AuthSubject;
@@ -27,6 +26,7 @@ import org.febit.boot.permission.PermissionVerifier;
 import org.febit.boot.util.AuthErrors;
 import org.febit.boot.util.Priority;
 import org.febit.lang.protocol.IResponse;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -51,18 +51,21 @@ public class WebAuthHandlerImpl<T extends AuthSubject> implements WebAuthHandler
     private final WebRequestAuthSubjectResolver<T> authSubjectResolver;
 
     @Override
-    public IResponse<AuthSubject> verify(WebRequest request, Method handler) {
+    public IResponse<@Nullable T> verify(WebRequest request, Method handler) {
         var resolved = authSubjectResolver.resolveAuth(request);
         store(request, resolved.orElse(null));
 
         var permission = this.permissionManager.getPermission(handler);
         switch (permission.getType()) {
             case IGNORED -> {
-                return IResponse.success(null);
+                return IResponse.ok(null);
             }
             case FORBIDDEN -> {
                 return AuthErrors.FORBIDDEN_NO_PERMISSION
                         .response(permission.getMessage());
+            }
+            case ALLOW_LIST -> {
+                // Go ahead to verify allows
             }
         }
 
@@ -75,13 +78,13 @@ public class WebAuthHandlerImpl<T extends AuthSubject> implements WebAuthHandler
         return verifyAllows(auth, permission.getItems());
     }
 
-    private IResponse<AuthSubject> verifyAllows(T auth, List<PermissionItem> allows) {
+    private IResponse<@Nullable T> verifyAllows(T auth, List<PermissionItem> allows) {
         var allowed = this.permissionVerifier.isAllow(auth, allows);
         if (!allowed) {
             return AuthErrors.FORBIDDEN_NO_PERMISSION
                     .response(AuthErrors.FORBIDDEN_NO_PERMISSION.getCode());
         }
-        return IResponse.success(auth);
+        return IResponse.ok(auth);
     }
 
     private void store(WebRequest request, @Nullable T auth) {

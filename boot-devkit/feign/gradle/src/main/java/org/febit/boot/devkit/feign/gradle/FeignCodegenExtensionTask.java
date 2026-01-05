@@ -20,16 +20,16 @@ import org.febit.boot.devkit.feign.ClientCodegen;
 import org.febit.boot.devkit.feign.MetaResolver;
 import org.febit.boot.devkit.feign.util.ClassNamings;
 import org.febit.devkit.gradle.util.GradleUtils;
-import org.febit.lang.annotation.NonNullApi;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.internal.classpath.DefaultClassPath;
+import org.jspecify.annotations.NullMarked;
 
 import javax.inject.Inject;
 import java.net.URLClassLoader;
 
 @Slf4j
-@NonNullApi
+@NullMarked
 public class FeignCodegenExtensionTask extends DefaultTask {
 
     @Inject

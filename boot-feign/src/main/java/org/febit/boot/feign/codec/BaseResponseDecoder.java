@@ -17,12 +17,12 @@ package org.febit.boot.feign.codec;
 
 import feign.Response;
 import feign.codec.Decoder;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.feign.FeignUtils;
 import org.febit.lang.protocol.IResponse;
 import org.febit.lang.util.JacksonWrapper;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -49,8 +49,8 @@ public abstract class BaseResponseDecoder implements Decoder {
         return this.jackson.parseToNamedMap(raw);
     }
 
-    protected IResponse<Object> onStatus204() {
-        return IResponse.success(204, OK, null, null);
+    protected IResponse<@Nullable Object> onStatus204() {
+        return IResponse.ok(204, OK, null, null);
     }
 
     @Nullable
@@ -61,9 +61,9 @@ public abstract class BaseResponseDecoder implements Decoder {
         return IResponse.failed(status, FAILED, message == null ? NO_MSG : message);
     }
 
-    protected IResponse<Object> onSuccess(int status, @Nullable Map<String, Object> body, Type innerType) {
+    protected IResponse<@Nullable Object> onSuccess(int status, @Nullable Map<String, Object> body, Type innerType) {
         var innerBean = this.jackson.to(body, innerType);
-        return IResponse.success(status, OK, null, innerBean);
+        return IResponse.ok(status, OK, null, innerBean);
     }
 
     @Override

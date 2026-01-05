@@ -16,8 +16,8 @@
 package org.febit.boot.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public interface INamed {

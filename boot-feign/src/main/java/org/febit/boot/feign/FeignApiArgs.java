@@ -16,13 +16,14 @@
 package org.febit.boot.feign;
 
 import lombok.experimental.UtilityClass;
+import org.jspecify.annotations.Nullable;
 
 @UtilityClass
 public class FeignApiArgs {
 
-    static final ThreadLocal<Object[]> HOLDER = new ThreadLocal<>();
+    static final ThreadLocal<@Nullable Object @Nullable []> HOLDER = new ThreadLocal<>();
 
-    public static Object[] get() {
+    public static @Nullable Object @Nullable [] get() {
         return HOLDER.get();
     }
 }

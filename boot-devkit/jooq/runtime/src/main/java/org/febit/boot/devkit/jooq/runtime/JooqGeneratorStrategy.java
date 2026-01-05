@@ -15,7 +15,6 @@
  */
 package org.febit.boot.devkit.jooq.runtime;
 
-import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.febit.boot.devkit.jooq.runtime.spi.ClassNameDecorator;
 import org.febit.boot.devkit.jooq.runtime.spi.ImplementsResolver;
@@ -29,6 +28,7 @@ import org.jooq.meta.ColumnDefinition;
 import org.jooq.meta.Definition;
 import org.jooq.meta.SchemaDefinition;
 import org.jooq.meta.TableDefinition;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -112,13 +112,13 @@ public class JooqGeneratorStrategy extends DefaultGeneratorStrategy {
     @Override
     public String getJavaClassName(Definition def, Mode mode) {
 
-        if (def instanceof CatalogDefinition
-                && ((CatalogDefinition) def).isDefaultCatalog()) {
+        if (def instanceof CatalogDefinition cat
+                && cat.isDefaultCatalog()) {
             return "DefaultCatalog";
         }
 
-        if (def instanceof SchemaDefinition
-                && ((SchemaDefinition) def).isDefaultSchema()) {
+        if (def instanceof SchemaDefinition schema
+                && schema.isDefaultSchema()) {
             return "DefaultSchema";
         }
 

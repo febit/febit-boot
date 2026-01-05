@@ -15,6 +15,7 @@
  */
 package org.febit.boot.springdoc;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -22,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.febit.boot.springdoc.GenericTypeNameResolver.INSTANCE;
-import static org.febit.lang.util.JacksonUtils.TYPE_FACTORY;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GenericTypeNameResolverTest {
@@ -30,25 +30,27 @@ class GenericTypeNameResolverTest {
     @Test
     void nameForGenericType() {
 
+        var types = TypeFactory.defaultInstance();
+
         assertEquals("String",
                 INSTANCE.nameForGenericType(
-                        TYPE_FACTORY.constructType(String.class),
+                        types.constructType(String.class),
                         Set.of()
                 )
         );
 
         assertEquals("Boolean",
                 INSTANCE.nameForGenericType(
-                        TYPE_FACTORY.constructType(Boolean.class),
+                        types.constructType(Boolean.class),
                         Set.of()
                 )
         );
 
         assertEquals("Map<String,List<String>>",
-                INSTANCE.nameForGenericType(TYPE_FACTORY.constructMapType(
+                INSTANCE.nameForGenericType(types.constructMapType(
                         Map.class,
-                        TYPE_FACTORY.constructType(String.class),
-                        TYPE_FACTORY.constructCollectionType(List.class, String.class)
+                        types.constructType(String.class),
+                        types.constructCollectionType(List.class, String.class)
                 ), Set.of())
         );
     }

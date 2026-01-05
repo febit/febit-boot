@@ -15,9 +15,9 @@
  */
 package org.febit.boot.web.component.mvc;
 
-import jakarta.annotation.Nullable;
 import org.febit.boot.web.util.ResponseUtils;
 import org.febit.lang.protocol.IResponse;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.MethodParameter;
@@ -33,7 +33,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
         ResponseBodyAdvice.class,
 })
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-public class ResponseResponseBodyAdvice implements ResponseBodyAdvice<IResponse<?>> {
+public class ResponseResponseBodyAdvice<T extends IResponse<?>> implements ResponseBodyAdvice<T> {
 
     @Override
     public boolean supports(
@@ -46,8 +46,8 @@ public class ResponseResponseBodyAdvice implements ResponseBodyAdvice<IResponse<
 
     @Override
     @Nullable
-    public IResponse<?> beforeBodyWrite(
-            @Nullable IResponse<?> body,
+    public T beforeBodyWrite(
+            @Nullable T body,
             MethodParameter parameter,
             MediaType contentType,
             Class<? extends HttpMessageConverter<?>> converterType,

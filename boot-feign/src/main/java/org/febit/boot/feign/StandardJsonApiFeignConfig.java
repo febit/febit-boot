@@ -15,7 +15,6 @@
  */
 package org.febit.boot.feign;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
 import feign.QueryMapEncoder;
@@ -27,12 +26,13 @@ import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
 import org.febit.lang.util.JacksonUtils;
 import org.febit.lang.util.JacksonWrapper;
-import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverters;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Config for standard json API.
@@ -40,20 +40,21 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 public class StandardJsonApiFeignConfig {
 
     @Bean
-    public ObjectMapper objectMapper() {
-        return JacksonUtils.standard(new ObjectMapper());
+    public JsonMapper objectMapper() {
+        return JacksonUtils.standard(JsonMapper.builder())
+                .build();
     }
 
     @Bean
-    public JacksonWrapper jacksonWrapper(ObjectMapper mapper) {
+    public JacksonWrapper jacksonWrapper(JsonMapper mapper) {
         return JacksonUtils.wrap(mapper);
     }
 
     @Bean
-    public HttpMessageConverters httpMessageConverters(ObjectMapper mapper) {
-        return new HttpMessageConverters(
-                new MappingJackson2HttpMessageConverter(mapper)
-        );
+    public HttpMessageConverters httpMessageConverters(JsonMapper mapper) {
+        return HttpMessageConverters.forClient()
+                .withJsonConverter(new JacksonJsonHttpMessageConverter(mapper))
+                .build();
     }
 
     @Bean
@@ -62,12 +63,12 @@ public class StandardJsonApiFeignConfig {
     }
 
     @Bean
-    public Encoder encoder(ObjectMapper mapper) {
+    public Encoder encoder(JsonMapper mapper) {
         return Encoders.chain(mapper);
     }
 
     @Bean
-    public Decoder decoder(ObjectMapper mapper) {
+    public Decoder decoder(JsonMapper mapper) {
         return Decoders.chain(
                 mapper,
                 Decoders::responseStatusDecoder,

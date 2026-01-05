@@ -15,11 +15,10 @@
  */
 package org.febit.boot.devkit.jooq.gradle;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import org.febit.boot.devkit.jooq.gradle.container.DbType;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.Serializable;
@@ -28,7 +27,6 @@ import java.io.Serializable;
 @Setter
 public class ContainerDbConfig implements Serializable {
 
-    @Nonnull
     private DbType type;
 
     @Nullable
