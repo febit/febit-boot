@@ -109,7 +109,7 @@ public class JooqJavaGenerator extends FebitDevkitJavaGeneratorHack {
         var recordClassName = getStrategy().getJavaClassName(table, GeneratorStrategy.Mode.RECORD);
 
         var columns = table.getColumns().stream()
-                .filter(col -> !col.isIdentity())
+                .filter(col -> col.getPrimaryKey() == null)
                 .toList();
 
         out.println();
