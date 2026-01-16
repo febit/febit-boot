@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'org.febit.boot'
-version = '3.5.1'
+version = '3.5.2-SNAPSHOT'
 description = 'Febit Boot'
 
 ext {
