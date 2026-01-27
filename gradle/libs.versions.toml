@@ -1,11 +1,9 @@
 [versions]
 hierynomus-license = '0.16.1'
-maven-plugin-development = '1.0.3'
 
 febit-commons = '4.0.0-SNAPSHOT'
 febit-devkit = '1.5.0'
 
-embedded-postgres = '2.2.0'
 spring-boot = '4.0.2'
 spring-cloud = '2025.1.0'
 springdoc = '3.0.1'
@@ -19,14 +17,7 @@ spring-boot-deps = { module = 'org.springframework.boot:spring-boot-dependencies
 spring-cloud-deps = { module = 'org.springframework.cloud:spring-cloud-dependencies', version.ref = 'spring-cloud' }
 okhttp-bom = { module = 'com.squareup.okhttp3:okhttp-bom', version.ref = 'okhttp' }
 
-embedded-postgres = { module = 'io.zonky.test:embedded-postgres', version.ref = 'embedded-postgres' }
-febit-gradle-common = { module = 'org.febit.devkit.gradle:febit-gradle-common', version.ref = 'febit-devkit' }
 swagger-annotations = { module = 'io.swagger.core.v3:swagger-annotations', version.ref = 'swagger3' }
-
-maven-core = { module = 'org.apache.maven:maven-core', version = '3.0' }
-maven-plugin-api = { module = 'org.apache.maven:maven-plugin-api', version = '3.0' }
-maven-plugin-annotations = { module = 'org.apache.maven.plugin-tools:maven-plugin-annotations', version = '3.5' }
-
 
 [plugins]
 febit-bom = { id = 'org.febit.standard-bom', version.ref = 'febit-devkit' }
@@ -35,4 +26,3 @@ febit-java = { id = 'org.febit.standard-java', version.ref = 'febit-devkit' }
 febit-maven-publish = { id = 'org.febit.standard-maven-publish', version.ref = 'febit-devkit' }
 
 license = { id = 'com.github.hierynomus.license', version.ref = 'hierynomus-license' }
-maven-plugin-development = { id = 'org.gradlex.maven-plugin-development', version.ref = 'maven-plugin-development' }

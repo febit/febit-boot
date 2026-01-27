@@ -107,8 +107,6 @@ configure(subprojects.findAll {
         entry 'springdoc-openapi-starter-webmvc-ui'
         entry 'springdoc-openapi-tests'
       }
-      dependency "${libs.embedded.postgres.get()}"
-      dependency "${libs.febit.gradle.common.get()}"
       dependency "${libs.swagger.annotations.get()}"
     }
   }
