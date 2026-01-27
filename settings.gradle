@@ -12,16 +12,9 @@ boot 'boot-dependencies'
 
 boot 'boot'
 
-boot 'boot-feign'
-boot 'boot-feign-test'
-
 boot 'boot-starter-webmvc'
 boot 'boot-starter-jwt'
-boot 'boot-starter-feign'
 boot 'boot-starter-jooq'
-
-devkit 'feign/common'
-devkit 'feign/gradle'
 
 devkit 'flyway'
 

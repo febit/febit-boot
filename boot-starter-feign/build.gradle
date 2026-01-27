@@ -1,8 +1,0 @@
-description = 'Febit Boot Feign Starter'
-
-dependencies {
-  api project(':febit-boot-feign')
-
-  api 'io.github.openfeign:feign-okhttp'
-  api 'org.springframework.cloud:spring-cloud-starter-openfeign'
-}
