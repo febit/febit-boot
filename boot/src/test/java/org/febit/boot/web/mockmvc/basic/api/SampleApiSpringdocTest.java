@@ -86,8 +86,12 @@ class SampleApiSpringdocTest extends BaseMvcTest {
         result.andExpect(j(param + ".name", "sort"))
                 .andExpect(j(param + ".in", "query"))
                 .andExpect(j(param + ".required", false))
+                .andExpect(jsonPath(param + ".description").exists())
                 .andExpect(j(param + ".schema.type", "array"))
+                .andExpect(jsonPath(param + ".schema.default").doesNotExist())
                 .andExpect(j(param + ".schema.items.type", "string"))
+                .andExpect(jsonPath(param + ".schema.items.default").doesNotExist())
+                .andExpect(j(param + ".schema.items.example", "id,desc"))
         ;
 
         result.andExpect(j(prefix + ".requestBody.required", true))
@@ -120,9 +124,9 @@ class SampleApiSpringdocTest extends BaseMvcTest {
     @Test
     void sampleResponseSchema() throws Exception {
         var result = result();
-        var prefix = "$.components.schemas['IResponse<SampleVO>']";
 
-        //result.andExpect(j(prefix + ".type", "object"));
+        var prefix = "$.components.schemas['IResponse<SampleVO>']";
+        result.andExpect(jsonPath(prefix + ".type").doesNotExist());
 
         var props = prefix + ".properties";
         result.andExpect(j(props + ".data['$ref']", "#/components/schemas/SampleVO"))
@@ -132,9 +136,9 @@ class SampleApiSpringdocTest extends BaseMvcTest {
     @Test
     void sampleSearchFormSchema() throws Exception {
         var result = result();
-        var prefix = "$.components.schemas['SampleSearchForm']";
 
-        // result.andExpect(j(prefix + ".type", "object"));
+        var prefix = "$.components.schemas['SampleSearchForm']";
+        result.andExpect(jsonPath(prefix + ".type").doesNotExist());
 
         var props = prefix + ".properties";
         result.andExpect(j(props + ".q.type", "string"))
@@ -157,9 +161,10 @@ class SampleApiSpringdocTest extends BaseMvcTest {
     @Test
     void sampleSchema() throws Exception {
         var result = result();
-        var prefix = "$.components.schemas['SampleVO']";
+        // result.andDo(print());
 
-        // result.andExpect(j(prefix + ".type", "object"));
+        var prefix = "$.components.schemas['SampleVO']";
+        result.andExpect(jsonPath(prefix + ".type").doesNotExist());
 
         var props = prefix + ".properties";
         result.andExpect(j(props + ".id.type", "integer"))

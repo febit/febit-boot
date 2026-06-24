@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 @NullMarked
-package org.febit.boot.okhttp3;
+package org.febit.boot.springdoc.swagger;
 
 import org.jspecify.annotations.NullMarked;

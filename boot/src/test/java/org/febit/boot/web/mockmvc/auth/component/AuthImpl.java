@@ -18,7 +18,7 @@ package org.febit.boot.web.mockmvc.auth.component;
 import org.febit.boot.auth.web.WebRequestAuthSubjectResolver;
 import org.febit.boot.permission.PermissionItem;
 import org.febit.boot.permission.PermissionVerifier;
-import org.febit.lang.annotation.NonNullApi;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequest;
 
@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-@NonNullApi
+@NullMarked
 @Component
 public class AuthImpl implements PermissionVerifier<TestAuthSubject>, WebRequestAuthSubjectResolver<TestAuthSubject> {
 

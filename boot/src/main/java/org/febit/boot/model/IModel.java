@@ -16,11 +16,11 @@
 package org.febit.boot.model;
 
 import org.febit.boot.util.Models;
-import org.febit.lang.annotation.NonNullApi;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Supplier;
 
-@NonNullApi
+@NullMarked
 public interface IModel<T> {
 
     default T to(Supplier<T> supplier) {

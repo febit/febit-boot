@@ -11,18 +11,20 @@ configurations {
 dependencies {
   api 'org.febit:febit-lang'
 
-  api 'io.swagger.core.v3:swagger-annotations'
+  api 'io.swagger.core.v3:swagger-annotations-jakarta'
   api 'jakarta.validation:jakarta.validation-api'
   api 'org.springframework:spring-core'
   api 'org.springframework:spring-context'
 
   compileOnly 'org.febit:febit-commons-jooq'
   compileOnly 'com.squareup.okhttp3:okhttp'
-  compileOnly 'jakarta.servlet:jakarta.servlet-api'
 
+  compileOnly 'jakarta.servlet:jakarta.servlet-api'
   compileOnly 'org.springframework:spring-web'
   compileOnly 'org.springframework:spring-webmvc'
   compileOnly 'org.springframework.boot:spring-boot'
+
+  compileOnly 'io.swagger.core.v3:swagger-core-jakarta'
   compileOnly 'org.springdoc:springdoc-openapi-starter-common'
 
   testRuntimeOnly 'com.h2database:h2'
@@ -31,4 +33,5 @@ dependencies {
   testImplementation 'org.springframework:spring-webmvc'
   testImplementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 }

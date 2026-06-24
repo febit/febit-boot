@@ -15,13 +15,14 @@
  */
 package org.febit.boot.springdoc;
 
-import com.fasterxml.jackson.core.type.ResolvedType;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.oas.models.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springdoc.core.customizers.PropertyCustomizer;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Type;
 
 @Slf4j
 @Component
@@ -37,22 +38,27 @@ public class ExtraEnumMetaPropertyCustomizer implements PropertyCustomizer {
         if (CollectionUtils.isEmpty(enums)) {
             return schema;
         }
-        var enumType = type.getType();
+        var enumType = unwrap(type.getType());
 
-        Class<?> cls = null;
-        if (enumType instanceof Class) {
-            cls = ((Class<?>) enumType);
-        } else if (enumType instanceof ResolvedType) {
-            cls = ((ResolvedType) enumType).getRawClass();
-        }
-
-        if (cls != null) {
+        if (enumType instanceof Class<?> cls) {
             schema.addExtension(EX_ENUM_FULL_CLASS, cls.getCanonicalName());
             schema.addExtension(EX_ENUM_CLASS, cls.getSimpleName());
         } else {
             schema.addExtension(EX_ENUM_FULL_CLASS, enumType.getTypeName());
         }
-
         return schema;
+    }
+
+    static Type unwrap(Type type) {
+        if (type instanceof tools.jackson.core.type.ResolvedType r) {
+            return r.getRawClass();
+        }
+        if (type instanceof com.fasterxml.classmate.ResolvedType r) {
+            return r.getErasedType();
+        }
+        if (type instanceof com.fasterxml.jackson.core.type.ResolvedType r) {
+            return r.getRawClass();
+        }
+        return type;
     }
 }

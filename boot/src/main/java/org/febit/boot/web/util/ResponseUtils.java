@@ -15,9 +15,9 @@
  */
 package org.febit.boot.web.util;
 
-import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 import org.febit.lang.protocol.IResponse;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpResponse;
 

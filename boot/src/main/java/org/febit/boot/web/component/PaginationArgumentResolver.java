@@ -15,13 +15,13 @@
  */
 package org.febit.boot.web.component;
 
-import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.util.Errors;
 import org.febit.boot.util.Priority;
 import org.febit.lang.protocol.Pagination;
 import org.febit.lang.protocol.Sort;
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -64,19 +63,19 @@ public class PaginationArgumentResolver implements HandlerMethodArgumentResolver
         }
     }
 
-    static List<Sort> parseOrders(@Nullable String[] raws, Sort.Direction defaultDirection) {
+    static List<Sort> parseOrders(@Nullable String @Nullable [] raws, Sort.Direction defaultDirection) {
         if (raws == null || raws.length == 0) {
             return List.of();
         }
 
-        return Stream.of(raws)
-                .flatMap(sort -> sort == null
-                        ? Stream.empty()
-                        : Stream.of(StringUtils.split(sort, '|'))
-                )
+        Stream<Sort> stream = Stream.of(raws)
+                .filter(StringUtils::isNotEmpty)
+                .flatMap(sort -> Stream.of(
+                        StringUtils.split(sort, '|')
+                ))
                 .map(raw -> parseOrder(raw, defaultDirection))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull);
+        return stream.toList();
     }
 
     @Nullable

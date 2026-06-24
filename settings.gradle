@@ -12,32 +12,12 @@ boot 'boot-dependencies'
 
 boot 'boot'
 
-boot 'boot-feign'
-boot 'boot-feign-test'
-
 boot 'boot-starter-webmvc'
 boot 'boot-starter-jwt'
-boot 'boot-starter-feign'
 boot 'boot-starter-jooq'
-
-devkit 'feign/common'
-devkit 'feign/gradle'
-
-devkit 'flyway'
-
-devkit 'jooq/gradle'
-devkit 'jooq/maven-plugin'
-devkit 'jooq/meta'
-devkit 'jooq/runtime'
 
 def boot(String dir) {
   def name = ":febit-$dir"
   include name
   project(name).projectDir = file(dir)
-}
-
-def devkit(String dir) {
-  def name = ':febit-boot-devkit-' + dir.replaceAll("/", "-")
-  include name
-  project(name).projectDir = file("boot-devkit/$dir")
 }

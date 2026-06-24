@@ -15,10 +15,12 @@
  */
 package org.febit.boot.auth;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Optional;
 
 @FunctionalInterface
-public interface AuthSupplier<T extends AuthSubject> {
+public interface AuthSupplier<T extends @Nullable AuthSubject> {
 
     Optional<T> get();
 

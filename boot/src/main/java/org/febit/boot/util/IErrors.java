@@ -15,13 +15,13 @@
  */
 package org.febit.boot.util;
 
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.lang.protocol.BusinessException;
 import org.febit.lang.protocol.Fallible;
 import org.febit.lang.protocol.IResponse;
+import org.jspecify.annotations.Nullable;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Collection;
@@ -29,6 +29,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+
+import static org.febit.lang.util.Defaults.nvl;
 
 public interface IErrors {
 
@@ -65,7 +67,7 @@ public interface IErrors {
      * @param args    message args
      */
     @CheckReturnValue
-    default <T> IResponse<T> response(String pattern, Object... args) {
+    default <T extends @Nullable Object> IResponse<T> response(String pattern, Object... args) {
         return IResponse.failed(this.getStatus(), this.name(), this.format(pattern, args));
     }
 
@@ -184,9 +186,9 @@ public interface IErrors {
      * @param result the result
      * @throws BusinessException if the result is failed
      */
-    default void whenFailed(IResponse<?> result) {
+    default void whenFailed(IResponse<? extends @Nullable Object> result) {
         if (result.isFailed()) {
-            throw new BusinessException(this.getStatus(), this.name(), result.getMessage());
+            throw new BusinessException(this.getStatus(), this.name(), nvl(result.getMessage(), ""));
         }
     }
 
@@ -196,9 +198,9 @@ public interface IErrors {
      * @param result the result
      * @throws BusinessException if the result is failed
      */
-    default void whenFailedExclude404(IResponse<?> result) {
+    default void whenFailedExclude404(IResponse<? extends @Nullable Object> result) {
         if (result.isFailed() && result.getStatus() != 404) { // NOPMD
-            throw new BusinessException(this.getStatus(), this.name(), result.getMessage());
+            throw new BusinessException(this.getStatus(), this.name(), nvl(result.getMessage(), ""));
         }
     }
 
@@ -208,7 +210,7 @@ public interface IErrors {
      * @param result the result
      * @throws BusinessException if the result is failed
      */
-    default void whenFailedExclude404(IResponse<?> result, String pattern, Object... args) {
+    default void whenFailedExclude404(IResponse<? extends @Nullable Object> result, String pattern, Object... args) {
         if (result.isFailed() && result.getStatus() != 404) { // NOPMD
             throw this.exception(pattern, args);
         }
@@ -247,13 +249,13 @@ public interface IErrors {
         }
     }
 
-    default Object[] normalizeArgs(@Nullable Object[] args) {
+    default @Nullable Object @Nullable [] normalizeArgs(@Nullable Object @Nullable [] args) {
         if (args == null) {
             return new Object[0];
         }
         for (int i = 0; i < args.length; i++) {
-            if (args[i] instanceof Number) {
-                args[i] = args[i].toString();
+            if (args[i] instanceof Number number) {
+                args[i] = number.toString();
             }
         }
         return args;

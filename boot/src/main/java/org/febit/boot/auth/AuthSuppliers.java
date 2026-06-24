@@ -15,9 +15,9 @@
  */
 package org.febit.boot.auth;
 
-import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -25,8 +25,7 @@ import java.util.Collection;
 @UtilityClass
 public class AuthSuppliers {
 
-    @Nullable
-    public static <T extends AuthSubject, S extends AuthSupplier<? extends T>> T get(
+    public static <T extends @Nullable AuthSubject, S extends AuthSupplier<? extends T>> T get(
             Collection<S> suppliers
     ) {
         for (var supplier : suppliers) {

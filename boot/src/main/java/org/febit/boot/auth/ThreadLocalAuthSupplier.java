@@ -15,16 +15,16 @@
  */
 package org.febit.boot.auth;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class ThreadLocalAuthSupplier<T extends AuthSubject> implements AuthSupplier<T> {
+public class ThreadLocalAuthSupplier<T extends @Nullable AuthSubject> implements AuthSupplier<T> {
 
     private final ThreadLocal<T> holder = new ThreadLocal<>();
 
-    public void set(@Nullable T auth) {
+    public void set(T auth) {
         holder.set(auth);
     }
 

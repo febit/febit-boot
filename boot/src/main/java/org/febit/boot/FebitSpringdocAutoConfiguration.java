@@ -17,7 +17,8 @@ package org.febit.boot;
 
 import io.swagger.v3.core.jackson.ModelResolver;
 import io.swagger.v3.core.util.Json;
-import org.febit.boot.springdoc.GenericTypeNameResolver;
+import org.febit.boot.springdoc.ExtraMetaOperationCustomizer;
+import org.febit.boot.springdoc.swagger.GenericTypeNameResolver;
 import org.febit.boot.util.FebitBootBeanNameGenerator;
 import org.febit.boot.util.Priority;
 import org.springdoc.core.configuration.SpringDocConfiguration;
@@ -28,7 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.springdoc.core.utils.Constants.SPRINGDOC_ENABLED;
 
@@ -40,7 +41,7 @@ import static org.springdoc.core.utils.Constants.SPRINGDOC_ENABLED;
 @ConditionalOnWebApplication
 @ComponentScan(
         basePackageClasses = {
-                GenericTypeNameResolver.class
+                ExtraMetaOperationCustomizer.class
         },
         nameGenerator = FebitBootBeanNameGenerator.class
 )
@@ -49,10 +50,11 @@ public class FebitSpringdocAutoConfiguration {
     @Bean
     @Order(Priority.HIGHEST)
     public ModelResolver springdocModelResolver(
-            Jackson2ObjectMapperBuilder builder
+            JsonMapper.Builder builder
     ) {
+        // FIXME: Swagger's ModelResolver is not compatible with Jackson 3.0, so we need to use the old version of Jackson.
+        //   See: https://github.com/swagger-api/swagger-core/issues/4991
         var mapper = Json.mapper();
-        builder.configure(mapper);
         return new ModelResolver(mapper, GenericTypeNameResolver.INSTANCE);
     }
 }

@@ -20,10 +20,14 @@ import lombok.Data;
 
 @Data
 @Builder
+@tools.jackson.databind.annotation.JsonNaming(tools.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy.class)
+@com.fasterxml.jackson.databind.annotation.JsonNaming(com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SampleVO {
 
     private Long id;
     private SampleStatus status;
     private SampleCategory category;
     private SampleScope scope;
+
+    private String camelCase;
 }
