@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.springdoc;
+package org.febit.boot.springdoc.swagger;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.febit.boot.springdoc.GenericTypeNameResolver.INSTANCE;
+import static org.febit.boot.springdoc.swagger.GenericTypeNameResolver.INSTANCE;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GenericTypeNameResolverTest {

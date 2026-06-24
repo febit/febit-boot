@@ -15,7 +15,7 @@ description = 'Febit Boot'
 ext {
 }
 
-allprojects {
+allprojects { subproject ->
   apply plugin: 'com.github.hierynomus.license'
 
   group = rootProject.group
@@ -27,7 +27,7 @@ allprojects {
 
   standardMavenPublish {
     pom {
-      customPom(it)
+      customPom(subproject, it)
     }
   }
 
@@ -61,8 +61,8 @@ configure(subprojects.findAll {
   def isStarter = name.startsWith(STARTER_PREFIX)
 
   java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 
     if (!isStarter) {
       withJavadocJar()
@@ -94,20 +94,10 @@ configure(subprojects.findAll {
     }
     imports {
       mavenBom "${libs.spring.boot.deps.get()}"
-      mavenBom "${libs.spring.cloud.deps.get()}"
       mavenBom "${libs.febit.commons.deps.get()}"
-      mavenBom "${libs.okhttp.bom.get()}"
+      mavenBom "${libs.springdoc.openapi.bom.get()}"
     }
     dependencies {
-      dependencySet(group: 'org.springdoc', version: "${libs.versions.springdoc.get()}") {
-        entry 'springdoc-openapi-starter-common'
-        entry 'springdoc-openapi-starter-webflux-api'
-        entry 'springdoc-openapi-starter-webflux-ui'
-        entry 'springdoc-openapi-starter-webmvc-api'
-        entry 'springdoc-openapi-starter-webmvc-ui'
-        entry 'springdoc-openapi-tests'
-      }
-      dependency "${libs.swagger.annotations.get()}"
     }
   }
 
@@ -121,7 +111,7 @@ configure(subprojects.findAll {
   }
 }
 
-def customPom(MavenPom pom) {
+static def customPom(Project project, MavenPom pom) {
   pom.with {
     name.set project.name
     description.set project.description
@@ -150,7 +140,7 @@ def customPom(MavenPom pom) {
       developer {
         id = 'kurt'
         name = 'Kurt Zhu'
-        email = 'zqq@febit.org'
+        email = 'kurt@febit.org'
         timezone = '+8'
       }
     }

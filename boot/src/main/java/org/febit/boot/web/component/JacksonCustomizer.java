@@ -36,7 +36,6 @@ public class JacksonCustomizer implements JsonMapperBuilderCustomizer {
         builder.addMixIn(IResponse.class, ResponseMixin.class);
     }
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonPropertyOrder({
             "success",
             "code",
@@ -44,6 +43,7 @@ public class JacksonCustomizer implements JsonMapperBuilderCustomizer {
             "timestamp",
             "data"
     })
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public interface ResponseMixin {
 
         @JsonIgnore
