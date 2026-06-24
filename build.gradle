@@ -1,5 +1,5 @@
 //buildscript {
-//  configurations.all { resolutionStrategy.cacheChangingModulesFor 0, 'seconds' }
+//  configurations.configureEach { resolutionStrategy.cacheChangingModulesFor 0, 'seconds' }
 //}
 plugins {
   alias libs.plugins.febit.java
@@ -9,8 +9,9 @@ plugins {
 }
 
 group = 'org.febit.boot'
-version = '4.1.0-SNAPSHOT'
 description = 'Febit Boot'
+
+version = '4.1.0'
 
 ext {
 }
