@@ -1,11 +1,11 @@
 [versions]
 hierynomus-license = '0.16.1'
 
-febit-commons = '4.1.0'
+febit-commons = '4.1.1'
 febit-devkit = '1.6.2'
 
-spring-boot = '4.1.0'
-springdoc = '3.0.3'
+spring-boot = '4.1.1'
+springdoc = '3.1.1'
 
 [libraries]
 febit-commons-bom = { module = 'org.febit:febit-commons-bom', version.ref = 'febit-commons' }
