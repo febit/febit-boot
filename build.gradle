@@ -11,7 +11,7 @@ plugins {
 group = 'org.febit.boot'
 description = 'Febit Boot'
 
-version = '4.1.1-SNAPSHOT'
+version = '4.2.0-SNAPSHOT'
 
 ext {
 }
