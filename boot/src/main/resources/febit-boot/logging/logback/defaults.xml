@@ -9,14 +9,14 @@
   <property name="LOG_MAX_FILE_SIZE" value="${LOG_MAX_FILE_SIZE:-${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-100MB}}"/>
   <property name="LOG_TOTAL_SIZE_CAP" value="${LOG_TOTAL_SIZE_CAP:-${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-0}}"/>
   <property name="LOG_MAX_HISTORY" value="${LOG_MAX_HISTORY:-${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-14}}"/>
-  <property name="LOG_HISTORY_FILE_SUFFIX" value="${LOG_HISTORY_FILE_SUFFIX:-%d{yyyy-MM-dd}.%i.log}"/>
+  <property name="LOG_HISTORY_FILE_SUFFIX" value="${LOG_HISTORY_FILE_SUFFIX:-%d{yyyy-MM-dd}.%i.jsonl}"/>
   <property name="LOG_CLEAN_HISTORY_ON_START"
             value="${LOG_CLEAN_HISTORY_ON_START:-${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}}"/>
 
   <appender name="FILE_ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOG_PATH}/all.log</file>
-    <encoder>
-      <pattern>${FILE_LOG_PATTERN}</pattern>
+    <file>${LOG_PATH}/all.jsonl</file>
+    <encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
+      <format>${FILE_LOG_STRUCTURED_FORMAT:-ecs}</format>
       <charset>UTF-8</charset>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -29,9 +29,9 @@
   </appender>
 
   <appender name="FILE_DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOG_PATH}/debug.log</file>
-    <encoder>
-      <pattern>${FILE_LOG_PATTERN}</pattern>
+    <file>${LOG_PATH}/debug.jsonl</file>
+    <encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
+      <format>${FILE_LOG_STRUCTURED_FORMAT:-ecs}</format>
       <charset>UTF-8</charset>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -49,9 +49,9 @@
   </appender>
 
   <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOG_PATH}/info.log</file>
-    <encoder>
-      <pattern>${FILE_LOG_PATTERN}</pattern>
+    <file>${LOG_PATH}/info.jsonl</file>
+    <encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
+      <format>${FILE_LOG_STRUCTURED_FORMAT:-ecs}</format>
       <charset>UTF-8</charset>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -69,9 +69,9 @@
   </appender>
 
   <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOG_PATH}/warn.log</file>
-    <encoder>
-      <pattern>${FILE_LOG_PATTERN}</pattern>
+    <file>${LOG_PATH}/warn.jsonl</file>
+    <encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
+      <format>${FILE_LOG_STRUCTURED_FORMAT:-ecs}</format>
       <charset>UTF-8</charset>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -89,9 +89,9 @@
   </appender>
 
   <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOG_PATH}/error.log</file>
-    <encoder>
-      <pattern>${FILE_LOG_PATTERN}</pattern>
+    <file>${LOG_PATH}/error.jsonl</file>
+    <encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
+      <format>${FILE_LOG_STRUCTURED_FORMAT:-ecs}</format>
       <charset>UTF-8</charset>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">

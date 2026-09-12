@@ -15,12 +15,13 @@
  */
 package org.febit.boot.springdoc;
 
-import lombok.RequiredArgsConstructor;
 import org.febit.lang.protocol.Pagination;
 import org.springdoc.core.converters.AdditionalModelsConverter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @ConditionalOnClass({

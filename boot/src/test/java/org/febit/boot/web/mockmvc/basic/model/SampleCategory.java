@@ -16,6 +16,7 @@
 package org.febit.boot.web.mockmvc.basic.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

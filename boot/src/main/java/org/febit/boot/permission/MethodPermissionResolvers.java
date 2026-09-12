@@ -15,9 +15,10 @@
  */
 package org.febit.boot.permission;
 
+import org.febit.lang.util.Streams;
+
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.febit.lang.util.Streams;
 
 import java.lang.reflect.Method;
 import java.util.List;

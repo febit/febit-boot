@@ -58,4 +58,3 @@ public class FebitSpringdocAutoConfiguration {
         return new ModelResolver(mapper, GenericTypeNameResolver.INSTANCE);
     }
 }
-

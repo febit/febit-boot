@@ -5,7 +5,6 @@ plugins {
   alias libs.plugins.febit.java
   alias libs.plugins.febit.maven.publish
   alias libs.plugins.febit.codegen.module
-  alias libs.plugins.license
 }
 
 group = 'org.febit.boot'
@@ -16,8 +15,7 @@ version = '4.2.0-SNAPSHOT'
 ext {
 }
 
-allprojects { subproject ->
-  apply plugin: 'com.github.hierynomus.license'
+allprojects {
 
   group = rootProject.group
   version = rootProject.version
@@ -26,33 +24,41 @@ allprojects { subproject ->
     mavenCentral()
   }
 
-  standardMavenPublish {
-    pom {
-      customPom(subproject, it)
-    }
-  }
-
   codegenModule {
     defaultTemplate = fromFile("$rootDir/etc/module.java.tmpl")
-  }
-
-  license {
-    mapping {
-      java = 'SLASHSTAR_STYLE'
-    }
-    include '**/*.java'
-    exclude '**/*Mojo.java'
-    strictCheck = false
-    skipExistingHeaders = false
-    header = rootProject.file('etc/license-header.txt')
   }
 
   tasks.withType(AbstractPublishToMaven).configureEach {
     mustRunAfter tasks.withType(Sign)
   }
+
+  spotless {
+    java {
+      licenseHeaderFile rootProject.file('etc/license-header.txt')
+
+      shortenFullyQualifiedTypes()
+
+      cleanthat()
+          .addMutator('SafeAndConsensual')
+          .addMutator('PMD')
+          .addMutator('Stream')
+          .addMutator('SpotBugs')
+
+      removeUnusedImports()
+      importOrder(
+          '',
+          'jakarta.persistence|jakarta.validation|lombok|org.jspecify',
+          'jakarta|java|javax',
+          '\\#', '\\#jakarta|\\#java|\\#javax'
+      )
+
+      // tableTestFormatter()
+    }
+  }
 }
 
 def STARTER_PREFIX = 'febit-boot-starter-'
+def LIBS = libs
 
 configure(subprojects.findAll {
   !it.name.endsWith('-bom')
@@ -71,14 +77,6 @@ configure(subprojects.findAll {
     }
   }
 
-  test {
-    useJUnitPlatform()
-  }
-
-  licenseMain {
-    mustRunAfter generateModule
-  }
-
   dependencies {
     compileOnly 'org.febit:febit-annotations-optional'
     testCompileOnly 'org.febit:febit-annotations-optional'
@@ -94,9 +92,9 @@ configure(subprojects.findAll {
       cacheChangingModulesFor 0, 'seconds'
     }
     imports {
-      mavenBom "${libs.spring.boot.deps.get()}"
-      mavenBom "${libs.febit.commons.deps.get()}"
-      mavenBom "${libs.springdoc.openapi.bom.get()}"
+      mavenBom "${LIBS.spring.boot.deps.get()}"
+      mavenBom "${LIBS.febit.commons.deps.get()}"
+      mavenBom "${LIBS.springdoc.openapi.bom.get()}"
     }
     dependencies {
     }
@@ -112,7 +110,7 @@ configure(subprojects.findAll {
   }
 }
 
-static def customPom(Project project, MavenPom pom) {
+def customPom = { Project project, MavenPom pom ->
   pom.with {
     name.set project.name
     description.set project.description
@@ -144,6 +142,14 @@ static def customPom(Project project, MavenPom pom) {
         email = 'kurt@febit.org'
         timezone = '+8'
       }
+    }
+  }
+}
+
+allprojects { subproject ->
+  standardMavenPublish {
+    pom {
+      customPom(subproject, it)
     }
   }
 }

@@ -15,20 +15,21 @@
  */
 package org.febit.boot.util;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.lang.protocol.BusinessException;
 import org.febit.lang.protocol.Fallible;
 import org.febit.lang.protocol.IResponse;
+
+import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 
-import javax.annotation.CheckReturnValue;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import javax.annotation.CheckReturnValue;
 
 import static org.febit.lang.util.Defaults.nvl;
 

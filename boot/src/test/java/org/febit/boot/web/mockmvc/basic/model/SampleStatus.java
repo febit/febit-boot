@@ -15,9 +15,10 @@
  */
 package org.febit.boot.web.mockmvc.basic.model;
 
+import org.febit.lang.Valued;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.febit.lang.Valued;
 
 @Getter
 @RequiredArgsConstructor

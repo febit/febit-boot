@@ -16,10 +16,6 @@
 package org.febit.boot.springdoc;
 
 import io.swagger.v3.oas.models.Operation;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.febit.boot.permission.PermissionItem;
 import org.febit.boot.permission.PermissionManager;
 import org.febit.boot.permission.ResolvedPermission;
@@ -28,6 +24,11 @@ import org.springdoc.core.customizers.GlobalOperationCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
