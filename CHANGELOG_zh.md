@@ -1,6 +1,15 @@
 # Changelog
 
-## [4.1.0] - Unreleased
+## [4.1.1] - 尚未发布
+
+### Dependencies
+
+- febit-commons 4.1.0 → 4.1.1
+- Spring Boot 4.1.0 → 4.1.1
+- Springdoc OpenAPI 3.0.3 → 3.1.1
+- Gradle 9.5.1 → 9.7.1
+
+## [4.1.0] - 2026-06-24
 
 > **v4.0.0** 未发布，已跳过。以下为相对于 v3.5.1 的变更汇总。
 
