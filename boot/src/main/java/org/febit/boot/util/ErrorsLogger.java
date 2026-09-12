@@ -15,9 +15,10 @@
  */
 package org.febit.boot.util;
 
-import lombok.experimental.UtilityClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class ErrorsLogger {

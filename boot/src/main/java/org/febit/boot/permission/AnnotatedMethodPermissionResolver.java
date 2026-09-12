@@ -15,8 +15,9 @@
  */
 package org.febit.boot.permission;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.core.annotation.AnnotatedElementUtils;
+
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.function.Consumer;

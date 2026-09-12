@@ -16,9 +16,6 @@
 package org.febit.boot.web.mockmvc.basic.api;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.febit.boot.web.mockmvc.basic.model.SampleForm;
 import org.febit.boot.web.mockmvc.basic.model.SampleScope;
 import org.febit.boot.web.mockmvc.basic.model.SampleSearchForm;
@@ -38,6 +35,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.List;

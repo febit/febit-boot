@@ -15,8 +15,6 @@
  */
 package org.febit.boot.auth.component;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.febit.boot.auth.AuthSubject;
 import org.febit.boot.auth.web.WebAuthHandler;
 import org.febit.boot.auth.web.WebRequestAuthSubjectResolver;
@@ -26,11 +24,14 @@ import org.febit.boot.permission.PermissionVerifier;
 import org.febit.boot.util.AuthErrors;
 import org.febit.boot.util.Priority;
 import org.febit.lang.protocol.IResponse;
-import org.jspecify.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequest;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.List;

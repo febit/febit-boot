@@ -1,10 +1,8 @@
 [versions]
-hierynomus-license = '0.16.1'
+febit-commons = '4.2.0-M1'
+febit-devkit = '1.7.0'
 
-febit-commons = '4.1.1'
-febit-devkit = '1.6.2'
-
-spring-boot = '4.1.1'
+spring-boot = '4.2.0-M2'
 springdoc = '3.1.1'
 
 [libraries]
@@ -18,5 +16,3 @@ febit-bom = { id = 'org.febit.standard-bom', version.ref = 'febit-devkit' }
 febit-codegen-module = { id = 'org.febit.codegen-module', version.ref = 'febit-devkit' }
 febit-java = { id = 'org.febit.standard-java', version.ref = 'febit-devkit' }
 febit-maven-publish = { id = 'org.febit.standard-maven-publish', version.ref = 'febit-devkit' }
-
-license = { id = 'com.github.hierynomus.license', version.ref = 'hierynomus-license' }

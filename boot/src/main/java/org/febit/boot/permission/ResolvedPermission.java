@@ -15,10 +15,11 @@
  */
 package org.febit.boot.permission;
 
+import org.springframework.util.CollectionUtils;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.List;

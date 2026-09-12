@@ -19,9 +19,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springdoc.core.annotations.ParameterObject;
+
 import jakarta.validation.constraints.Min;
 import lombok.Data;
-import org.springdoc.core.annotations.ParameterObject;
 
 import java.util.List;
 

@@ -15,11 +15,12 @@
  */
 package org.febit.boot.web.util;
 
-import lombok.experimental.UtilityClass;
 import org.febit.lang.protocol.IResponse;
-import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpResponse;
+
+import lombok.experimental.UtilityClass;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;

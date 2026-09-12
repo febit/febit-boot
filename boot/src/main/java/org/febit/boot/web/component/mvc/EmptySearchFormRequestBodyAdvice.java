@@ -16,7 +16,6 @@
 package org.febit.boot.web.component.mvc;
 
 import org.febit.common.jooq.SearchForm;
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -26,6 +25,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAdapter;
+
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Type;
 

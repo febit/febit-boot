@@ -16,6 +16,7 @@
 package org.febit.boot.model;
 
 import org.febit.boot.util.Models;
+
 import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Supplier;

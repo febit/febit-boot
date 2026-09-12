@@ -28,7 +28,7 @@ public class Priority {
     public static final int NORMAL = 0;
 
     public static final int LOW = 1024;
-    public static final int LOWER = 65536;
+    public static final int LOWER = 65_536;
     public static final int LOWEST = Integer.MAX_VALUE;
 
     public static final int HIGH = -LOW;
