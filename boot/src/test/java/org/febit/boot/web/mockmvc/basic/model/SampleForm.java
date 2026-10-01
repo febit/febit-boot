@@ -15,9 +15,11 @@
  */
 package org.febit.boot.web.mockmvc.basic.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class SampleForm {
 
     private String name;

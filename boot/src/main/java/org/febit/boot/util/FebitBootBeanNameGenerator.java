@@ -27,7 +27,7 @@ public class FebitBootBeanNameGenerator extends AnnotationBeanNameGenerator {
 
     @Override
     protected String buildDefaultBeanName(BeanDefinition definition) {
-        String beanClassName = definition.getBeanClassName();
+        var beanClassName = definition.getBeanClassName();
         Assert.state(beanClassName != null, "No bean class name set");
         if (!beanClassName.startsWith(PREFIX)) {
             return beanClassName;

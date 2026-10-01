@@ -18,9 +18,6 @@ package org.febit.boot.util;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-/**
- * Auth errors.
- */
 @Getter
 @RequiredArgsConstructor
 public enum AuthErrors implements IErrors {

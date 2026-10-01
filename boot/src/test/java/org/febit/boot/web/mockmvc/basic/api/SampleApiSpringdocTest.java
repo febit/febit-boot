@@ -161,7 +161,6 @@ class SampleApiSpringdocTest extends BaseMvcTest {
     @Test
     void sampleSchema() throws Exception {
         var result = result();
-        // result.andDo(print());
 
         var prefix = "$.components.schemas['SampleVO']";
         result.andExpect(jsonPath(prefix + ".type").doesNotExist());

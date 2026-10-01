@@ -19,15 +19,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Generic errors.
- *
  * @see IErrors
  */
 @Getter
 @RequiredArgsConstructor
 public enum Errors implements IErrors {
 
-    // 400
     BAD_REQUEST(400, Logger.DEBUG,
             "Generic bad request, because of a problem on the client side"
     ),

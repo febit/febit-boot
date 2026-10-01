@@ -13,15 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.permission;
+package org.febit.boot.permission;
 
-import org.febit.boot.permission.AnnotatedMethodPermissionResolver;
-import org.febit.boot.permission.AnonymousApi;
-import org.febit.boot.permission.MethodPermissionResolver;
-import org.febit.boot.permission.MethodPermissionResolvers;
-import org.febit.boot.permission.Permission;
-import org.febit.boot.permission.PermissionItem;
-import org.febit.boot.permission.ResolvedPermission;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 

@@ -44,7 +44,7 @@ public class ValidationExceptionHandlers {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public IResponse<Void> handler(HttpMessageNotReadableException ex) {
-        log.warn("HttpMessageNotReadable", ex);
+        log.warn("Failed to read request body", ex);
         return Errors.BAD_REQUEST
                 .response("sys.request.invalid-message");
     }
@@ -57,8 +57,8 @@ public class ValidationExceptionHandlers {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public IResponse<Void> handler(MethodArgumentNotValidException ex) {
-        StringBuilder buf = new StringBuilder();
-        for (ObjectError error : ex.getBindingResult().getAllErrors()) {
+        var buf = new StringBuilder();
+        for (var error : ex.getBindingResult().getAllErrors()) {
             buf.append(resolveField(error))
                     .append(": ")
                     .append(error.getDefaultMessage())

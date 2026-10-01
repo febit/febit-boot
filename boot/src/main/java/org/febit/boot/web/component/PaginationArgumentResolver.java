@@ -15,11 +15,13 @@
  */
 package org.febit.boot.web.component;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.febit.boot.util.Errors;
 import org.febit.boot.util.Priority;
 import org.febit.lang.protocol.Pagination;
 import org.febit.lang.protocol.Sort;
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -28,9 +30,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-
-import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -69,7 +68,7 @@ public class PaginationArgumentResolver implements HandlerMethodArgumentResolver
             return List.of();
         }
 
-        Stream<Sort> stream = Stream.of(raws)
+        var stream = Stream.of(raws)
                 .filter(StringUtils::isNotEmpty)
                 .flatMap(sort -> Stream.of(
                         StringUtils.split(sort, '|')
@@ -107,7 +106,7 @@ public class PaginationArgumentResolver implements HandlerMethodArgumentResolver
             case "asc" -> Sort.Direction.ASC;
             case "desc" -> Sort.Direction.DESC;
             default -> throw Errors.ILLEGAL_ARG.exception(
-                    "Only ''asc'' and ''desc'' directions are allow for parameter ''{0}''",
+                    "Only ''asc'' and ''desc'' directions are allowed for parameter ''{0}''",
                     PARAM_SORT
             );
         };
@@ -120,8 +119,9 @@ public class PaginationArgumentResolver implements HandlerMethodArgumentResolver
             return true;
         }
         if (Pagination.class.isAssignableFrom(paramType)) {
-            log.error("You are using a Pagination implements type [{}], in method [{}],"
-                            + " which we can't handle, please use Pagination directly!",
+            log.error("""
+                            You are using a Pagination implements type [{}], in method [{}], \
+                            which we can't handle, please use Pagination directly!""",
                     paramType, param.getMethod()
             );
         }

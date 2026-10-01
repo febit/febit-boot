@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.common.permission;
+package org.febit.boot.permission;
 
-import org.febit.boot.permission.ResolvedPermission;
 import org.junit.jupiter.api.Test;
 
 import static org.febit.boot.permission.ResolvedPermission.ANONYMOUS;

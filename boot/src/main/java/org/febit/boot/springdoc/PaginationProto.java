@@ -22,11 +22,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springdoc.core.annotations.ParameterObject;
 
 import jakarta.validation.constraints.Min;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @ParameterObject
 public class PaginationProto {
 
@@ -55,9 +57,10 @@ public class PaginationProto {
 
     @Parameter(
             in = ParameterIn.QUERY,
-            description = "Sorting criteria in the format: property(,asc|desc). "
-                    + "Sort order is according to param 'order' if absent. "
-                    + "Multiple sort criteria are supported.",
+            description = """
+                    Sorting criteria in the format: property(,asc|desc). \
+                    Sort order is according to param 'order' if absent. \
+                    Multiple sort criteria are supported.""",
             name = "sort",
             array = @ArraySchema(schema = @Schema(type = "string", example = "id,desc"))
     )
