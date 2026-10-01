@@ -22,6 +22,7 @@ import org.jspecify.annotations.NullMarked;
 import java.util.function.Supplier;
 
 @NullMarked
+@Deprecated(since = "4.2.0", forRemoval = true)
 public interface IModel<T> {
 
     default T to(Supplier<T> supplier) {
