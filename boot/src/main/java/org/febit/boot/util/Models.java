@@ -32,6 +32,7 @@ import java.lang.reflect.Modifier;
 import java.util.function.Supplier;
 
 @UtilityClass
+@Deprecated(since = "4.2.0", forRemoval = true)
 public class Models {
 
     private static final DefaultConversionService CONVERSION = new DefaultConversionService();
