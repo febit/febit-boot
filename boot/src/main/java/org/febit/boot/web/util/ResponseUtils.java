@@ -33,8 +33,9 @@ public class ResponseUtils {
 
         static {
             // Override duplicate keys
-            var map = new HashMap<Integer, HttpStatus>();
-            for (var status : HttpStatus.values()) {
+            var statuses = HttpStatus.values();
+            var map = HashMap.<Integer, HttpStatus>newHashMap(statuses.length);
+            for (var status : statuses) {
                 map.put(status.value(), status);
             }
             MAPPING = Map.copyOf(map);

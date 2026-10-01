@@ -36,6 +36,9 @@ public class FebitModuleEnvironmentPostProcessor implements EnvironmentPostProce
 
     private static final char DOT = '.';
 
+    private static final int SHORT_COMMIT_ID_LENGTH = 8;
+    private static final int PROPS_PER_MODULE = 7;
+
     private static final String GROUP_ID = "group-id";
     private static final String ARTIFACT_ID = "artifact-id";
     private static final String VERSION = "version";
@@ -84,12 +87,12 @@ public class FebitModuleEnvironmentPostProcessor implements EnvironmentPostProce
             return Map.of();
         }
 
-        var props = new HashMap<String, Object>();
+        var props = new HashMap<String, Object>(annotations.size() * PROPS_PER_MODULE);
         for (var annotation : annotations) {
             var prefix = annotation.prefix() + DOT;
             var module = BeanUtils.instantiateClass(annotation.value());
-            var shortCommitId = module.getCommitId().length() > 8
-                    ? module.getCommitId().substring(0, 8)
+            var shortCommitId = module.getCommitId().length() > SHORT_COMMIT_ID_LENGTH
+                    ? module.getCommitId().substring(0, SHORT_COMMIT_ID_LENGTH)
                     : module.getCommitId();
 
             props.put(prefix + GROUP_ID, module.getGroupId());

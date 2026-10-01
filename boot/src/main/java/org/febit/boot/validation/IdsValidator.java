@@ -17,6 +17,7 @@ package org.febit.boot.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.jspecify.annotations.Nullable;
 
 public class IdsValidator implements ConstraintValidator<Ids, Object[]> {
 
@@ -30,14 +31,14 @@ public class IdsValidator implements ConstraintValidator<Ids, Object[]> {
     }
 
     @Override
-    public boolean isValid(Object[] ids, ConstraintValidatorContext context) {
+    public boolean isValid(@Nullable Object @Nullable [] ids, ConstraintValidatorContext context) {
         if (ids == null) {
             return false;
         }
         if (ids.length < min) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
-                            "Size of ids should not less than " + min
+                            "Size of ids should not be less than {min}"
                     )
                     .addConstraintViolation();
             return false;
@@ -45,7 +46,7 @@ public class IdsValidator implements ConstraintValidator<Ids, Object[]> {
         if (ids.length > max) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
-                            "Size of ids should not greater than " + max
+                            "Size of ids should not be greater than {max}"
                     )
                     .addConstraintViolation();
             return false;
@@ -56,7 +57,7 @@ public class IdsValidator implements ConstraintValidator<Ids, Object[]> {
             }
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
-                            "Ids should not contains null elements"
+                            "Ids should not contain null elements"
                     )
                     .addConstraintViolation();
             return false;

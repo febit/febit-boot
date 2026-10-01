@@ -31,11 +31,9 @@ class ErrorsLogger {
 
     @SuppressWarnings("unused")
     static void discard(String msg) {
-        // Nothing to do
     }
 
     @SuppressWarnings("unused")
     static void discard(String msg, Exception ex) {
-        // Nothing to do
     }
 }

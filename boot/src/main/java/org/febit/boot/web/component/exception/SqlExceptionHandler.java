@@ -33,7 +33,7 @@ public class SqlExceptionHandler {
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public IResponse<Void> handler(SQLIntegrityConstraintViolationException ex) {
-        log.info("SQLIntegrityConstraintViolationException: {}", ex.getMessage());
+        log.info("Integrity constraint violation: {}", ex.getMessage());
         return Errors.CONSTRAINT_INTEGRITY
                 .response("sys.integrity-constraint");
     }

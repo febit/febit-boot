@@ -58,8 +58,8 @@ public class BusinessExceptionHandler {
             if (!log.isTraceEnabled()) {
                 try {
                     shortenStackTrace(ex);
-                } catch (Exception ignore) {
-                    // Ignore
+                } catch (Exception e) {
+                    log.debug("Failed to shorten stack trace", e);
                 }
             }
             log.debug("Business exception:", ex);

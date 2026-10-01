@@ -18,12 +18,14 @@ package org.febit.boot.web.mockmvc.basic.model;
 import org.febit.common.jooq.OrderMappingBy;
 import org.febit.common.jooq.SearchForm;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @OrderMappingBy(SampleOrderMapping.class)
 public class SampleSearchForm implements SearchForm {
 

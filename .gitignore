@@ -22,5 +22,7 @@ node_modules
 .classpath
 .settings
 
+.codebuddy
+
 .vscode/*
 !.vscode/extensions.json

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.febit.boot.web.util;
+package org.febit.boot.auth.web;
 
 import org.febit.boot.auth.AuthConstants;
-import org.febit.boot.auth.web.RequestAttributeAuthSupplier;
 import org.febit.boot.util.Errors;
 import org.febit.boot.web.mockmvc.auth.component.TestAuthSubject;
 import org.febit.lang.protocol.BusinessException;

@@ -46,7 +46,7 @@ public class RequestAttributeAuthSupplier<T extends AuthSubject> implements Auth
             return Optional.empty();
         }
         if (!authType.isInstance(raw)) {
-            throw Errors.SYSTEM.exception("Auth type not matched.");
+            throw Errors.SYSTEM.exception("Auth type not matched");
         }
         return Optional.of((T) raw);
     }
