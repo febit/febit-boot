@@ -19,7 +19,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.febit.boot.permission.ResolvedPermission.ANONYMOUS;
@@ -41,50 +43,80 @@ class MethodPermissionResolversTest {
     }
 
     @Test
-    void resolve() {
-        ResolvedPermission permission;
+    void resolveReturnsForbiddenAbsentForUnannotatedStringLength() {
+        assertSame(FORBIDDEN_ABSENT, resolve(String.class, "length"));
+    }
 
-        permission = resolve(String.class, "length");
-        assertSame(FORBIDDEN_ABSENT, permission);
+    @Test
+    void resolveReturnsAnonymousForLogin() {
+        assertSame(ANONYMOUS, resolve(Handler.class, "login"));
+    }
 
-        permission = resolve(Handler.class, "ping");
-        assertSame(ANONYMOUS, permission);
+    @Test
+    void resolveReturnsAnonymousForPing() {
+        assertSame(ANONYMOUS, resolve(Handler.class, "ping"));
+    }
 
-        permission = resolve(Handler.class, "login");
-        assertSame(ANONYMOUS, permission);
+    @Test
+    void resolveReturnsForbiddenAbsentForMissingPermission() {
+        assertSame(FORBIDDEN_ABSENT, resolve(Handler.class, "missingPermission"));
+    }
 
-        permission = resolve(Handler.class, "missingPermission");
-        assertSame(FORBIDDEN_ABSENT, permission);
+    @Test
+    void resolveCollectsAllowListForNotAnonymous() {
+        assertAllowList("notAnonymous", List.of("api.foo"));
+    }
 
-        permission = resolve(Handler.class, "notAnonymous");
+    @Test
+    void resolveCollectsAllowListForFoo() {
+        assertAllowList("foo", List.of("api.foo"));
+    }
+
+    @Test
+    void resolveCollectsAllowListForBar() {
+        assertAllowList("bar", List.of("api:bar"));
+    }
+
+    @Test
+    void resolveCollectsAllowListForQux() {
+        assertAllowList("qux", List.of("api.foo", "api.baz:qux", "api:bar"));
+    }
+
+    private void assertAllowList(String method, List<String> expectedCodes) {
+        var permission = resolve(Handler.class, method);
         assertTrue(permission.isAllowList());
         assertThat(permission.getItems())
-                .hasSize(1)
                 .map(PermissionItem::code)
-                .contains("api.foo");
+                .containsExactlyInAnyOrderElementsOf(expectedCodes);
+    }
 
-        permission = resolve(Handler.class, "foo");
-        assertTrue(permission.isAllowList());
-        assertThat(permission.getItems())
-                .hasSize(1)
-                .map(PermissionItem::code)
-                .contains("api.foo");
+    @Test
+    void isAnonymousResolvesPerResolverBranches() throws Exception {
+        var method = Handler.class.getDeclaredMethod("missingPermission");
+        assertThat(MethodPermissionResolvers.isAnonymous(List.of(new StubResolver(null)), method)).isFalse();
+        assertThat(MethodPermissionResolvers.isAnonymous(List.of(new StubResolver(false)), method)).isFalse();
+        assertThat(MethodPermissionResolvers.isAnonymous(List.of(new StubResolver(true)), method)).isTrue();
+        assertThat(MethodPermissionResolvers.isAnonymous(
+                List.of(new StubResolver(null), new StubResolver(true)), method)).isTrue();
+        assertThat(MethodPermissionResolvers.isAnonymous(
+                List.of(new StubResolver(true), new StubResolver(false)), method)).isFalse();
+    }
 
-        permission = resolve(Handler.class, "bar");
-        assertTrue(permission.isAllowList());
-        assertThat(permission.getItems())
-                .hasSize(1)
-                .map(PermissionItem::code)
-                .contains("api:bar");
+    static class StubResolver implements MethodPermissionResolver {
+        private final Boolean anonymous;
 
-        permission = resolve(Handler.class, "qux");
-        assertTrue(permission.isAllowList());
-        assertThat(permission.getItems())
-                .map(PermissionItem::code)
-                .hasSize(3)
-                .contains("api.foo")
-                .contains("api.baz:qux")
-                .contains("api:bar");
+        StubResolver(Boolean anonymous) {
+            this.anonymous = anonymous;
+        }
+
+        @Override
+        public void collect(Method method, Consumer<PermissionItem> consumer) {
+        }
+
+        @Override
+        public Boolean isAnonymous(Method method) {
+            return anonymous;
+        }
     }
 
     @SuppressWarnings({"unused"})

@@ -16,42 +16,54 @@
 package org.febit.boot.springdoc.swagger;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.febit.boot.springdoc.swagger.GenericTypeNameResolver.INSTANCE;
-import static org.junit.jupiter.api.Assertions.*;
 
 class GenericTypeNameResolverTest {
 
-    @Test
-    void nameForGenericType() {
+    private final TypeFactory types = TypeFactory.defaultInstance();
 
-        var types = TypeFactory.defaultInstance();
+    @Nested
+    class WithoutTypeParameters {
+        @Test
+        void usesRawClassName() {
+            assertThat(INSTANCE.nameForGenericType(types.constructType(String.class), Set.of()))
+                    .isEqualTo("String");
+            assertThat(INSTANCE.nameForGenericType(types.constructType(Boolean.class), Set.of()))
+                    .isEqualTo("Boolean");
+        }
+    }
 
-        assertEquals("String",
-                INSTANCE.nameForGenericType(
-                        types.constructType(String.class),
-                        Set.of()
-                )
-        );
+    @Nested
+    class WithTypeParameters {
+        @Test
+        void wrapsGenericParameters() {
+            assertThat(INSTANCE.nameForGenericType(
+                    types.constructMapType(Map.class,
+                            types.constructType(String.class),
+                            types.constructCollectionType(List.class, String.class)),
+                    Set.of()))
+                    .isEqualTo("Map<String,List<String>>");
+        }
 
-        assertEquals("Boolean",
-                INSTANCE.nameForGenericType(
-                        types.constructType(Boolean.class),
-                        Set.of()
-                )
-        );
-
-        assertEquals("Map<String,List<String>>",
-                INSTANCE.nameForGenericType(types.constructMapType(
-                        Map.class,
-                        types.constructType(String.class),
-                        types.constructCollectionType(List.class, String.class)
-                ), Set.of())
-        );
+        @Test
+        void usesClassNameForPrimitiveElement() {
+            assertThat(INSTANCE.nameForGenericType(
+                    types.constructCollectionType(List.class, Integer.class), Set.of()))
+                    .isEqualTo("List<Integer>");
+            assertThat(INSTANCE.nameForGenericType(
+                    types.constructMapType(Map.class,
+                            types.constructType(String.class),
+                            types.constructType(Integer.class)),
+                    Set.of()))
+                    .isEqualTo("Map<String,Integer>");
+        }
     }
 }
