@@ -17,10 +17,12 @@ package org.febit.boot.module;
 
 import org.febit.boot.FebitBoot;
 import org.febit.boot.util.Priority;
+import org.febit.lang.module.IModule;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.mock.env.MockEnvironment;
 
+import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
 
@@ -97,6 +99,15 @@ class FebitModuleEnvironmentPostProcessorTest {
                 );
     }
 
+    @Test
+    void toPropsKeepsShortCommitIdAsIs() {
+        var annotation = AppShortCommit.class.getAnnotation(FebitModuleEnvironments.class);
+
+        assertThat(FebitModuleEnvironmentPostProcessor.toProps(Set.of(annotation)))
+                .containsEntry("short.commit-id", "abc1234")
+                .containsEntry("short.short-commit-id", "abc1234");
+    }
+
     static class AppNoAnnotation {
     }
 
@@ -107,5 +118,37 @@ class FebitModuleEnvironmentPostProcessorTest {
     @FebitModuleEnvironments(value = FebitBoot.class, prefix = "febit-boot")
     @FebitModuleEnvironments(value = FebitBoot.class, prefix = "febit-boot-alias")
     static class AppMultiAnnotation {
+    }
+
+    // commit-id 长度 <= 8，触发 toProps 中长度判断的 false 分支（不截断）。
+    @FebitModuleEnvironments(value = ShortCommitModule.class, prefix = "short")
+    static class AppShortCommit {
+    }
+
+    static class ShortCommitModule implements IModule {
+        @Override
+        public String getGroupId() {
+            return "g";
+        }
+
+        @Override
+        public String getArtifactId() {
+            return "a";
+        }
+
+        @Override
+        public String getVersion() {
+            return "1";
+        }
+
+        @Override
+        public String getCommitId() {
+            return "abc1234";
+        }
+
+        @Override
+        public Instant getBuildTime() {
+            return Instant.EPOCH;
+        }
     }
 }

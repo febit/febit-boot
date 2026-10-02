@@ -28,6 +28,7 @@ dependencies {
   compileOnly 'org.springdoc:springdoc-openapi-starter-common'
 
   testRuntimeOnly 'com.h2database:h2'
+  testImplementation 'com.squareup.okhttp3:okhttp'
   testImplementation 'jakarta.servlet:jakarta.servlet-api'
   testImplementation project(':febit-boot-starter-jooq')
   testImplementation 'org.springframework:spring-webmvc'
