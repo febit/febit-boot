@@ -1,5 +1,33 @@
 # Changelog
 
+## [4.2.0-M1] - 2026-10-04
+
+### Breaking Changes
+
+- Logging: file appenders (`all` / `debug` / `info` / `warn`) now write JSON Lines (`.jsonl`, ECS format) via
+  `StructuredLogEncoder` instead of plain text patterns.
+
+### New Features
+
+- `validation`: add `@EachSize` — per-element size bound for `Collection` / `Map` / array fields.
+- `validation`: add `@OversizeWarning` — logging-only size warning that never rejects; thresholds `warn` / `error` (`-1`
+  disables a level).
+
+### Changes
+
+- **`IModel` / `Models`**: deprecated for removal (since `4.2.0`)
+
+### Build
+
+- Replace the `com.github.hierynomus.license` Gradle plugin with Spotless (license header, `cleanthat`, unused-import
+  removal, FQN shortening).
+
+### Dependencies
+
+- Spring Boot 4.1.x → 4.2.0-M2
+- febit-commons 4.1.x → 4.2.0-M1
+- febit-devkit 1.6.2 → 1.7.0
+
 ## [4.1.1] - not yet released
 
 ### Dependencies

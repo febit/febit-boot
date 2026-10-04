@@ -1,5 +1,31 @@
 # Changelog
 
+## [4.2.0-M1] - 2026-10-04
+
+### Breaking Changes
+
+- 日志：文件追加器（`all` / `debug` / `info` / `warn`）改用 `StructuredLogEncoder` 输出 JSON Lines（`.jsonl`，ECS 格式），不再输出纯文本
+  pattern。
+
+### New Features
+
+- `validation`：新增 `@EachSize` —— 针对 `Collection` / `Map` / 数组字段的逐元素尺寸约束。
+- `validation`：新增 `@OversizeWarning` —— 仅日志告警、不拒绝请求的超大尺寸校验；阈值 `warn` / `error`（`-1` 表示该级别关闭）。
+
+### Changes
+
+- **`IModel` / `Models`**: 标记废弃，将在后续版本移除（自 `4.2.0` 起）
+
+### Build
+
+- 用 Spotless（license header、`cleanthat`、移除未用 import、缩短全限定名）替换 `com.github.hierynomus.license` Gradle 插件。
+
+### Dependencies
+
+- Spring Boot 4.1.x → 4.2.0-M2
+- febit-commons 4.1.x → 4.2.0-M1
+- febit-devkit 1.6.2 → 1.7.0
+
 ## [4.1.1] - 尚未发布
 
 ### Dependencies
