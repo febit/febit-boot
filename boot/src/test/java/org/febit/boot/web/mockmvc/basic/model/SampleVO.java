@@ -15,14 +15,15 @@
  */
 package org.febit.boot.web.mockmvc.basic.model;
 
+import tools.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @lombok.Builder
-@tools.jackson.databind.annotation.JsonNaming(tools.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy.class)
-@com.fasterxml.jackson.databind.annotation.JsonNaming(com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy.class)
+@tools.jackson.databind.annotation.JsonNaming(SnakeCaseStrategy.class)
 public class SampleVO {
 
     private Long id;

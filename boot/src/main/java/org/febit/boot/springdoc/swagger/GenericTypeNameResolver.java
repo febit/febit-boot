@@ -15,9 +15,9 @@
  */
 package org.febit.boot.springdoc.swagger;
 
-import com.fasterxml.jackson.databind.JavaType;
 import io.swagger.v3.core.jackson.TypeNameResolver;
 import io.swagger.v3.core.util.PrimitiveType;
+import tools.jackson.databind.JavaType;
 
 import java.util.Set;
 

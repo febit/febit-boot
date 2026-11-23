@@ -62,31 +62,41 @@ class SampleApiSpringdocTest extends BaseMvcTest {
         var param = prefix + ".parameters[?(@.name=='page')]";
         result.andExpect(j(param + ".name", "page"))
                 .andExpect(j(param + ".in", "query"))
+                .andExpect(j(param + ".description", "The number of the page, start from 1."))
                 .andExpect(j(param + ".required", false))
                 .andExpect(j(param + ".schema.minimum", 1))
                 .andExpect(j(param + ".schema.type", "integer"))
+                .andExpect(j(param + ".schema.default", 1))
+                .andExpect(j(param + ".schema.example", 1))
         ;
 
         param = prefix + ".parameters[?(@.name=='size')]";
         result.andExpect(j(param + ".name", "size"))
                 .andExpect(j(param + ".in", "query"))
+                .andExpect(j(param + ".description", "The size of the page to be returned"))
                 .andExpect(j(param + ".required", false))
                 .andExpect(j(param + ".schema.minimum", 1))
                 .andExpect(j(param + ".schema.type", "integer"))
+                .andExpect(j(param + ".schema.example", 20))
         ;
         param = prefix + ".parameters[?(@.name=='order')]";
         result.andExpect(j(param + ".name", "order"))
                 .andExpect(j(param + ".in", "query"))
+                .andExpect(j(param + ".description", "Default sort order"))
                 .andExpect(j(param + ".required", false))
                 .andExpect(j(param + ".schema.type", "string"))
                 .andExpect(j(param + ".schema.default", "desc"))
+                .andExpect(j(param + ".schema.example", "desc"))
         ;
 
         param = prefix + ".parameters[?(@.name=='sort')]";
         result.andExpect(j(param + ".name", "sort"))
                 .andExpect(j(param + ".in", "query"))
                 .andExpect(j(param + ".required", false))
-                .andExpect(jsonPath(param + ".description").exists())
+                .andExpect(j(param + ".description", """
+                        Sorting criteria in the format: property(,asc|desc). \
+                        Sort order is according to param 'order' if absent. \
+                        Multiple sort criteria are supported."""))
                 .andExpect(j(param + ".schema.type", "array"))
                 .andExpect(jsonPath(param + ".schema.default").doesNotExist())
                 .andExpect(j(param + ".schema.items.type", "string"))
@@ -143,18 +153,18 @@ class SampleApiSpringdocTest extends BaseMvcTest {
         var props = prefix + ".properties";
         result.andExpect(j(props + ".q.type", "string"))
                 .andExpect(j(props + ".q['x-class']", "String"))
-                .andExpect(j(props + ".q['x-search-filter']", "KEYWORD"))
+                .andExpect(j(props + ".q['x-search-filter']", "Keyword"))
                 .andExpect(j(props + ".id.type", "integer"))
                 .andExpect(j(props + ".id['x-class']", "Integer"))
-                .andExpect(j(props + ".id['x-search-filter']", "EQ"))
+                .andExpect(j(props + ".id['x-search-filter']", "Equals"))
                 .andExpect(j(props + ".name.type", "string"))
                 .andExpect(j(props + ".name['x-class']", "String"))
-                .andExpect(j(props + ".name['x-search-filter']", "CONTAINS"))
+                .andExpect(j(props + ".name['x-search-filter']", "Contains"))
                 .andExpect(j(props + ".ids.type", "array"))
                 .andExpect(j(props + ".ids.items.type", "integer"))
                 .andExpect(j(props + ".ids.items.['x-class']", "Integer"))
                 .andExpect(j(props + ".ids['x-class']", "List"))
-                .andExpect(j(props + ".ids['x-search-filter']", "IN"))
+                .andExpect(j(props + ".ids['x-search-filter']", "In"))
         ;
     }
 

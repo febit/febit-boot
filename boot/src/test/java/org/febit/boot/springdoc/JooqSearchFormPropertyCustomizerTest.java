@@ -17,7 +17,7 @@ package org.febit.boot.springdoc;
 
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.oas.models.media.Schema;
-import org.febit.common.jooq.Column;
+import org.febit.common.jooq.annotation.CriterionMapping;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -30,13 +30,13 @@ class JooqSearchFormPropertyCustomizerTest {
 
     private static final String X_SEARCH_FILTER = "x-search-filter";
 
-    @Column
+    @CriterionMapping
     @SuppressWarnings("unused")
-    private String withColumn;
+    private String withCriterionMapping;
 
     @Deprecated
     @SuppressWarnings("unused")
-    private String notColumn;
+    private String notCriterionMapping;
 
     private Schema customize(Annotation[] annotations) {
         var annotatedType = new AnnotatedType().type(String.class);
@@ -56,7 +56,7 @@ class JooqSearchFormPropertyCustomizerTest {
 
         @Test
         void returnsUnchangedWhenAnnotationIsNotColumn() throws Exception {
-            Annotation anno = field("notColumn").getAnnotation(Deprecated.class);
+            Annotation anno = field("notCriterionMapping").getAnnotation(Deprecated.class);
             Schema result = customize(new Annotation[]{anno});
             assertThat(result.getExtensions()).isNullOrEmpty();
         }
@@ -66,12 +66,12 @@ class JooqSearchFormPropertyCustomizerTest {
     class WithColumn {
         @Test
         void addsSearchFilterExtensionWithOperatorName() throws Exception {
-            Column colAnno = field("withColumn").getAnnotation(Column.class);
+            var colAnno = field("withCriterionMapping").getAnnotation(CriterionMapping.class);
             Schema result = customize(new Annotation[]{colAnno});
 
             var extensions = result.getExtensions();
             assertThat(extensions).containsOnlyKeys(X_SEARCH_FILTER);
-            assertThat(extensions.get(X_SEARCH_FILTER)).isEqualTo(colAnno.operator().name());
+            assertThat(extensions.get(X_SEARCH_FILTER)).isEqualTo(colAnno.using().getSimpleName());
         }
     }
 

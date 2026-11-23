@@ -20,12 +20,8 @@ allprojects {
   group = rootProject.group
   version = rootProject.version
 
-  repositories {
-    mavenCentral()
-  }
-
   codegenModule {
-    defaultTemplate = fromFile("$rootDir/etc/module.java.tmpl")
+    defaultTemplate = fromFile("$rootDir/gradle/module.java.tmpl")
   }
 
   tasks.withType(AbstractPublishToMaven).configureEach {
@@ -34,7 +30,7 @@ allprojects {
 
   spotless {
     java {
-      licenseHeaderFile rootProject.file('etc/license-header.txt')
+      licenseHeaderFile rootProject.file('gradle/license-header.txt')
 
       shortenFullyQualifiedTypes()
 
@@ -68,9 +64,9 @@ configure(subprojects.findAll {
   def isStarter = name.startsWith(STARTER_PREFIX)
 
   java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-
+    toolchain {
+      languageVersion = JavaLanguageVersion.of(21)
+    }
     if (!isStarter) {
       withJavadocJar()
       withSourcesJar()

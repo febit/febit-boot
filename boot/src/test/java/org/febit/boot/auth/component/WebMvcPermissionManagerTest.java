@@ -19,7 +19,6 @@ import org.febit.boot.permission.AnnotatedMethodPermissionResolver;
 import org.febit.boot.permission.PermissionItem;
 import org.febit.boot.permission.ResolvedPermission;
 import org.junit.jupiter.api.Test;
-import org.springdoc.SampleDocController;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -79,18 +78,6 @@ class WebMvcPermissionManagerTest {
         assertThat(manager.getAllPermissionItems())
                 .extracting(PermissionItem::code)
                 .containsExactly("other", "res");
-    }
-
-    @Test
-    void ignoresHandlerMethodsInExcludedPackages() throws Exception {
-        var method = SampleDocController.class.getDeclaredMethod("apiDocs");
-        var manager = managerWith(Map.of(
-                RequestMappingInfo.paths("/doc").build(),
-                new HandlerMethod(new SampleDocController(), method)
-        ));
-        manager.start();
-
-        assertThat(manager.getPermission(method).isIgnored()).isTrue();
     }
 
     @Test

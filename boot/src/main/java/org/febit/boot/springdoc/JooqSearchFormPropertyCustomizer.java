@@ -18,8 +18,8 @@ package org.febit.boot.springdoc;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.oas.models.media.Schema;
 import org.apache.commons.lang3.ArrayUtils;
-import org.febit.common.jooq.Column;
 import org.febit.common.jooq.SearchForm;
+import org.febit.common.jooq.annotation.CriterionMapping;
 import org.springdoc.core.customizers.PropertyCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -41,14 +41,14 @@ public class JooqSearchFormPropertyCustomizer implements PropertyCustomizer {
         if (ArrayUtils.isEmpty(annotations)) {
             return schema;
         }
-        var colAnno = AnnotatedElementUtils.findMergedAnnotation(
+        var mapping = AnnotatedElementUtils.findMergedAnnotation(
                 AnnotatedElementUtils.forAnnotations(annotatedType.getCtxAnnotations()),
-                Column.class
+                CriterionMapping.class
         );
-        if (colAnno == null) {
+        if (mapping == null) {
             return schema;
         }
-        schema.addExtension(EX_SEARCH_FILTER, colAnno.operator().name());
+        schema.addExtension(EX_SEARCH_FILTER, mapping.using().getSimpleName());
         return schema;
     }
 }

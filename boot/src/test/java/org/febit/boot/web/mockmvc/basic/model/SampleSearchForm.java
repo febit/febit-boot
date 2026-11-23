@@ -15,8 +15,8 @@
  */
 package org.febit.boot.web.mockmvc.basic.model;
 
-import org.febit.common.jooq.OrderMappingBy;
 import org.febit.common.jooq.SearchForm;
+import org.febit.common.jooq.annotation.*;
 
 import lombok.Getter;
 import lombok.Setter;

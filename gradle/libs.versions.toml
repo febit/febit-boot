@@ -1,9 +1,9 @@
 [versions]
-febit-commons = '4.2.0-M1'
+febit-commons = '4.2.0-M2'
 febit-devkit = '1.7.0'
 
-spring-boot = '4.2.0-M2'
-springdoc = '3.1.1'
+spring-boot = '4.2.0'
+springdoc = '3.2.1'
 
 [libraries]
 febit-commons-bom = { module = 'org.febit:febit-commons-bom', version.ref = 'febit-commons' }

@@ -57,9 +57,6 @@ public class ExtraEnumMetaPropertyCustomizer implements PropertyCustomizer {
         if (type instanceof com.fasterxml.classmate.ResolvedType r) {
             return r.getErasedType();
         }
-        if (type instanceof com.fasterxml.jackson.core.type.ResolvedType r) {
-            return r.getRawClass();
-        }
         return type;
     }
 }

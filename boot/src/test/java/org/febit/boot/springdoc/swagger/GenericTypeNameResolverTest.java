@@ -15,9 +15,9 @@
  */
 package org.febit.boot.springdoc.swagger;
 
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.type.TypeFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ import static org.febit.boot.springdoc.swagger.GenericTypeNameResolver.INSTANCE;
 
 class GenericTypeNameResolverTest {
 
-    private final TypeFactory types = TypeFactory.defaultInstance();
+    private final TypeFactory types = TypeFactory.createDefaultInstance();
 
     @Nested
     class WithoutTypeParameters {

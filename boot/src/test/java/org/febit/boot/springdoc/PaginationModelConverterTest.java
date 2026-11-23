@@ -13,9 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springdoc;
+package org.febit.boot.springdoc;
 
-public class SampleDocController {
-    public void apiDocs() {
+import org.febit.lang.protocol.Pagination;
+import org.junit.jupiter.api.Test;
+import org.springdoc.core.converters.AdditionalModelsConverter;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class PaginationModelConverterTest {
+
+    @Test
+    void replacesPaginationWithProtoOnStartup() {
+        new PaginationModelConverter().afterPropertiesSet();
+
+        assertThat(AdditionalModelsConverter.getParameterObjectReplacement(Pagination.class))
+                .isEqualTo(PaginationProto.class);
     }
 }

@@ -134,14 +134,6 @@ class ExtraEnumMetaPropertyCustomizerTest {
         }
 
         @Test
-        void unwrapsJackson2ResolvedType() {
-            var resolved = mock(com.fasterxml.jackson.core.type.ResolvedType.class,
-                    withSettings().extraInterfaces(Type.class));
-            doReturn(MyEnum.class).when((com.fasterxml.jackson.core.type.ResolvedType) resolved).getRawClass();
-            assertThat(ExtraEnumMetaPropertyCustomizer.unwrap((Type) resolved)).isEqualTo(MyEnum.class);
-        }
-
-        @Test
         void unwrapsJackson3ResolvedType() {
             var resolved = mock(tools.jackson.core.type.ResolvedType.class,
                     withSettings().extraInterfaces(Type.class));
