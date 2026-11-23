@@ -1,5 +1,30 @@
 # Changelog
 
+## [4.2.0-M2] - 2026-11-23
+
+### Breaking Changes
+
+- `JooqSearchFormPropertyCustomizer`：`x-search-filter` 改用 `@CriterionMapping.using()`（febit-commons 4.2.0-M2）。
+
+### Changes
+
+- `FebitSpringdocAutoConfiguration`：将 Spring Boot Jackson customizer 应用到 springdoc 的 `ModelResolver` mapper，使自定义
+  mixin 在生成的 OpenAPI 文档中生效。
+- `ExtraEnumMetaPropertyCustomizer`：移除 Jackson 2.x `ResolvedType` 兼容分支。
+- 测试：覆盖 springdoc mixin / factory 定制、Web 条件装配及 Jackson 3 / swagger-core 上游行为。
+
+### Build
+
+- Gradle 9.7.1 → 9.9.1；Java 插件改用 `toolchain`。
+- 仓库声明集中到 `settings.gradle`；模板从 `etc/` 移至 `gradle/`。
+
+### Dependencies
+
+- febit-commons 4.2.0-M1 → 4.2.0-M2
+- Spring Boot 4.2.0-M2 → 4.2.0
+- springdoc OpenAPI 3.1.1 → 3.2.1
+- Swagger 3.0.0：改用 `swagger-annotations` / `swagger-core`，去掉 `-jakarta` 后缀。
+
 ## [4.2.0-M1] - 2026-10-04
 
 ### Breaking Changes
